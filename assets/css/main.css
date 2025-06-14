@@ -10,10 +10,13 @@
     text-decoration: none;
   }
 
-  section {
-    margin-bottom: 5px;
-    padding-bottom: 5px;
-  }
+section {
+  width: 100%;            /* Ensures full width */
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  box-sizing: border-box; /* Includes padding in the width calculation */
+}
+
 
   hr {
     margin-top: 5px;
