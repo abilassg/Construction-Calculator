@@ -10,19 +10,13 @@
     text-decoration: none;
   }
 
-section {
-  width: 100vw; /* Full viewport width */
-  margin: 0 auto 20px auto; /* Vertical spacing, center aligned */
-  padding: 10px 0;
+.section {
+  width: 100%;
+  margin: 0 auto;
+  padding-bottom: 5px;
   box-sizing: border-box;
 }
 
-.full-width-section {
-  width: 100%;
-  max-width: 1200px; /* Optional, to keep content centered and readable */
-  margin: 0 auto;
-  padding: 0 15px;
-}
 
 
   hr {
