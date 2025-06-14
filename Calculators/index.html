@@ -170,7 +170,11 @@
           <div class="calculator-button">
               <span>Pipe Section Properties</span>
               <a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">  <button>Open Calculator</button> </a>
-          </div>      
+          </div>    
+          <div class="calculator-button">
+              <span>Angle Section Properties</span>
+              <a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">  <button>Open Calculator</button> </a>
+          </div>  
         </div>
     </div>
 </div>
@@ -286,112 +290,6 @@
     </div>
 </footer>
 
-
-
-<script>
-  // Calculator logic: calculate and update output fields on input changes
-  function calculate() {
-    // Get inputs
-    const w1 = parseFloat(document.getElementById('F15').value);
-    const w2 = parseFloat(document.getElementById('F16').value);
-    const t = parseFloat(document.getElementById('F17').value);
-
-    if (isNaN(w1) || isNaN(w2) || isNaN(t) || w1 <= 0 || w2 <= 0 || t <= 0) {
-      // Clear outputs if inputs invalid
-      ['F24','F25','F26','F27','F28','F29','F30','F31','F32','F33','F34','F35','F36','F37','F38'].forEach(id => {
-        document.getElementById(id).value = '';
-      });
-      return;
-    }
-
-    // Calculations:
-    // Area of angle section (two legs)
-    const A = t * (w1 + w2 - t);
-
-    // CG from top flange:
-    const Y_top = ((t * w1) * (w1 / 2) + (t * (w2 - t)) * (w1 + (w2 - t)/2)) / A;
-
-    // CG from bottom flange:
-    const Y_bottom = w1 + w2 - Y_top;
-
-    // Moment of inertia about zz (Izz)
-    // Using formula for two rectangles and parallel axis theorem
-    const Izz_leg1 = (t * Math.pow(w1, 3)) / 12;
-    const Izz_leg2 = ((w2 - t) * Math.pow(t, 3)) / 12;
-    // Distance of each leg CG to neutral axis
-    const d1 = Y_top - w1 / 2;
-    const d2 = (w1 + (w2 - t)/2) - Y_top;
-    const Izz = Izz_leg1 + A * d1 * d1 + Izz_leg2 + A * d2 * d2;
-
-    // Radius of gyration Rzz
-    const Rzz = Math.sqrt(Izz / A);
-
-    // Neutral axis YY from top flange and bottom flange
-    // For angle section about y-axis:
-    // Calculate x coordinates of CG
-    // Assume thickness is t, legs length w1 and w2
-    // Coordinates of centroids of legs:
-    // Leg1 at x = t/2
-    // Leg2 at x = (w2 - t)/2 + t
-    const A1 = t * w1;
-    const A2 = t * (w2 - t);
-    const Xcg = (A1 * (t / 2) + A2 * (t + (w2 - t)/2)) / (A1 + A2);
-
-    // Neutral axis YY from top flange is Xcg (mm)
-    const NPA_YY_top = Xcg;
-    // From bottom flange
-    const NPA_YY_bottom = t + (w2 - t) - Xcg;
-
-    // Elastic section modulus ZeZZ from top and bottom
-    const ZeZZ_top = Izz / Y_top;
-    const ZeZZ_bottom = Izz / Y_bottom;
-
-    // Plastic section modulus ZpZZ (approximate)
-    const ZpZZ = A * (w1 + w2 - t) / 4; // rough approx
-
-    // Moment of inertia about yy (Iyy)
-    const Iyy_leg1 = (w1 * Math.pow(t,3)) / 12;
-    const Iyy_leg2 = ((w2 - t) * Math.pow((w2 - t), 3)) / 12; // Note: w2 leg thickness is length here; rough estimate
-    // Actually, for yy axis: Iyy = sum of Iyy for legs plus parallel axis terms
-    // Let's approximate
-    const Iyy = Iyy_leg1 + Iyy_leg2; // rough approx
-
-    // Radius of gyration Ryy
-    const Ryy = Math.sqrt(Iyy / A);
-
-    // Elastic section modulus ZeYY from outside and inside leg (approximate)
-    const ZeYY_outside = Iyy / (w1 / 2);
-    const ZeYY_inside = Iyy / (w2 / 2);
-
-    // Plastic section modulus ZpYY (approximate)
-    const ZpYY = A * Math.max(w1, w2) / 4;
-
-    // Assign to output fields with fixed decimals
-    document.getElementById('F24').value = A.toFixed(2);
-    document.getElementById('F25').value = Y_top.toFixed(2);
-    document.getElementById('F26').value = Y_bottom.toFixed(2);
-    document.getElementById('F27').value = Izz.toFixed(2);
-    document.getElementById('F28').value = Rzz.toFixed(2);
-    document.getElementById('F29').value = NPA_YY_top.toFixed(2);
-    document.getElementById('F30').value = NPA_YY_bottom.toFixed(2);
-    document.getElementById('F31').value = ZeZZ_top.toFixed(2);
-    document.getElementById('F32').value = ZeZZ_bottom.toFixed(2);
-    document.getElementById('F33').value = ZpZZ.toFixed(2);
-    document.getElementById('F34').value = Iyy.toFixed(2);
-    document.getElementById('F35').value = Ryy.toFixed(2);
-    document.getElementById('F36').value = ZeYY_outside.toFixed(2);
-    document.getElementById('F37').value = ZeYY_inside.toFixed(2);
-    document.getElementById('F38').value = ZpYY.toFixed(2);
-  }
-
-  // Attach event listeners to inputs
-  document.querySelectorAll('#calcForm input').forEach(input => {
-    input.addEventListener('input', calculate);
-  });
-
-  // Initial calculation on page load
-  window.onload = calculate;
-</script>
 <script>
   function toggleMenu() {
     const nav = document.querySelector("header nav");
