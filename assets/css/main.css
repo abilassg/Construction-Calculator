@@ -10,14 +10,13 @@
     text-decoration: none;
   }
 
-section {
-  width: 100%;
-  margin: 0 auto;
-  padding-bottom: 5px;
+.section {
+  width: 100vw;               /* Full viewport width */
+  margin-left: calc(-50vw + 50%);  /* Pulls it to left */
+  padding: 10px;
   box-sizing: border-box;
+  border: 1px dashed black;
 }
-
-
 
   hr {
     margin-top: 5px;
