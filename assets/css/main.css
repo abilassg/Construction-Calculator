@@ -10,7 +10,14 @@
     text-decoration: none;
   }
 
-.section {
+wrapper {
+  max-width: 1200px;   /* Or whatever fixed width you want */
+  margin: 0 auto;      /* Center horizontally */
+  padding: 0 15px;     /* Optional horizontal padding */
+  box-sizing: border-box;
+}
+
+section {
   width: 100vw;               /* Full viewport width */
   margin-left: calc(-50vw + 50%);  /* Pulls it to left */
   padding: 10px;
