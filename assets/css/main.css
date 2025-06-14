@@ -11,10 +11,17 @@
   }
 
 section {
-  width: 100%;            /* Ensures full width */
-  margin-bottom: 5px;
-  padding-bottom: 5px;
-  box-sizing: border-box; /* Includes padding in the width calculation */
+  width: 100vw; /* Full viewport width */
+  margin: 0 auto 20px auto; /* Vertical spacing, center aligned */
+  padding: 10px 0;
+  box-sizing: border-box;
+}
+
+.full-width-section {
+  width: 100%;
+  max-width: 1200px; /* Optional, to keep content centered and readable */
+  margin: 0 auto;
+  padding: 0 15px;
 }
 
 
