@@ -48,7 +48,7 @@ header {
   align-items: center;
   justify-content: space-between;
   padding: 10px 40px;
-  background-color: teal;
+  background-color: #dffef2; /* Updated color */
   flex-wrap: wrap;
 }
 
@@ -74,25 +74,29 @@ nav {
 }
 
 nav a {
-  color: #ffffff;
+  color: #013220; /* updated for better contrast and SEO */
   font-size: 16px;
-  font-weight: 500;
-  transition: color 0.3s ease-in-out;
+  font-weight: 600;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  padding: 6px 10px;
+  border-radius: 4px;
 }
 
 nav a:hover {
-  color: #FFD700;
+  background-color: #32cd32;
+  color: #ffffff;
 }
 
 nav a.active {
-  color: #4CAF50;
+  background-color: #4CAF50;
+  color: #ffffff;
 }
 
 .hamburger {
   display: none;
   font-size: 28px;
   cursor: pointer;
-  color: #ffffff;
+  color: #013220;
 }
 
 /* Content and Ads */
@@ -155,24 +159,23 @@ nav a.active {
   font-weight: 500;
   padding: 8px 12px;
   transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 4px;
 }
 
 .ad-side ul li a:hover {
   background-color: #007bff;
   color: white;
-  border-radius: 4px;
 }
 
 .ad-side ul li a.active {
   background-color: #4CAF50;
   color: white;
   font-weight: bold;
-  border-radius: 4px;
 }
 
 /* Subfooter */
 .subfooter-container {
-  background-color: #e0fff2;
+  background-color: #dffef2; /* Updated color */
   padding: 30px;
   box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.1);
 }
@@ -272,7 +275,7 @@ footer {
   align-items: center;
   justify-content: space-between;
   padding: 10px 40px;
-  background-color: teal;
+  background-color: #4effc8; /* Updated color */
   width: 100%;
   flex-wrap: wrap;
 }
@@ -343,14 +346,17 @@ footer {
     flex-direction: column;
     width: 100%;
     margin-top: 10px;
+    background-color: #dffef2;
+    border-radius: 4px;
   }
 
   nav a {
     margin: 8px 0;
     padding: 10px;
-    background-color: #006666;
+    background-color: #b9f4e0;
     border-radius: 4px;
     text-align: left;
+    color: #013220;
   }
 
   nav.show {
