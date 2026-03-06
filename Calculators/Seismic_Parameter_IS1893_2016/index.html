@@ -611,18 +611,25 @@
   function buildSpectrumPoints(sc) {
     const cfg = SC_CONFIG[sc];
     const pts = [];
-    const Ts  = [0, 0.01, 0.05, 0.10,
-                 cfg.peak * 0.5, cfg.peak,
-                 cfg.peak * 1.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5];
-    Ts.sort((a,b)=>a-b);
-    Ts.forEach(T => {
+    const STEPS = 500;
+    const T_MAX = 4.5;
+
+    // Insert exact breakpoints so corners are sharp, rest is dense
+    const breakpoints = new Set([0, 0.10, cfg.peak, 4.0, T_MAX]);
+
+    for (let i = 0; i <= STEPS; i++) {
+      breakpoints.add(parseFloat((i * T_MAX / STEPS).toFixed(4)));
+    }
+
+    Array.from(breakpoints).sort((a, b) => a - b).forEach(T => {
       let Sa;
       if      (T <= 0.10)      Sa = 1 + 15 * T;
       else if (T <= cfg.peak)  Sa = 2.5;
       else if (T <= 4.0)       Sa = cfg.Cv / T;
       else                     Sa = cfg.tail;
-      pts.push({ x: parseFloat(T.toFixed(3)), y: parseFloat(Sa.toFixed(4)) });
+      pts.push({ x: parseFloat(T.toFixed(4)), y: parseFloat(Sa.toFixed(5)) });
     });
+
     return pts;
   }
 
