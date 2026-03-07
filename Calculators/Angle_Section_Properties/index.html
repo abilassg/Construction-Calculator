@@ -467,142 +467,136 @@ function drawSketch(h, b, t, yBar, xBar) {
   const canvas = document.getElementById('angleSketch');
   const CW = Math.min(canvas.parentElement.clientWidth - 4, 420);
   canvas.width  = CW;
-  canvas.height = 300;
+  const CH = 320;
+  canvas.height = CH;
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, CW, 300);
+  ctx.clearRect(0, 0, CW, CH);
 
-  const margin = { l: 60, r: 60, t: 40, b: 60 };
-  const drawW = CW - margin.l - margin.r;
-  const drawH = 300 - margin.t - margin.b;
+  // Margins: left for ȳ label, right for h dim line, top for x̄ + t label, bottom for b dim line
+  const mL = 72, mR = 88, mT = 50, mB = 48;
+  const drawW = CW - mL - mR;
+  const drawH = CH - mT - mB;
 
-  // Section bounds in mm: origin = bottom-left heel
-  const maxDim = Math.max(h, b) || 100;
   const sc = Math.min(drawW / b, drawH / h);
 
-  // Canvas coords: origin at bottom-left of section
-  const ox = margin.l;          // left edge of section in canvas px
-  const oy = margin.t + drawH;  // bottom edge of section in canvas px (y increases down)
+  // Origin in canvas px = bottom-left heel of section
+  const ox = mL;
+  const oy = mT + drawH;   // canvas y increases downward
 
   function cx(xMm) { return ox + xMm * sc; }
   function cy(yMm) { return oy - yMm * sc; }
 
-  /* ── Fill angle shape ── */
+  /* ── Fill L-shape ── */
   ctx.fillStyle = '#cfe2ff';
   ctx.strokeStyle = '#343a40';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  // L-shape: bottom-left → bottom-right → inner corner of h-leg → top of h-leg → ...
-  ctx.moveTo(cx(0),   cy(0));    // heel (bottom-left)
-  ctx.lineTo(cx(b),   cy(0));    // bottom-right of horiz leg
-  ctx.lineTo(cx(b),   cy(t));    // top-right of horiz leg
-  ctx.lineTo(cx(t),   cy(t));    // inner corner
-  ctx.lineTo(cx(t),   cy(h));    // top of vertical leg
-  ctx.lineTo(cx(0),   cy(h));    // top-left of vertical leg
+  ctx.moveTo(cx(0), cy(0));
+  ctx.lineTo(cx(b), cy(0));
+  ctx.lineTo(cx(b), cy(t));
+  ctx.lineTo(cx(t), cy(t));
+  ctx.lineTo(cx(t), cy(h));
+  ctx.lineTo(cx(0), cy(h));
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
 
-  /* ── Dimension lines ── */
-  ctx.strokeStyle = '#495057';
-  ctx.fillStyle   = '#495057';
-  ctx.lineWidth   = 1;
-  ctx.font        = 'bold 11px sans-serif';
-  ctx.textAlign   = 'center';
-
-  // h — vertical dimension (right of vertical leg)
-  dimLineV(ctx, cx(t) + 18, cy(0), cy(h), 6, `h=${(h||'?')} mm`);
-  // b — horizontal dimension (below horiz leg)
-  dimLineH(ctx, cy(0) + 20, cx(0), cx(b), 6, `b=${(b||'?')} mm`);
-  // t — thickness label (inside angle corner)
-  ctx.fillStyle = '#0d6efd';
-  ctx.font = 'bold 10px sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText(`t=${(t||'?')} mm`, cx(t) + 4, cy(t/2));
-
-  /* ── Centroid marker & axes (only if valid) ── */
+  /* ── Centroidal axes ── */
   if (!isNaN(yBar) && !isNaN(xBar)) {
     const cgX = cx(xBar);
     const cgY = cy(yBar);
 
-    /* ZZ axis (horizontal dashed line) */
-    ctx.strokeStyle = '#dc3545';
-    ctx.lineWidth   = 1.2;
-    ctx.setLineDash([5, 4]);
-    ctx.beginPath();
-    ctx.moveTo(ox - 14, cgY); ctx.lineTo(cx(b) + 14, cgY);
-    ctx.stroke();
-
-    /* YY axis (vertical dashed line) */
-    ctx.beginPath();
-    ctx.moveTo(cgX, oy + 14); ctx.lineTo(cgX, cy(h) - 14);
-    ctx.stroke();
+    ctx.strokeStyle = '#dc3545'; ctx.lineWidth = 1.2; ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(ox - 10, cgY); ctx.lineTo(cx(b) + 10, cgY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cgX, cy(h) - 10); ctx.lineTo(cgX, oy + 10); ctx.stroke();
     ctx.setLineDash([]);
 
-    /* ZZ / YY labels */
-    ctx.fillStyle = '#dc3545';
-    ctx.font = 'bold 10px sans-serif';
-    ctx.textAlign = 'right';
-    ctx.fillText('ZZ', ox - 2, cgY + 4);
-    ctx.textAlign = 'center';
-    ctx.fillText('YY', cgX, oy + 26);
-
     /* Centroid cross */
-    ctx.strokeStyle = '#dc3545';
-    ctx.lineWidth   = 2;
+    ctx.strokeStyle = '#dc3545'; ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(cgX - 7, cgY); ctx.lineTo(cgX + 7, cgY);
     ctx.moveTo(cgX, cgY - 7); ctx.lineTo(cgX, cgY + 7);
     ctx.stroke();
 
-    /* ȳ arrow & label */
-    ctx.strokeStyle = '#198754'; ctx.fillStyle = '#198754'; ctx.lineWidth = 1.5;
-    // vertical arrow from bottom to CG
-    arrowV(ctx, cx(0) - 18, cy(0), cgY, '#198754');
-    ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'right';
-    ctx.fillText(`ȳ=${yBar.toFixed(1)}`, cx(0) - 22, (cy(0)+cgY)/2);
+    /* ZZ label — left of axis, in left margin */
+    ctx.fillStyle = '#dc3545'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText('ZZ', ox - 13, cgY + 4);
 
-    /* x̄ arrow & label */
-    arrowH(ctx, cy(h) - 18, cx(0), cgX, '#198754');
+    /* YY label — below section, in bottom margin */
     ctx.textAlign = 'center';
-    ctx.fillText(`x̄=${xBar.toFixed(1)}`, (cx(0)+cgX)/2, cy(h) - 22);
+    ctx.fillText('YY', cgX, oy + 14);
+
+    /* ȳ — vertical bracket from bottom(heel) to CG, in left margin */
+    const ybX = ox - 20;
+    ctx.strokeStyle = '#198754'; ctx.fillStyle = '#198754'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(ybX + 4, oy); ctx.lineTo(ybX, oy); ctx.lineTo(ybX, cgY); ctx.lineTo(ybX + 4, cgY);
+    ctx.stroke();
+    ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(`ȳ = ${yBar.toFixed(1)} mm`, ybX - 2, (oy + cgY) / 2 + 4);
+
+    /* x̄ — horizontal bracket from left(heel) to CG, above section */
+    const xbY = cy(h) - 20;
+    ctx.strokeStyle = '#198754'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(ox, xbY + 4); ctx.lineTo(ox, xbY); ctx.lineTo(cgX, xbY); ctx.lineTo(cgX, xbY + 4);
+    ctx.stroke();
+    ctx.fillStyle = '#198754'; ctx.textAlign = 'center';
+    ctx.fillText(`x̄ = ${xBar.toFixed(1)} mm`, (ox + cgX) / 2, xbY - 5);
   }
 
-  /* ── Axis labels ── */
-  ctx.fillStyle = '#343a40'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
-  ctx.fillText('← b →', cx(b/2), oy + 38);
+  /* ── h dimension — right of section ── */
+  const hDimX = cx(t) + 22;
+  ctx.strokeStyle = '#495057'; ctx.fillStyle = '#495057'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(hDimX - 4, cy(0)); ctx.lineTo(hDimX + 4, cy(0));
+  ctx.moveTo(hDimX - 4, cy(h)); ctx.lineTo(hDimX + 4, cy(h));
+  ctx.moveTo(hDimX, cy(0)); ctx.lineTo(hDimX, cy(h));
+  ctx.stroke();
+  arrowTipA(ctx, hDimX, cy(0), 'down', '#495057');
+  arrowTipA(ctx, hDimX, cy(h), 'up',   '#495057');
+  ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText(`h = ${h} mm`, hDimX + 7, (cy(0) + cy(h)) / 2 + 4);
+
+  /* ── b dimension — below section ── */
+  const bDimY = oy + 22;
+  ctx.strokeStyle = '#495057'; ctx.fillStyle = '#495057'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cx(0), bDimY - 4); ctx.lineTo(cx(0), bDimY + 4);
+  ctx.moveTo(cx(b), bDimY - 4); ctx.lineTo(cx(b), bDimY + 4);
+  ctx.moveTo(cx(0), bDimY);     ctx.lineTo(cx(b), bDimY);
+  ctx.stroke();
+  arrowTipA(ctx, cx(0), bDimY, 'left',  '#495057');
+  arrowTipA(ctx, cx(b), bDimY, 'right', '#495057');
+  ctx.textAlign = 'center';
+  ctx.fillText(`b = ${b} mm`, (cx(0) + cx(b)) / 2, bDimY + 14);
+
+  /* ── t label — bracket on top of horizontal leg, above section ── */
+  const tBrktY = cy(h) - (isNaN(yBar) ? 10 : 32);   // above x̄ bracket if shown
+  ctx.strokeStyle = '#0d6efd'; ctx.fillStyle = '#0d6efd'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cx(0), tBrktY + 4); ctx.lineTo(cx(0), tBrktY);
+  ctx.lineTo(cx(t), tBrktY);     ctx.lineTo(cx(t), tBrktY + 4);
+  ctx.stroke();
+  ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(`t = ${t} mm`, (cx(0) + cx(t)) / 2, tBrktY - 4);
 }
 
-/* Dimension line helpers */
-function dimLineH(ctx, yPx, x1, x2, tick, label) {
-  ctx.strokeStyle='#495057'; ctx.fillStyle='#495057';
-  ctx.lineWidth=1;
+function arrowTipA(ctx, x, y, dir, c) {
+  ctx.fillStyle = c;
   ctx.beginPath();
-  ctx.moveTo(x1,yPx-tick); ctx.lineTo(x1,yPx+tick);
-  ctx.moveTo(x2,yPx-tick); ctx.lineTo(x2,yPx+tick);
-  ctx.moveTo(x1,yPx); ctx.lineTo(x2,yPx);
-  ctx.stroke();
-  ctx.font='bold 11px sans-serif'; ctx.textAlign='center';
-  ctx.fillText(label, (x1+x2)/2, yPx+14);
+  switch(dir) {
+    case 'up':    ctx.moveTo(x,y); ctx.lineTo(x-4,y+8);  ctx.lineTo(x+4,y+8);  break;
+    case 'down':  ctx.moveTo(x,y); ctx.lineTo(x-4,y-8);  ctx.lineTo(x+4,y-8);  break;
+    case 'left':  ctx.moveTo(x,y); ctx.lineTo(x+8,y-4);  ctx.lineTo(x+8,y+4);  break;
+    case 'right': ctx.moveTo(x,y); ctx.lineTo(x-8,y-4);  ctx.lineTo(x-8,y+4);  break;
+  }
+  ctx.closePath(); ctx.fill();
 }
-function dimLineV(ctx, xPx, y1, y2, tick, label) {
-  ctx.strokeStyle='#495057'; ctx.fillStyle='#495057';
-  ctx.lineWidth=1;
-  ctx.beginPath();
-  ctx.moveTo(xPx-tick,y1); ctx.lineTo(xPx+tick,y1);
-  ctx.moveTo(xPx-tick,y2); ctx.lineTo(xPx+tick,y2);
-  ctx.moveTo(xPx,y1); ctx.lineTo(xPx,y2);
-  ctx.stroke();
-  ctx.save();
-  ctx.translate(xPx+14, (y1+y2)/2);
-  ctx.rotate(Math.PI/2);
-  ctx.font='bold 11px sans-serif'; ctx.textAlign='center';
-  ctx.fillText(label,0,0);
-  ctx.restore();
-}
+
 function arrowV(ctx, xPx, fromY, toY, c) {
   ctx.strokeStyle=c; ctx.fillStyle=c; ctx.lineWidth=1.5;
   ctx.beginPath(); ctx.moveTo(xPx, fromY); ctx.lineTo(xPx, toY); ctx.stroke();
-  // arrowhead at toY
   const dir = toY < fromY ? -1 : 1;
   ctx.beginPath(); ctx.moveTo(xPx, toY); ctx.lineTo(xPx-4, toY-dir*8); ctx.lineTo(xPx+4, toY-dir*8); ctx.closePath(); ctx.fill();
 }
