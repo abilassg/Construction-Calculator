@@ -1,91 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EQ-PAR Calculator | Construction-Calculator</title>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Seismic ESM Calculator (IS 1893:2016) | Construction-Calculator</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="../../assets/css/main.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
   <style>
-    /* ── match Bootstrap 4 default font exactly ── */
-    body, input, select, button, td, th, label {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-                   "Helvetica Neue", Arial, "Noto Sans", sans-serif,
-                   "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
-    }
-
-    /* ── sheet tabs ── */
-    .tab-row { display:flex; gap:4px; margin-bottom:-1px; flex-wrap:wrap; }
-    .sheet-tab {
-      cursor:pointer; padding:7px 18px; border:1px solid #ccc; border-bottom:none;
-      background:#e9ecef; font-weight:600; font-size:13px; border-radius:4px 4px 0 0;
-      user-select:none;
-    }
-    .sheet-tab.active { background:#fff; color:#212529; border-bottom:1px solid #fff; }
-    .sheet-panel { display:none; border:1px solid #ccc; background:#fff; }
-    .sheet-panel.active { display:block; }
-    .sheet-header {
-      background:#343a40; color:#fff; padding:7px 14px;
-      font-weight:700; font-size:13px; letter-spacing:.2px;
-    }
-
-    /* ── rows ── */
-    .calc-row {
-      display:flex; align-items:center;
-      border-bottom:1px solid #f0f0f0; padding:5px 14px;
-    }
-    .calc-label { flex:0 0 58%; font-size:13px; color:#212529; padding-right:8px; line-height:1.4; }
-    .calc-value { flex:0 0 28%; }
-    .calc-unit  { flex:0 0 14%; font-size:12px; color:#6c757d; font-style:italic; padding-left:4px; }
-
-    .calc-value input,
-    .calc-value select {
-      width:100%; padding:4px 8px; border:1px solid #ced4da;
-      border-radius:.25rem; font-size:13px;
-      background-color:LightBlue;
-      font-family:inherit;
-    }
-    .calc-value input.out      { background:LightGray;  font-weight:600; }
-    .calc-value input.out-pass { background:#d4edda; font-weight:700; color:#155724; }
-    .calc-value input.out-fail { background:#f8d7da; font-weight:700; color:#721c24; }
-    .calc-value input.out-warn { background:#fff3cd; font-weight:700; color:#856404; }
-
-    .sec-div {
-      background:#f8f9fa; border-top:2px solid #dee2e6; border-bottom:1px solid #dee2e6;
-      padding:4px 14px; font-size:11.5px; font-weight:700;
-      text-transform:uppercase; color:#6c757d; letter-spacing:.4px;
-    }
-
-    /* ── graph container ── */
-    .graph-wrap {
-      padding:14px 14px 6px;
-      background:#fff;
-    }
-    .graph-wrap h6 {
-      font-size:12.5px; font-weight:700; color:#343a40;
-      margin-bottom:8px; text-align:center;
-    }
-    canvas#spectrumChart { width:100% !important; }
-
-    /* ── IS table inside sheet ── */
-    table.is-tbl {
-      width:calc(100% - 28px); border-collapse:collapse;
-      font-size:11.5px; margin:6px 14px 10px;
-    }
-    table.is-tbl th {
-      background:#343a40; color:#fff; padding:4px 8px; text-align:center;
-    }
-    table.is-tbl td {
-      border:1px solid #dee2e6; padding:3px 8px; text-align:center;
-    }
-    table.is-tbl tr:nth-child(even) td { background:#f8f9fa; }
+    input.out-hi  { background-color:#d4edda!important; font-weight:700!important; color:#155724!important; }
+    select.in     { background-color:LightBlue; }
+    .section-card { background:#f8f9fa; border:1px solid #dee2e6; border-radius:6px; padding:16px 20px; margin-bottom:16px; }
+    .section-card h5 { font-weight:700; color:#0d6efd; border-bottom:2px solid #0d6efd; padding-bottom:6px; margin-bottom:14px; font-size:14px; letter-spacing:.5px; text-transform:uppercase; }
+    .formula-box  { background:#fff3cd; border:1px solid #ffc107; border-radius:4px; padding:10px 14px; font-size:12.5px; font-family:monospace; margin-bottom:12px; }
+    .result-big   { font-size:1.4rem; font-weight:800; color:#155724; }
+    .result-label { font-size:11px; color:#6c757d; text-transform:uppercase; letter-spacing:.5px; }
+    #chartWrap    { position:relative; width:100%; max-width:620px; margin-bottom:20px; }
+    .radio-group label { margin-right:16px; font-weight:500; cursor:pointer; }
+    .codal-inputs, .manual-inputs { display:none; }
+    .codal-inputs.active, .manual-inputs.active { display:block; }
+    .note-text    { font-size:11.5px; color:#6c757d; font-style:italic; }
+    .ah-highlight { background:#0d6efd; color:#fff; border-radius:8px; padding:12px 20px; text-align:center; margin-bottom:8px; }
+    .av-highlight { background:#198754; color:#fff; border-radius:8px; padding:12px 20px; text-align:center; }
+    .result-row   { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+    .result-row > div { flex:1; min-width:140px; }
   </style>
 </head>
 <body style="background-color:teal;">
 
 <header>
-  <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
   <div class="logo-container">
     <img src="../../assets/svg/logo.png" alt="Logo">
     <span>Construction-Calculator</span>
@@ -102,260 +46,301 @@
 <div class="ad-block ad-top"><p>Advertisement - Top Banner</p></div>
 
 <div class="e-con-inner">
-
-  <!-- Left Sidebar -->
+  <!-- Left sidebar -->
   <div class="ad-side ad-block" aria-label="Primary Navigation">
     <h3>Seismic Calculators</h3>
     <ul>
-      <li><a href="#" class="active">EQ-PAR (IS 1893:2016)</a></li>
-      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Active_Earth_Pressure">Active Earth Pressure</a></li>
-      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Passive_Earth_Pressure">Passive Earth Pressure</a></li>
-      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Soil_Bearing_Capacity">Soil Bearing Capacity</a></li>
-      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pile_Capacity">Pile Capacity</a></li>
+      <li><a href="#" class="active">ESM — IS 1893:2016</a></li>
+    </ul>
+    <h3 style="margin-top:16px;">Section Properties</h3>
+    <ul>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">T Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">Rectangular Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">Circular Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">Pipe Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">Box Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section Properties</a></li>
     </ul>
   </div>
 
-  <!-- Main Content -->
+  <!-- Main content -->
   <div class="content">
     <main id="main">
       <section id="Calculation">
-        <div class="container-fluid px-2">
-          <div class="row">
+        <div class="container-fluid px-0">
+          <div class="row no-gutters">
             <div class="col-md-12">
-              <div class="page-container p-3 my-2 border">
+              <div class="page-container p-4 my-2 border">
 
-                <h3><strong>EQ-PAR &mdash; Equivalent Static Analysis</strong></h3>
-                <p class="text-muted mb-2" style="font-size:12.5px;">
-                  <strong>IS 1893 (Part 1): 2016</strong> &mdash;
-                  Design Seismic Coefficient A<sub>h</sub> &amp; Base Shear V<sub>B</sub>
+                <h3><strong>Seismic Analysis — Equivalent Static Method</strong></h3>
+                <p class="text-muted mb-1" style="font-size:12.5px;">
+                  As per <strong>IS 1893 (Part 1) : 2016</strong> &nbsp;|&nbsp; Clause 6.4, 7.6 &nbsp;|&nbsp; Table 2, 6, 7, 8
                 </p>
-
-                <!-- Sheet Tabs -->
-                <div class="tab-row">
-                  <div class="sheet-tab active" onclick="showSheet('input')">&#128203; Input Sheet</div>
-                  <div class="sheet-tab"        onclick="showSheet('calc')" >&#128290; Calculation Sheet</div>
-                  <div class="sheet-tab"        onclick="showSheet('valid')">&#9989; Validation Checks</div>
+                <div class="formula-box mb-3">
+                  A<sub>h</sub> = (Z/2) × (I/R) × (S<sub>a</sub>/g) &nbsp;&nbsp;&nbsp;
+                  A<sub>v</sub> = (2/3) × A<sub>h</sub>
                 </div>
 
-                <!-- ══════════════════════════════════════════
-                     SHEET 1 — INPUT SHEET
-                ══════════════════════════════════════════ -->
-                <div class="sheet-panel active" id="sheet-input">
-                  <div class="sheet-header">&#128203; Input Sheet &mdash; Design Parameters</div>
+                <!-- ══ SECTION 1: SEISMIC PARAMETERS ══ -->
+                <div class="section-card">
+                  <h5>1. Seismic Parameters</h5>
+                  <div class="container-fluid px-0">
 
-                  <div class="sec-div">Dropdowns</div>
-
-                  <div class="calc-row">
-                    <div class="calc-label">Seismic Zone (IS 1893 Table 2)</div>
-                    <div class="calc-value">
-                      <select id="zoneSelect" onchange="onInput()">
-                        <option value="II">Zone II &mdash; Low</option>
-                        <option value="III" selected>Zone III &mdash; Moderate</option>
-                        <option value="IV">Zone IV &mdash; Severe</option>
-                        <option value="V">Zone V &mdash; Very Severe</option>
-                      </select>
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Seismic Zone (Table 2)</div>
+                      <div class="col-12 col-sm-5">
+                        <select class="in form-control" id="zone" style="background-color:LightBlue">
+                          <option value="0.10">Zone II — Z = 0.10 (Low)</option>
+                          <option value="0.16">Zone III — Z = 0.16 (Moderate)</option>
+                          <option value="0.24" selected>Zone IV — Z = 0.24 (Severe)</option>
+                          <option value="0.36">Zone V — Z = 0.36 (Very Severe)</option>
+                        </select>
+                      </div>
+                      <div class="col-2"><span id="zVal" class="badge badge-primary">Z = 0.24</span></div>
                     </div>
-                    <div class="calc-unit">&mdash;</div>
-                  </div>
 
-                  <div class="calc-row">
-                    <div class="calc-label">Structure Category (IS 1893 Table 8)</div>
-                    <div class="calc-value">
-                      <select id="structCat" onchange="syncImportance(); onInput();">
-                        <option value="1.0" selected>Normal &mdash; Residential / Office (I = 1.0)</option>
-                        <option value="1.2">Important &mdash; Schools / Hospitals (I = 1.2)</option>
-                        <option value="1.5">Special &mdash; Post-earthquake critical (I = 1.5)</option>
-                      </select>
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Importance Factor — I (Table 8)</div>
+                      <div class="col-12 col-sm-5">
+                        <select class="in form-control" id="imp" style="background-color:LightBlue">
+                          <option value="1.0" selected>1.0 — Residential / Commercial / Industrial</option>
+                          <option value="1.2">1.2 — Schools, Hospitals (&lt; 300 beds)</option>
+                          <option value="1.5">1.5 — Hospitals (≥ 300 beds), Power stations, Fire</option>
+                          <option value="1.8">1.8 — Nuclear power plants</option>
+                        </select>
+                      </div>
+                      <div class="col-2"><span id="iVal" class="badge badge-secondary">I = 1.0</span></div>
                     </div>
-                    <div class="calc-unit">&mdash;</div>
-                  </div>
 
-                  <div class="calc-row">
-                    <div class="calc-label">Site Class (IS 1893 Cl. 6.2.3.2)</div>
-                    <div class="calc-value">
-                      <select id="siteClass" onchange="onInput()">
-                        <option value="A">Class A &mdash; Rock (V<sub>s</sub> &gt; 800 m/s)</option>
-                        <option value="B">Class B &mdash; Very Dense Soil (360&ndash;800 m/s)</option>
-                        <option value="C" selected>Class C &mdash; Dense Soil (180&ndash;360 m/s)</option>
-                        <option value="D">Class D &mdash; Stiff Soil (90&ndash;180 m/s)</option>
-                        <option value="E">Class E &mdash; Soft Soil (&lt; 90 m/s)</option>
-                      </select>
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Structural System / Response Reduction Factor R (Table 9)</div>
+                      <div class="col-12 col-sm-5">
+                        <select class="in form-control" id="rFactor" style="background-color:LightBlue">
+                          <optgroup label="RC Frame Systems">
+                            <option value="5" data-tp="rc_mrf">SMRF — Special Moment Resisting Frame (R = 5)</option>
+                            <option value="3" data-tp="rc_mrf_infill">OMRF — Ordinary Moment Resisting Frame (R = 3)</option>
+                          </optgroup>
+                          <optgroup label="RC Shear Wall Systems">
+                            <option value="4" data-tp="other">RC Shear Wall + SMRF (R = 4)</option>
+                            <option value="3" data-tp="other">RC Shear Wall + OMRF (R = 3)</option>
+                          </optgroup>
+                          <optgroup label="Steel Frame Systems">
+                            <option value="5" data-tp="steel_mrf">Steel SMRF (R = 5)</option>
+                            <option value="4" data-tp="other">Steel OCBF — Ordinary CBF (R = 4)</option>
+                            <option value="4" data-tp="other">Steel SCBF — Special CBF (R = 4)</option>
+                            <option value="5" data-tp="other">Steel EBF — Eccentrically Braced Frame (R = 5)</option>
+                          </optgroup>
+                          <optgroup label="Masonry">
+                            <option value="3" data-tp="other">Reinforced Masonry (R = 3)</option>
+                            <option value="1.5" data-tp="other">Unreinforced Masonry (R = 1.5)</option>
+                          </optgroup>
+                          <optgroup label="Flat Slab">
+                            <option value="3" data-tp="other">Flat Slab Structure (R = 3)</option>
+                          </optgroup>
+                        </select>
+                      </div>
+                      <div class="col-2"><span id="rVal" class="badge badge-warning text-dark">R = 5</span></div>
                     </div>
-                    <div class="calc-unit">&mdash;</div>
-                  </div>
 
-                  <div class="calc-row">
-                    <div class="calc-label">Method of Analysis</div>
-                    <div class="calc-value">
-                      <select id="method" onchange="toggleDynamic(); onInput();">
-                        <option value="static" selected>Equivalent Static Method</option>
-                        <option value="dynamic">Dynamic / Response Spectrum</option>
-                      </select>
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Damping Ratio (Cl. 6.4.5)</div>
+                      <div class="col-12 col-sm-5">
+                        <select class="in form-control" id="damp" style="background-color:LightBlue">
+                          <option value="1.40">2% — Steel structures, pre-stressed concrete (×1.40)</option>
+                          <option value="1.00" selected>5% — RCC structures (×1.00) — Default</option>
+                          <option value="0.80">10% — (×0.80)</option>
+                          <option value="0.70">15% — (×0.70)</option>
+                          <option value="0.60">20% — (×0.60)</option>
+                          <option value="0.55">25% — (×0.55)</option>
+                          <option value="0.50">30% — (×0.50)</option>
+                        </select>
+                      </div>
+                      <div class="col-2"><span id="dampVal" class="badge badge-info">×1.00</span></div>
                     </div>
-                    <div class="calc-unit">&mdash;</div>
-                  </div>
 
-                  <div class="sec-div">User Entries</div>
-
-                  <div class="calc-row">
-                    <div class="calc-label">Building Height (h)</div>
-                    <div class="calc-value"><input type="number" id="height" value="15" step="0.5" min="0" onchange="onInput()"></div>
-                    <div class="calc-unit">m</div>
-                  </div>
-
-                  <div class="calc-row">
-                    <div class="calc-label">Frame Type (for auto T<sub>H</sub>)</div>
-                    <div class="calc-value">
-                      <select id="frameType" onchange="toggleWidth(); onInput();">
-                        <option value="rc" selected>RC Frame &mdash; 0.075 &middot; h<sup>0.75</sup></option>
-                        <option value="steel">Steel Frame &mdash; 0.085 &middot; h<sup>0.75</sup></option>
-                        <option value="other">Other &mdash; 0.09 &middot; h / &radic;d</option>
-                      </select>
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Site Soil Type (Table 1)</div>
+                      <div class="col-12 col-sm-5">
+                        <select class="in form-control" id="soil" style="background-color:LightBlue">
+                          <option value="1">Type I — Rock / Very Dense Hard Soil (N &gt; 30)</option>
+                          <option value="2" selected>Type II — Medium / Stiff Soil (10 ≤ N ≤ 30)</option>
+                          <option value="3">Type III — Soft Soil (N &lt; 10)</option>
+                        </select>
+                      </div>
+                      <div class="col-2"><span id="soilVal" class="badge badge-dark">Type II</span></div>
                     </div>
-                    <div class="calc-unit">&mdash;</div>
-                  </div>
 
-                  <div class="calc-row" id="row-width" style="display:none;">
-                    <div class="calc-label">Plan dimension in shear direction (d)</div>
-                    <div class="calc-value"><input type="number" id="planD" value="10" step="0.5" min="0.1" onchange="onInput()"></div>
-                    <div class="calc-unit">m</div>
-                  </div>
-
-                  <div class="calc-row">
-                    <div class="calc-label">
-                      Fundamental Natural Period (T<sub>H</sub>)
-                      <small class="d-block text-muted" style="font-size:10.5px;">
-                        IS 1893 Cl. 7.6.2 &nbsp;&mdash;&nbsp;
-                        <a href="#" onclick="autoCalcT(); return false;" style="font-size:11px;">[Auto-calculate from h]</a>
-                      </small>
-                    </div>
-                    <div class="calc-value"><input type="number" id="TH" value="0.50" step="0.01" min="0.01" onchange="onInput()"></div>
-                    <div class="calc-unit">sec</div>
-                  </div>
-
-                  <div class="calc-row">
-                    <div class="calc-label">Total Seismic Weight (W)</div>
-                    <div class="calc-value"><input type="number" id="W" value="5000" step="10" min="0" onchange="onInput()"></div>
-                    <div class="calc-unit">kN</div>
-                  </div>
-
-                  <div class="calc-row">
-                    <div class="calc-label">Importance Factor (I) <small class="text-muted">&mdash; auto from Structure Category</small></div>
-                    <div class="calc-value"><input type="number" id="I" value="1.0" step="0.1" min="0" onchange="onInput()"></div>
-                    <div class="calc-unit">&mdash;</div>
-                  </div>
-
-                  <div class="calc-row">
-                    <div class="calc-label">Response Reduction Factor (R) &mdash; IS 1893 Table 9</div>
-                    <div class="calc-value">
-                      <select id="rSelect" onchange="syncR(); onInput();">
-                        <option value="1.5">1.5 &mdash; Plain Masonry</option>
-                        <option value="2.0">2.0 &mdash; Ordinary RC Frame</option>
-                        <option value="3.0">3.0 &mdash; Special RC Frame</option>
-                        <option value="4.0">4.0 &mdash; Steel Braced Frame</option>
-                        <option value="5.0" selected>5.0 &mdash; SMRF</option>
-                      </select>
-                    </div>
-                    <div class="calc-unit">&mdash;</div>
-                  </div>
-
-                  <div class="calc-row">
-                    <div class="calc-label">Response Reduction Factor (R)</div>
-                    <div class="calc-value"><input type="number" id="R" value="5.0" step="0.5" min="1" onchange="onInput()"></div>
-                    <div class="calc-unit">&mdash;</div>
-                  </div>
-
-                  <div class="calc-row" id="row-vrs" style="display:none;">
-                    <div class="calc-label">V<sub>RS</sub> &mdash; Base Shear from Dynamic Analysis</div>
-                    <div class="calc-value"><input type="number" id="VRS" value="0" step="1" min="0" onchange="onInput()"></div>
-                    <div class="calc-unit">kN</div>
-                  </div>
-
-                  <!-- ── GRAPH ── -->
-                  <div class="graph-wrap mt-2">
-                    <h6>Response Spectrum &mdash; S<sub>a</sub>/g vs T (IS 1893:2016, Cl. 6.2.3.2)</h6>
-                    <canvas id="spectrumChart" height="220"></canvas>
-                    <p class="text-muted text-center mt-1 mb-0" style="font-size:11px;">
-                      Vertical marker shows your T<sub>H</sub>. All five site classes plotted.
-                      Highlighted curve = selected Site Class.
-                    </p>
-                  </div>
-
-                  <div class="p-3">
-                    <button class="btn btn-dark btn-sm" onclick="runAll()">&#9654; Calculate All Sheets</button>
-                    <button class="btn btn-secondary btn-sm ml-2" onclick="resetAll()">&#8635; Reset</button>
                   </div>
                 </div>
-                <!-- end input sheet -->
 
-                <!-- ══════════════════════════════════════════
-                     SHEET 2 — CALCULATION SHEET
-                ══════════════════════════════════════════ -->
-                <div class="sheet-panel" id="sheet-calc">
-                  <div class="sheet-header">&#128290; Calculation Sheet &mdash; IS 1893 (Part 1): 2016</div>
+                <!-- ══ SECTION 2: TIME PERIOD ══ -->
+                <div class="section-card">
+                  <h5>2. Fundamental Time Period (T)</h5>
 
-                  <div class="sec-div">Zone Factor Z &mdash; Table 2 Lookup (VLOOKUP)</div>
-                  <div class="calc-row"><div class="calc-label">Seismic Zone</div><div class="calc-value"><input class="out" type="text" id="c_zone" readonly></div><div class="calc-unit">&mdash;</div></div>
-                  <div class="calc-row"><div class="calc-label">Zone Factor (Z)</div><div class="calc-value"><input class="out" type="text" id="c_Z" readonly></div><div class="calc-unit">&mdash;</div></div>
-                  <div class="calc-row"><div class="calc-label">Importance Factor (I)</div><div class="calc-value"><input class="out" type="text" id="c_I" readonly></div><div class="calc-unit">&mdash;</div></div>
-                  <div class="calc-row"><div class="calc-label">Response Reduction Factor (R)</div><div class="calc-value"><input class="out" type="text" id="c_R" readonly></div><div class="calc-unit">&mdash;</div></div>
-
-                  <div class="sec-div">Spectral Acceleration A<sub>NH</sub> &mdash; Cl. 6.2.3.2 (IF Statement by T<sub>H</sub> &amp; Site Class)</div>
-                  <div class="calc-row"><div class="calc-label">Fundamental Period (T<sub>H</sub>)</div><div class="calc-value"><input class="out" type="text" id="c_TH" readonly></div><div class="calc-unit">sec</div></div>
-                  <div class="calc-row"><div class="calc-label">Site Class</div><div class="calc-value"><input class="out" type="text" id="c_siteClass" readonly></div><div class="calc-unit">&mdash;</div></div>
-                  <div class="calc-row"><div class="calc-label">Spectral Region (IF condition)</div><div class="calc-value"><input class="out" type="text" id="c_region" readonly style="font-size:11.5px;"></div><div class="calc-unit">&mdash;</div></div>
-                  <div class="calc-row"><div class="calc-label">A<sub>NH</sub> = S<sub>a</sub>/g</div><div class="calc-value"><input class="out" type="text" id="c_ANH" readonly></div><div class="calc-unit">&mdash;</div></div>
-
-                  <div class="sec-div">Design Seismic Coefficient A<sub>HD</sub> &mdash; Cl. 6.4.2</div>
-                  <div class="calc-row"><div class="calc-label">A<sub>HD</sub> = (Z &times; I &times; A<sub>NH</sub>) / (2 &times; R)</div><div class="calc-value"><input class="out" type="text" id="c_AHD" readonly></div><div class="calc-unit">&mdash;</div></div>
-                  <div class="calc-row"><div class="calc-label">A<sub>HD,min</sub> = (Z / 2) &times; (I / R)</div><div class="calc-value"><input class="out" type="text" id="c_AHD_min" readonly></div><div class="calc-unit">&mdash;</div></div>
-
-                  <div class="sec-div">Design Base Shear V<sub>B</sub> &mdash; Cl. 7.5.3</div>
-                  <div class="calc-row"><div class="calc-label">Total Seismic Weight (W)</div><div class="calc-value"><input class="out" type="text" id="c_W" readonly></div><div class="calc-unit">kN</div></div>
-                  <div class="calc-row">
-                    <div class="calc-label"><strong>V<sub>B</sub> = A<sub>HD</sub> &times; W</strong></div>
-                    <div class="calc-value"><input class="out" type="text" id="c_VB" readonly style="font-size:15px;font-weight:800;"></div>
-                    <div class="calc-unit">kN</div>
+                  <div class="radio-group mb-3">
+                    <label><input type="radio" name="tMode" value="codal" id="tCodeRadio" checked onchange="onTModeChange()"> &nbsp;Codal Formula (Cl. 7.6)</label>
+                    <label><input type="radio" name="tMode" value="manual" id="tManualRadio" onchange="onTModeChange()"> &nbsp;Manual Entry (from 3D analysis / software)</label>
                   </div>
 
-                  <div class="p-3">
-                    <button class="btn btn-dark btn-sm" onclick="runAll()">&#9654; Recalculate</button>
-                    <button class="btn btn-secondary btn-sm ml-2" onclick="resetAll()">&#8635; Reset</button>
+                  <!-- Codal inputs -->
+                  <div class="codal-inputs active" id="codalDiv">
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Structure Type for T<sub>a</sub></div>
+                      <div class="col-12 col-sm-5">
+                        <select class="in form-control" id="structType" style="background-color:LightBlue" onchange="onStructTypeChange()">
+                          <option value="rc_mrf">RC MRF — bare frame: T = 0.075 × h<sup>0.75</sup></option>
+                          <option value="rc_mrf_infill">RC MRF with brick infill: T = 0.09h / √d</option>
+                          <option value="steel_mrf">Steel MRF — bare frame: T = 0.085 × h<sup>0.75</sup></option>
+                          <option value="other">Other (shear wall / CBF / masonry): T = 0.09h / √d</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Height of Building (h)</div>
+                      <div class="col-12 col-sm-5">
+                        <input class="in form-control" style="background-color:LightBlue" type="number" id="bHeight" value="15" min="1" step="0.5"/>
+                      </div>
+                      <div class="col-2">m</div>
+                    </div>
+
+                    <div id="baseRow" class="row my-2 align-items-center" style="display:none!important">
+                      <div class="col-12 col-sm-5">Base Dimension along EQ direction (d)</div>
+                      <div class="col-12 col-sm-5">
+                        <input class="in form-control" style="background-color:LightBlue" type="number" id="bBase" value="20" min="1" step="0.5"/>
+                      </div>
+                      <div class="col-2">m</div>
+                    </div>
+
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Calculated T<sub>a</sub> (codal)</div>
+                      <div class="col-12 col-sm-5">
+                        <input class="out form-control out-hi" type="text" id="tCodal" readonly style="background-color:LightGray"/>
+                      </div>
+                      <div class="col-2">sec</div>
+                    </div>
+                    <p class="note-text ml-1">Note: As per IS 1893:2016 Cl. 7.6.2 — T<sub>a</sub> from 3D analysis should not exceed 1.25× the codal value for regular buildings.</p>
                   </div>
-                </div>
-                <!-- end calc sheet -->
 
-                <!-- ══════════════════════════════════════════
-                     SHEET 3 — VALIDATION CHECKS
-                ══════════════════════════════════════════ -->
-                <div class="sheet-panel" id="sheet-valid">
-                  <div class="sheet-header">&#9989; Validation Checks &mdash; IS 1893 (Part 1): 2016</div>
-
-                  <div class="sec-div">Check 1 &mdash; Minimum Base Shear (Cl. 8.2.4.1)</div>
-                  <div class="calc-row"><div class="calc-label">Computed V<sub>B</sub></div><div class="calc-value"><input class="out" type="text" id="v_VB" readonly></div><div class="calc-unit">kN</div></div>
-                  <div class="calc-row"><div class="calc-label">V<sub>B,min</sub> = 0.015 &times; W</div><div class="calc-value"><input class="out" type="text" id="v_VBmin" readonly></div><div class="calc-unit">kN</div></div>
-                  <div class="calc-row"><div class="calc-label">V<sub>B</sub> &ge; V<sub>B,min</sub> ? &nbsp;<small>(Cl. 8.2.4.1)</small></div><div class="calc-value"><input class="out" type="text" id="v_check1" readonly></div><div class="calc-unit">&mdash;</div></div>
-                  <div class="calc-row"><div class="calc-label"><strong>Governing V<sub>BD,H</sub></strong></div><div class="calc-value"><input class="out" type="text" id="v_VBD" readonly style="font-size:14px;font-weight:800;"></div><div class="calc-unit">kN</div></div>
-
-                  <div class="sec-div">Check 2 &mdash; Dynamic Scaling V<sub>BD</sub> / V<sub>RS</sub> &nbsp;<small>(Cl. 7.7.3)</small></div>
-                  <div class="calc-row"><div class="calc-label">Method of Analysis</div><div class="calc-value"><input class="out" type="text" id="v_method" readonly></div><div class="calc-unit">&mdash;</div></div>
-                  <div class="calc-row"><div class="calc-label">V<sub>BD,H</sub> (governing)</div><div class="calc-value"><input class="out" type="text" id="v_VBD2" readonly></div><div class="calc-unit">kN</div></div>
-                  <div class="calc-row"><div class="calc-label">V<sub>RS</sub> from Response Spectrum</div><div class="calc-value"><input class="out" type="text" id="v_VRS" readonly></div><div class="calc-unit">kN</div></div>
-                  <div class="calc-row"><div class="calc-label">Scaling Factor = V<sub>BD</sub> / V<sub>RS</sub></div><div class="calc-value"><input class="out" type="text" id="v_scale" readonly></div><div class="calc-unit">&mdash;</div></div>
-                  <div class="calc-row"><div class="calc-label">Scaling Required?</div><div class="calc-value"><input class="out" type="text" id="v_check2" readonly></div><div class="calc-unit">&mdash;</div></div>
-
-                  <div class="sec-div">Check 3 &mdash; Period Validity &nbsp;<small>(Cl. 7.6.2)</small></div>
-                  <div class="calc-row"><div class="calc-label">T<sub>H</sub> within 0.01 &ndash; 4.0 s ?</div><div class="calc-value"><input class="out" type="text" id="v_check3" readonly></div><div class="calc-unit">&mdash;</div></div>
-
-                  <div class="sec-div">Check 4 &mdash; A<sub>H</sub> Minimum &nbsp;<small>(Cl. 6.4.2 Note)</small></div>
-                  <div class="calc-row"><div class="calc-label">A<sub>HD</sub> &ge; (Z/2) &times; (I/R) ?</div><div class="calc-value"><input class="out" type="text" id="v_check4" readonly></div><div class="calc-unit">&mdash;</div></div>
-
-                  <div class="p-3">
-                    <button class="btn btn-dark btn-sm" onclick="runAll()">&#9654; Recalculate</button>
-                    <button class="btn btn-secondary btn-sm ml-2" onclick="resetAll()">&#8635; Reset</button>
+                  <!-- Manual inputs -->
+                  <div class="manual-inputs" id="manualDiv">
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Time Period T (from software / analysis)</div>
+                      <div class="col-12 col-sm-5">
+                        <input class="in form-control" style="background-color:LightBlue" type="number" id="tManual" value="0.5" min="0.01" step="0.01"/>
+                      </div>
+                      <div class="col-2">sec</div>
+                    </div>
+                    <p class="note-text ml-1">Note: T entered manually from 3D model / dynamic analysis. Ensure compliance with Cl. 7.6.2 cap if applicable.</p>
                   </div>
                 </div>
-                <!-- end validation sheet -->
+
+                <!-- ══ SECTION 3: RESULTS ══ -->
+                <div class="section-card">
+                  <h5>3. Results</h5>
+
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">Zone Factor (Z)</div>
+                    <div class="col-8 col-sm-5"><input id="oZ" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">Importance Factor (I)</div>
+                    <div class="col-8 col-sm-5"><input id="oI" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">Response Reduction Factor (R)</div>
+                    <div class="col-8 col-sm-5"><input id="oR" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">Damping Multiplier (η)</div>
+                    <div class="col-8 col-sm-5"><input id="oEta" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">Design Time Period (T)</div>
+                    <div class="col-8 col-sm-5"><input id="oT" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                    <div class="col-2">sec</div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">Spectral Acceleration Coefficient (S<sub>a</sub>/g) for selected soil</div>
+                    <div class="col-8 col-sm-5"><input id="oSag" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+
+                  <hr/>
+
+                  <!-- Big result boxes -->
+                  <div class="result-row">
+                    <div>
+                      <div class="ah-highlight">
+                        <div class="result-label" style="color:rgba(255,255,255,0.8)">Design Horizontal Seismic Coefficient</div>
+                        <div class="result-big" id="bigAh">—</div>
+                        <div style="font-size:11px; color:rgba(255,255,255,0.7)">A<sub>h</sub> = (Z/2)×(I/R)×(S<sub>a</sub>/g)</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="av-highlight">
+                        <div class="result-label" style="color:rgba(255,255,255,0.8)">Design Vertical Seismic Coefficient</div>
+                        <div class="result-big" id="bigAv">—</div>
+                        <div style="font-size:11px; color:rgba(255,255,255,0.7)">A<sub>v</sub> = (2/3) × A<sub>h</sub></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Detailed output fields -->
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5"><strong>Design Horizontal Seismic Coefficient (A<sub>h</sub>)</strong></div>
+                    <div class="col-8 col-sm-5"><input id="oAh" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5"><strong>Design Vertical Seismic Coefficient (A<sub>v</sub>)</strong></div>
+                    <div class="col-8 col-sm-5"><input id="oAv" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+
+                  <!-- Ah for all soils -->
+                  <hr/>
+                  <h6 class="mt-3" style="font-weight:700; color:#495057;">A<sub>h</sub> at same T for all Soil Types:</h6>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">A<sub>h</sub> — Type I (Rock)</div>
+                    <div class="col-8 col-sm-5"><input id="oAh1" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">A<sub>h</sub> — Type II (Medium soil)</div>
+                    <div class="col-8 col-sm-5"><input id="oAh2" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">A<sub>h</sub> — Type III (Soft soil)</div>
+                    <div class="col-8 col-sm-5"><input id="oAh3" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                </div>
+
+                <!-- ══ SECTION 4: GRAPH ══ -->
+                <div class="section-card">
+                  <h5>4. Response Spectrum — S<sub>a</sub>/g vs T (IS 1893:2016, Table 8)</h5>
+                  <p class="note-text mb-2">Curves shown at selected damping ratio. Vertical marker = design time period T. Shaded region = plateau (peak spectral acceleration).</p>
+                  <div id="chartWrap">
+                    <canvas id="sagChart"></canvas>
+                  </div>
+                  <hr/>
+                  <h5>5. A<sub>h</sub> vs T — All Soil Types</h5>
+                  <p class="note-text mb-2">A<sub>h</sub> curves for Zone, I, R, damping selected above. Vertical marker = design T.</p>
+                  <div id="chartWrap2">
+                    <canvas id="ahChart"></canvas>
+                  </div>
+                </div>
+
+                <!-- ══ REFERENCE NOTE ══ -->
+                <div class="section-card" style="background:#e8f4f8; border-color:#bee5eb;">
+                  <h5 style="color:#0c6674; border-color:#0c6674;">Reference — IS 1893:2016 Key Clauses</h5>
+                  <small>
+                    <b>Cl. 6.4.2:</b> A<sub>h</sub> = (Z/2)·(I/R)·(S<sub>a</sub>/g) &nbsp;|&nbsp;
+                    <b>Cl. 6.4.6:</b> A<sub>v</sub> = (2/3)·A<sub>h</sub> &nbsp;|&nbsp;
+                    <b>Cl. 6.4.5:</b> Damping multipliers per Table 7 &nbsp;|&nbsp;
+                    <b>Cl. 7.6.1:</b> T<sub>a</sub> = 0.075h<sup>0.75</sup> (RC bare MRF) &nbsp;|&nbsp;
+                    <b>Cl. 7.6.2:</b> T<sub>a</sub> = 0.09h/√d (with infill / other) &nbsp;|&nbsp;
+                    <b>Cl. 7.6.3:</b> T for steel = 0.085h<sup>0.75</sup> &nbsp;|&nbsp;
+                    <b>Table 8:</b> S<sub>a</sub>/g vs T for 3 soil types at 5% damping
+                  </small>
+                </div>
 
               </div><!-- end page-container -->
             </div>
@@ -363,7 +348,7 @@
         </div>
       </section>
     </main>
-  </div><!-- end content -->
+  </div>
 
   <div class="ad-side ad-block"><p>Advertisement - Sidebar</p></div>
 </div><!-- end e-con-inner -->
@@ -372,54 +357,42 @@
 <div class="subfooter-container">
   <h3 class="subfooter-title">CALCULATORS</h3>
   <div class="subfooter">
-    <div class="calculator-category">
-      <h3>Estimation Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Foundation_Quantity_Estimation">Foundation Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Column_Quantity_Estimation">Column Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Beam_Quantity_Estimation">Beam Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Slab_Quantity_Estimation">Slab Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Brick_Quantity_Estimation">Brick Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Quantity_Estimation">RCC Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Plate_Girder_Quantity_Estimation">Plate Girder Quantity Estimation</a></li>
-      </ul>
-    </div>
-    <div class="calculator-category">
-      <h3>Section Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">T Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">Circular Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">Pipe Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">Rectangular Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">Box Section Properties</a></li>
-      </ul>
-    </div>
-    <div class="calculator-category">
-      <h3>RCC Design Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Singly Reinforced Beam Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Doubly Reinforced Beam Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Column_Design">RCC Column Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_One_Way_Slab_Design">RCC 1 Way Slab Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Two_Way_Slab_Design">RCC 2 Way Slab Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Isolated_Footing_Design">Isolated Footing Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Combined_Footing_Design">Combined Footing Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Trapezoidal_Footing_Design">Trapezoidal Footing Design</a></li>
-      </ul>
-    </div>
-    <div class="calculator-category">
-      <h3>Geotechnical Engineering Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Important_Basic_Formulae">Important Basic Formulae</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Seive_Size_Analysis">Sieve Size Analysis</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Active_Earth_Pressure">Active Earth Pressure</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Passive_Earth_Pressure">Passive Earth Pressure</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Soil_Bearing_Capacity">Soil Bearing Capacity</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pile_Capacity">Pile Capacity</a></li>
-      </ul>
-    </div>
+    <div class="calculator-category"><h3>Estimation Calculators</h3><ul>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Foundation_Quantity_Estimation">Foundation Quantity Estimation</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Column_Quantity_Estimation">Column Quantity Estimation</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Beam_Quantity_Estimation">Beam Quantity Estimation</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Slab_Quantity_Estimation">Slab Quantity Estimation</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Brick_Quantity_Estimation">Brick Quantity Estimation</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Quantity_Estimation">RCC Quantity Estimation</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Plate_Girder_Quantity_Estimation">Plate Girder Quantity Estimation</a></li>
+    </ul></div>
+    <div class="calculator-category"><h3>Section Calculators</h3><ul>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">T Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">Circular Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">Pipe Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">Rectangular Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">Box Section Properties</a></li>
+    </ul></div>
+    <div class="calculator-category"><h3>RCC Design Calculators</h3><ul>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Singly Reinforced Beam Design</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Doubly Reinforced Beam Design</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Column_Design">RCC Column Design</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_One_Way_Slab_Design">RCC 1 Way Slab Design</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Two_Way_Slab_Design">RCC 2 Way Slab Design</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Isolated_Footing_Design">Isolated Footing Design</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Combined_Footing_Design">Combined Footing Design</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Trapezoidal_Footing_Design">Trapezoidal Footing Design</a></li>
+    </ul></div>
+    <div class="calculator-category"><h3>Geotechnical Engineering Calculators</h3><ul>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Important_Basic_Formulae">Important Basic Formulae</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Seive_Size_Analysis">Sieve Size Analysis</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Active_Earth_Pressure">Active Earth Pressure</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Passive_Earth_Pressure">Passive Earth Pressure</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Soil_Bearing_Capacity">Soil Bearing Capacity</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pile_Capacity">Pile Capacity</a></li>
+    </ul></div>
   </div>
 </div>
 
@@ -435,333 +408,250 @@
   </div>
 </footer>
 
-<!-- ══════════════════════════════════════════
-     JAVASCRIPT
-══════════════════════════════════════════ -->
 <script>
-  /* ── Zone table (VLOOKUP equivalent) ── */
-  const ZONE_Z = { II:0.10, III:0.16, IV:0.24, V:0.36 };
+/* ══════════════════════════════════════════════════════════════
+   IS 1893 : 2016 — Equivalent Static Method
+   ══════════════════════════════════════════════════════════════
 
-  /* ── Sa/g per IS 1893:2016 Cl. 6.2.3.2 ── */
-  function getSa(T, sc) {
-    const peak = (sc==='D'||sc==='E') ? 0.67 : (sc==='A') ? 0.40 : 0.55;
-    const Cv   = (sc==='D'||sc==='E') ? 1.67 : (sc==='A') ? 1.00 : 1.36;
-    const tail = (sc==='D'||sc==='E') ? 0.42 : (sc==='A') ? 0.25 : 0.34;
-    if      (T <= 0.10) return 1 + 15 * T;
-    else if (T <= peak) return 2.5;
-    else if (T <= 4.00) return Cv / T;
-    else                return tail;
+   Sa/g (5% damping) — Table 8:
+   Type I  (Rock):   plateau [0, 0.40], descent 1.00/T [0.40–4.0], floor 0.25
+   Type II (Medium): plateau [0, 0.55], descent 1.36/T [0.55–4.0], floor 0.34
+   Type III (Soft):  plateau [0, 0.67], descent 1.67/T [0.67–4.0], floor 0.42
+
+   For other damping multiply by η (Table 7).
+
+   Ah = (Z/2) × (I/R) × Sa/g
+   Av = (2/3) × Ah
+══════════════════════════════════════════════════════════════ */
+
+/* ── Sa/g at 5% damping ── */
+function sagAt5(T, soilType) {
+  if (T < 0) T = 0;
+  switch(soilType) {
+    case 1: // Rock
+      if (T <= 0.40) return 2.5;
+      if (T <= 4.00) return 1.00 / T;
+      return 0.25;
+    case 2: // Medium
+      if (T <= 0.55) return 2.5;
+      if (T <= 4.00) return 1.36 / T;
+      return 0.34;
+    case 3: // Soft
+      if (T <= 0.67) return 2.5;
+      if (T <= 4.00) return 1.67 / T;
+      return 0.42;
+  }
+  return 0;
+}
+
+/* ── Sa/g at given damping ── */
+function sag(T, soilType, eta) {
+  return sagAt5(T, soilType) * eta;
+}
+
+/* ── Time period — codal formula ── */
+function codalT(structType, h, d) {
+  switch(structType) {
+    case 'rc_mrf':        return 0.075 * Math.pow(h, 0.75);
+    case 'steel_mrf':     return 0.085 * Math.pow(h, 0.75);
+    case 'rc_mrf_infill':
+    case 'other':
+    default:              return 0.09 * h / Math.sqrt(d);
+  }
+}
+
+/* ── Badge updaters ── */
+function updateBadges() {
+  document.getElementById('zVal').textContent   = 'Z = ' + parseFloat(document.getElementById('zone').value).toFixed(2);
+  document.getElementById('iVal').textContent   = 'I = ' + parseFloat(document.getElementById('imp').value).toFixed(1);
+  document.getElementById('rVal').textContent   = 'R = ' + parseFloat(document.getElementById('rFactor').value);
+  document.getElementById('dampVal').textContent = '×' + parseFloat(document.getElementById('damp').value).toFixed(2);
+  const soilIdx = parseInt(document.getElementById('soil').value);
+  document.getElementById('soilVal').textContent = ['','Type I','Type II','Type III'][soilIdx];
+}
+
+/* ── T-Mode toggle ── */
+function onTModeChange() {
+  const codal = document.getElementById('tCodeRadio').checked;
+  document.getElementById('codalDiv').classList.toggle('active', codal);
+  document.getElementById('manualDiv').classList.toggle('active', !codal);
+  calculate();
+}
+
+/* ── Structure type → show/hide base dim ── */
+function onStructTypeChange() {
+  const st = document.getElementById('structType').value;
+  const needBase = (st === 'rc_mrf_infill' || st === 'other');
+  document.getElementById('baseRow').style.setProperty('display', needBase ? 'flex' : 'none', 'important');
+  calculate();
+}
+
+/* ── Chart instances ── */
+let sagChartInst = null;
+let ahChartInst  = null;
+
+/* ── Build T-array for graph (0.01 to 4.0, 200 pts) ── */
+function tArray(n) {
+  const arr = [];
+  for (let i = 0; i <= n; i++) arr.push(+(i * 4.0 / n).toFixed(3));
+  return arr;
+}
+
+/* ── Main calculate ── */
+function calculate() {
+  updateBadges();
+
+  const Z    = parseFloat(document.getElementById('zone').value);
+  const I    = parseFloat(document.getElementById('imp').value);
+  const R    = parseFloat(document.getElementById('rFactor').value);
+  const eta  = parseFloat(document.getElementById('damp').value);
+  const soil = parseInt(document.getElementById('soil').value);
+
+  /* T determination */
+  let T;
+  const codal = document.getElementById('tCodeRadio').checked;
+  if (codal) {
+    const st = document.getElementById('structType').value;
+    const h  = parseFloat(document.getElementById('bHeight').value) || 15;
+    const d  = parseFloat(document.getElementById('bBase').value)   || 20;
+    T = codalT(st, h, d);
+    document.getElementById('tCodal').value = T.toFixed(4);
+  } else {
+    T = parseFloat(document.getElementById('tManual').value) || 0.5;
   }
 
-  function getRegion(T, sc) {
-    const peak = (sc==='D'||sc==='E') ? 0.67 : (sc==='A') ? 0.40 : 0.55;
-    const Cv   = (sc==='D'||sc==='E') ? 1.67 : (sc==='A') ? 1.00 : 1.36;
-    if      (T <= 0.10) return 'Rising zone: Sa/g = 1 + 15T';
-    else if (T <= peak) return 'Plateau zone: Sa/g = 2.5';
-    else if (T <= 4.00) return 'Descending zone: Sa/g = ' + Cv + '/T';
-    else                return 'Long-period constant';
-  }
+  /* Sa/g for selected soil + damping */
+  const SaG_sel = sag(T, soil, eta);
 
-  /* ── Tab switching ── */
-  function showSheet(name) {
-    document.querySelectorAll('.sheet-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.sheet-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('sheet-' + name).classList.add('active');
-    const map = { input:0, calc:1, valid:2 };
-    document.querySelectorAll('.sheet-tab')[map[name]].classList.add('active');
-  }
+  /* Ah, Av */
+  const Ah = (Z / 2) * (I / R) * SaG_sel;
+  const Av = (2 / 3) * Ah;
 
-  /* ── Sync helpers ── */
-  function syncImportance() { document.getElementById('I').value = document.getElementById('structCat').value; }
-  function syncR()           { document.getElementById('R').value = document.getElementById('rSelect').value; }
-  function toggleDynamic()   {
-    document.getElementById('row-vrs').style.display =
-      document.getElementById('method').value === 'dynamic' ? 'flex' : 'none';
-  }
-  function toggleWidth() {
-    document.getElementById('row-width').style.display =
-      document.getElementById('frameType').value === 'other' ? 'flex' : 'none';
-  }
-  function autoCalcT() {
-    const h  = parseFloat(document.getElementById('height').value) || 0;
-    const ft = document.getElementById('frameType').value;
-    const d  = parseFloat(document.getElementById('planD').value) || 10;
-    if (h <= 0) return;
-    let T = ft==='rc' ? 0.075*Math.pow(h,0.75) :
-            ft==='steel' ? 0.085*Math.pow(h,0.75) :
-            0.09*h/Math.sqrt(d);
-    document.getElementById('TH').value = T.toFixed(3);
-    onInput();
-  }
+  /* Ah for all soils at same T (for comparison) */
+  const Ah1 = (Z/2)*(I/R)*sag(T,1,eta);
+  const Ah2 = (Z/2)*(I/R)*sag(T,2,eta);
+  const Ah3 = (Z/2)*(I/R)*sag(T,3,eta);
 
-  /* ── Output helpers ── */
-  function set(id, val) {
-    const el = document.getElementById(id);
-    if (el) { el.value = val; el.className = 'out'; }
-  }
-  function setS(id, val, type) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.value = val;
-    el.className = type==='pass' ? 'out out-pass' :
-                   type==='fail' ? 'out out-fail' : 'out out-warn';
-  }
+  /* Fill outputs */
+  document.getElementById('oZ').value   = Z.toFixed(2);
+  document.getElementById('oI').value   = I.toFixed(1);
+  document.getElementById('oR').value   = R.toFixed(1);
+  document.getElementById('oEta').value = eta.toFixed(2);
+  document.getElementById('oT').value   = T.toFixed(4);
+  document.getElementById('oSag').value = SaG_sel.toFixed(4);
+  document.getElementById('oAh').value  = Ah.toFixed(4);
+  document.getElementById('oAv').value  = Av.toFixed(4);
+  document.getElementById('oAh1').value = Ah1.toFixed(4);
+  document.getElementById('oAh2').value = Ah2.toFixed(4);
+  document.getElementById('oAh3').value = Ah3.toFixed(4);
 
-  /* ── Main calculation ── */
-  function runAll() {
-    const zone = document.getElementById('zoneSelect').value;
-    const Z    = ZONE_Z[zone];
-    const I    = parseFloat(document.getElementById('I').value);
-    const R    = parseFloat(document.getElementById('R').value);
-    const TH   = parseFloat(document.getElementById('TH').value);
-    const W    = parseFloat(document.getElementById('W').value);
-    const sc   = document.getElementById('siteClass').value;
-    const meth = document.getElementById('method').value;
-    const VRS  = parseFloat(document.getElementById('VRS').value) || 0;
+  /* Big display */
+  document.getElementById('bigAh').textContent = Ah.toFixed(4);
+  document.getElementById('bigAv').textContent = Av.toFixed(4);
 
-    if ([Z,I,R,TH,W].some(v => isNaN(v)||v<=0)) {
-      alert('Please fill all inputs correctly.');
-      return;
-    }
+  /* Charts */
+  drawSagChart(T, soil, eta);
+  drawAhChart(T, Z, I, R, eta);
+}
 
-    const ANH     = getSa(TH, sc);
-    const region  = getRegion(TH, sc);
-    const AHD     = (Z * I * ANH) / (2 * R);
-    const AHD_min = (Z / 2) * (I / R);
-    const VB      = AHD * W;
-    const VBmin   = 0.015 * W;
-    const VBD     = Math.max(VB, VBmin);
+/* ══ Sa/g vs T chart ══ */
+function drawSagChart(T_design, soilSel, eta) {
+  const Ts = tArray(300);
+  const s1 = Ts.map(t => sag(t, 1, eta));
+  const s2 = Ts.map(t => sag(t, 2, eta));
+  const s3 = Ts.map(t => sag(t, 3, eta));
 
-    /* — Calculation sheet — */
-    set('c_zone',     'Zone ' + zone);
-    set('c_Z',        Z.toFixed(2));
-    set('c_I',        I.toFixed(2));
-    set('c_R',        R.toFixed(2));
-    set('c_TH',       TH.toFixed(3) + ' s');
-    set('c_siteClass','Class ' + sc);
-    set('c_region',   region);
-    set('c_ANH',      ANH.toFixed(4));
-    set('c_AHD',      AHD.toFixed(4));
-    set('c_AHD_min',  AHD_min.toFixed(4));
-    set('c_W',        W.toFixed(2));
-    set('c_VB',       VB.toFixed(2) + ' kN');
+  const markerData = Ts.map(t => Math.abs(t - T_design) < 0.007 ? sag(t, soilSel, eta) : null);
 
-    /* — Validation sheet — */
-    set('v_VB',   VB.toFixed(2));
-    set('v_VBmin',VBmin.toFixed(2));
-    setS('v_check1',
-      VB >= VBmin ? 'PASS  —  VB >= 0.015W' : 'FAIL  —  VB < 0.015W  →  use VB,min',
-      VB >= VBmin ? 'pass' : 'fail');
-    set('v_VBD', VBD.toFixed(2));
-
-    set('v_method', meth==='dynamic' ? 'Dynamic / Response Spectrum' : 'Equivalent Static');
-    set('v_VBD2', VBD.toFixed(2));
-    set('v_VRS',  meth==='dynamic' ? VRS.toFixed(2) : 'N/A');
-
-    if (meth === 'dynamic') {
-      if (VRS <= 0) {
-        setS('v_scale',  'Enter VRS', 'warn');
-        setS('v_check2', 'Enter VRS to check', 'warn');
-      } else {
-        const sf = VBD / VRS;
-        set('v_scale', sf.toFixed(3));
-        setS('v_check2',
-          VRS < VBD ? 'YES  —  Scale dynamic results by ' + sf.toFixed(3)
-                    : 'NO  —  No scaling required  (VRS >= VBD)',
-          VRS < VBD ? 'warn' : 'pass');
+  const cfg = {
+    type: 'line',
+    data: {
+      labels: Ts,
+      datasets: [
+        { label: 'Type I — Rock/Hard Soil',   data: s1, borderColor:'#0d6efd', backgroundColor:'rgba(13,110,253,0.06)', borderWidth:2, pointRadius:0, fill:true, tension:0 },
+        { label: 'Type II — Medium Soil',      data: s2, borderColor:'#fd7e14', backgroundColor:'rgba(253,126,20,0.06)',  borderWidth:2, pointRadius:0, fill:true, tension:0 },
+        { label: 'Type III — Soft Soil',       data: s3, borderColor:'#dc3545', backgroundColor:'rgba(220,53,69,0.06)',   borderWidth:2, pointRadius:0, fill:true, tension:0 },
+        { label: `T = ${T_design.toFixed(3)} s (design)`,
+          data: markerData, borderColor:'#198754', backgroundColor:'#198754',
+          borderWidth:0, pointRadius: Ts.map(t => Math.abs(t - T_design) < 0.007 ? 8 : 0),
+          pointStyle:'triangle', showLine:false },
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        title: { display:true, text:'Response Spectrum — Sₐ/g vs T (IS 1893:2016)', font:{size:13} },
+        legend: { position:'top', labels:{ font:{size:11} } },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(4) ?? ''}` } },
+        annotation: {}
+      },
+      scales: {
+        x: { type:'linear', title:{ display:true, text:'Time Period T (sec)', font:{size:11} },
+             min:0, max:4.0, ticks:{stepSize:0.5} },
+        y: { title:{ display:true, text:'Sₐ/g', font:{size:11} }, min:0, max:3.0 }
       }
-    } else {
-      set('v_scale', 'N/A');
-      setS('v_check2', 'N/A  —  Static analysis selected', 'pass');
     }
-
-    const pOK = TH >= 0.01 && TH <= 4.0;
-    setS('v_check3',
-      pOK ? 'PASS  —  TH = ' + TH.toFixed(3) + ' s  (within 0.01 – 4.0 s)'
-          : 'WARNING  —  TH = ' + TH.toFixed(3) + ' s  outside typical range',
-      pOK ? 'pass' : 'warn');
-
-    const aOK = AHD >= AHD_min - 1e-9;
-    setS('v_check4',
-      aOK ? 'PASS  —  AHD (' + AHD.toFixed(4) + ')  >=  AHD,min (' + AHD_min.toFixed(4) + ')'
-          : 'FAIL  —  AHD below (Z/2)×(I/R) minimum',
-      aOK ? 'pass' : 'fail');
-
-    /* — Update graph marker — */
-    updateChart();
-    showSheet('calc');
-  }
-
-  /* ── Live graph update on any input change ── */
-  function onInput() { updateChart(); }
-
-  /* ══════════════════════════════════════════
-     CHART.JS — Response Spectrum
-  ══════════════════════════════════════════ */
-  let specChart = null;
-
-  const SC_CONFIG = {
-    A: { label:'Class A (Rock)',        color:'rgba(220,53,69,1)',   bg:'rgba(220,53,69,0.08)',  peak:0.40, Cv:1.00, tail:0.25 },
-    B: { label:'Class B',               color:'rgba(255,140,0,1)',   bg:'rgba(255,140,0,0.08)',  peak:0.55, Cv:1.36, tail:0.34 },
-    C: { label:'Class C (Medium)',       color:'rgba(40,167,69,1)',   bg:'rgba(40,167,69,0.08)', peak:0.55, Cv:1.36, tail:0.34 },
-    D: { label:'Class D (Stiff Soil)',   color:'rgba(0,123,255,1)',   bg:'rgba(0,123,255,0.08)', peak:0.67, Cv:1.67, tail:0.42 },
-    E: { label:'Class E (Soft Soil)',    color:'rgba(111,66,193,1)',  bg:'rgba(111,66,193,0.08)',peak:0.67, Cv:1.67, tail:0.42 }
   };
 
-  function buildSpectrumPoints(sc) {
-    const cfg = SC_CONFIG[sc];
-    const pts = [];
-    const STEPS = 500;
-    const T_MAX = 4.5;
+  if (sagChartInst) { sagChartInst.destroy(); }
+  sagChartInst = new Chart(document.getElementById('sagChart'), cfg);
+}
 
-    // Insert exact breakpoints so corners are sharp, rest is dense
-    const breakpoints = new Set([0, 0.10, cfg.peak, 4.0, T_MAX]);
+/* ══ Ah vs T chart ══ */
+function drawAhChart(T_design, Z, I, R, eta) {
+  const Ts = tArray(300);
+  const ahFn = (t, soil) => (Z/2)*(I/R)*sag(t, soil, eta);
+  const a1 = Ts.map(t => ahFn(t,1));
+  const a2 = Ts.map(t => ahFn(t,2));
+  const a3 = Ts.map(t => ahFn(t,3));
 
-    for (let i = 0; i <= STEPS; i++) {
-      breakpoints.add(parseFloat((i * T_MAX / STEPS).toFixed(4)));
-    }
+  // Vertical marker line as scatter
+  const mkY = Math.max(ahFn(T_design,1), ahFn(T_design,2), ahFn(T_design,3));
+  const markerLine = [{ x: T_design, y: 0 }, { x: T_design, y: mkY * 1.15 }];
 
-    Array.from(breakpoints).sort((a, b) => a - b).forEach(T => {
-      let Sa;
-      if      (T <= 0.10)      Sa = 1 + 15 * T;
-      else if (T <= cfg.peak)  Sa = 2.5;
-      else if (T <= 4.0)       Sa = cfg.Cv / T;
-      else                     Sa = cfg.tail;
-      pts.push({ x: parseFloat(T.toFixed(4)), y: parseFloat(Sa.toFixed(5)) });
-    });
-
-    return pts;
-  }
-
-  function initChart() {
-    const ctx = document.getElementById('spectrumChart').getContext('2d');
-    const selectedSC = document.getElementById('siteClass').value;
-    const TH = parseFloat(document.getElementById('TH').value) || 0.5;
-
-    const datasets = Object.keys(SC_CONFIG).map(sc => {
-      const cfg  = SC_CONFIG[sc];
-      const isSel = sc === selectedSC;
-      return {
-        label: cfg.label,
-        data:  buildSpectrumPoints(sc),
-        borderColor:     cfg.color,
-        backgroundColor: isSel ? cfg.bg : 'transparent',
-        borderWidth:     isSel ? 3 : 1.2,
-        borderDash:      isSel ? [] : [4, 3],
-        pointRadius:     0,
-        tension:         0,
-        fill:            isSel,
-        order:           isSel ? 0 : 1
-      };
-    });
-
-    // T_H vertical marker annotation via extra dataset
-    const Sa_at_TH = getSa(TH, selectedSC);
-    datasets.push({
-      label: 'Your T\u2095 = ' + TH.toFixed(3) + ' s  (Sa/g = ' + Sa_at_TH.toFixed(4) + ')',
-      data: [{ x: TH, y: 0 }, { x: TH, y: Sa_at_TH }],
-      borderColor: '#212529',
-      backgroundColor: '#212529',
-      borderWidth: 2,
-      borderDash: [6, 3],
-      pointRadius: [0, 6],
-      pointStyle: 'circle',
-      pointBackgroundColor: '#212529',
-      tension: 0,
-      fill: false,
-      order: -1
-    });
-
-    specChart = new Chart(ctx, {
-      type: 'line',
-      data: { datasets },
-      options: {
-        responsive: true,
-        interaction: { mode: 'index', intersect: false },
-        scales: {
-          x: {
-            type: 'linear',
-            title: { display: true, text: 'Period  T  (s)', font: { size: 12 } },
-            min: 0, max: 4.5,
-            ticks: { stepSize: 0.5 }
-          },
-          y: {
-            title: { display: true, text: 'Sa / g', font: { size: 12 } },
-            min: 0, max: 3.0,
-            ticks: { stepSize: 0.5 }
-          }
-        },
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: { font: { size: 11 }, boxWidth: 24, padding: 10 }
-          },
-          tooltip: {
-            callbacks: {
-              label: ctx => ctx.dataset.label + ': ' + (ctx.parsed.y !== undefined ? ctx.parsed.y.toFixed(4) : '')
-            }
-          }
-        }
+  const cfg = {
+    type: 'line',
+    data: {
+      labels: Ts,
+      datasets: [
+        { label: 'Ah — Type I (Rock)',     data: a1, borderColor:'#0d6efd', backgroundColor:'rgba(13,110,253,0.06)', borderWidth:2, pointRadius:0, fill:true, tension:0 },
+        { label: 'Ah — Type II (Medium)',  data: a2, borderColor:'#fd7e14', backgroundColor:'rgba(253,126,20,0.06)',  borderWidth:2, pointRadius:0, fill:true, tension:0 },
+        { label: 'Ah — Type III (Soft)',   data: a3, borderColor:'#dc3545', backgroundColor:'rgba(220,53,69,0.06)',   borderWidth:2, pointRadius:0, fill:true, tension:0 },
+        { label: `T = ${T_design.toFixed(3)} s`,
+          data: markerLine, type:'line', borderColor:'#198754', borderWidth:2,
+          borderDash:[6,4], pointRadius:0, showLine:true,
+          parsing:{ xAxisKey:'x', yAxisKey:'y' } },
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        title: { display:true, text:'Design Seismic Coefficient Aₕ vs T (IS 1893:2016)', font:{size:13} },
+        legend: { position:'top', labels:{ font:{size:11} } },
+        tooltip: { callbacks: { label: ctx => ctx.parsed.y != null ? `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(4)}` : '' } }
+      },
+      scales: {
+        x: { type:'linear', title:{ display:true, text:'Time Period T (sec)', font:{size:11} }, min:0, max:4.0, ticks:{stepSize:0.5} },
+        y: { title:{ display:true, text:'Aₕ', font:{size:11} }, min:0 }
       }
-    });
-  }
+    }
+  };
 
-  function updateChart() {
-    if (!specChart) return;
-    const selectedSC = document.getElementById('siteClass').value;
-    const TH = parseFloat(document.getElementById('TH').value) || 0.5;
-    const Sa_at_TH = getSa(TH, selectedSC);
+  if (ahChartInst) { ahChartInst.destroy(); }
+  ahChartInst = new Chart(document.getElementById('ahChart'), cfg);
+}
 
-    // Update spectrum datasets
-    let dsIdx = 0;
-    Object.keys(SC_CONFIG).forEach(sc => {
-      const cfg  = SC_CONFIG[sc];
-      const isSel = sc === selectedSC;
-      specChart.data.datasets[dsIdx].borderWidth     = isSel ? 3 : 1.2;
-      specChart.data.datasets[dsIdx].borderDash      = isSel ? [] : [4, 3];
-      specChart.data.datasets[dsIdx].fill            = isSel;
-      specChart.data.datasets[dsIdx].backgroundColor = isSel ? cfg.bg : 'transparent';
-      dsIdx++;
-    });
+/* ══ Event wiring ══ */
+function toggleMenu() { document.querySelector('header nav').classList.toggle('show'); }
 
-    // Update TH marker
-    const markerDs = specChart.data.datasets[5];
-    markerDs.data  = [{ x: TH, y: 0 }, { x: TH, y: Sa_at_TH }];
-    markerDs.label = 'Your T\u2095 = ' + TH.toFixed(3) + ' s  (Sa/g = ' + Sa_at_TH.toFixed(4) + ')';
+['zone','imp','rFactor','damp','soil','bHeight','bBase','tManual'].forEach(id => {
+  document.getElementById(id).addEventListener('change', calculate);
+  document.getElementById(id).addEventListener('input',  calculate);
+});
 
-    specChart.update();
-  }
-
-  /* ── Reset ── */
-  function resetAll() {
-    document.getElementById('zoneSelect').value = 'III';
-    document.getElementById('structCat').value  = '1.0';
-    document.getElementById('siteClass').value  = 'C';
-    document.getElementById('method').value     = 'static';
-    document.getElementById('frameType').value  = 'rc';
-    document.getElementById('rSelect').value    = '5.0';
-    document.getElementById('height').value     = '15';
-    document.getElementById('TH').value         = '0.50';
-    document.getElementById('W').value          = '5000';
-    document.getElementById('I').value          = '1.0';
-    document.getElementById('R').value          = '5.0';
-    document.getElementById('VRS').value        = '0';
-    document.getElementById('row-vrs').style.display   = 'none';
-    document.getElementById('row-width').style.display = 'none';
-    ['c_zone','c_Z','c_I','c_R','c_TH','c_siteClass','c_region','c_ANH',
-     'c_AHD','c_AHD_min','c_W','c_VB',
-     'v_VB','v_VBmin','v_check1','v_VBD','v_method','v_VBD2','v_VRS',
-     'v_scale','v_check2','v_check3','v_check4'].forEach(id => set(id,''));
-    updateChart();
-    showSheet('input');
-  }
-
-  function toggleMenu() {
-    document.querySelector('header nav').classList.toggle('show');
-  }
-
-  /* ── Init on load ── */
-  window.onload = function() { initChart(); };
+window.onload = () => { onStructTypeChange(); calculate(); };
 </script>
 </body>
 </html>
