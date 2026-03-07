@@ -3,22 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Construction-Calculator</title>
+  <title>Circular Section Properties | Construction-Calculator</title>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-
   <link rel="stylesheet" href="../../assets/css/main.css">
-
-
+  <style>
+    input.out-hi {
+      background-color: #d4edda !important;
+      font-weight: 700 !important;
+      color: #155724 !important;
+    }
+    #circSketch {
+      width: 100%;
+      max-width: 420px;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      background: #fff;
+      display: block;
+      margin-bottom: 16px;
+    }
+  </style>
 </head>
 <body style="background-color: teal;">
 
-
   <header>
     <div class="hamburger" onclick="toggleMenu()">☰</div>
-
     <div class="logo-container">
       <img src="../../assets/svg/logo.png" alt="Logo">
-      <span href="https://abilassg.github.io/Construction-Calculator/">Construction-Calculator</span>
+      <span>Construction-Calculator</span>
     </div>
     <nav>
       <a href="https://abilassg.github.io/Construction-Calculator/">Home</a>
@@ -29,274 +40,358 @@
     </nav>
   </header>
 
+  <div class="ad-block ad-top"><p>Advertisement - Top Banner</p></div>
 
-<div class="ad-block ad-top">
-  <p>Advertisement - Top Banner</p>
-</div>
+  <div class="e-con-inner">
 
-<div class="e-con-inner">
-  <!-- Left sidebar: Menu -->
-  <div class="ad-side ad-block" aria-label="Primary Navigation">
-    <h3>Section Properties Calculators</h3>
-    <ul>
-      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">T Section Properties</a></li>
-      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section Properties</a></li>
-      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">Rectangular Section Properties</a></li>
-      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties" class="active">Circular Section Properties</a></li>
-      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">Pipe Section Properties</a></li>
-      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">Box Section Properties</a></li>
-      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section Properties</a></li>
-      <!--
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Channel_Section_Properties">Channel Section Properties</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Composite_Section_Properties">Composite Section Properties</a></li>
-     -->
+    <div class="ad-side ad-block" aria-label="Primary Navigation">
+      <h3>Section Properties Calculators</h3>
+      <ul>
+        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">T Section Properties</a></li>
+        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section Properties</a></li>
+        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">Rectangular Section Properties</a></li>
+        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties" class="active">Circular Section Properties</a></li>
+        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">Pipe Section Properties</a></li>
+        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">Box Section Properties</a></li>
+        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section Properties</a></li>
+      </ul>
+    </div>
 
-    </ul>
-  </div>
+    <div class="content">
+      <main id="main">
+        <section id="Calculation">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="page-container p-4 my-2 border">
 
+                  <h3><strong>Circular Section Properties Calculator</strong></h3>
+                  <p class="text-muted mb-3" style="font-size:12.5px;">
+                    Solid circular cross-section. ZZ = horizontal centroidal axis, YY = vertical centroidal axis.
+                    By symmetry, I<sub>ZZ</sub> = I<sub>YY</sub> and all centroidal distances equal D/2.
+                  </p>
 
+                  <!-- INTERACTIVE SKETCH -->
+                  <canvas id="circSketch" height="320"></canvas>
 
-  <div class="content">
-    <main id="main">
-      <Section id="Calculation">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="page-container p-4 my-2 mx-4 border">
-                <h3><strong>Circular Section Properties Calculator</strong></h3>
-                <img src="../../assets/svg/Circular_Section_Properties_00.jpg" alt="Circular_Section_Properties_00" width="200">
-
-                  <div class="container my-4 mx-4">
-                      <h3><strong>Inputs:</strong></h3>
-                      <form id="calcForm">
-
-                        <div class="row my-2">
-                        <div class="col-12">Diameter of Circular Section (D)</div>
+                  <!-- INPUTS -->
+                  <div class="container my-4">
+                    <h3><strong>Inputs:</strong></h3>
+                    <form id="calcForm">
+                      <div class="row my-2">
+                        <div class="col-12">Diameter (D)</div>
                         <div class="col-8">
-                          <input class="in form-control" style="background-color: LightBlue" type="text" id="F15" value="100" size="5" required>
+                          <input class="in form-control" style="background-color:LightBlue" type="number" id="F15" value="100" min="1" step="1" />
                         </div>
                         <div class="col-4">mm</div>
-                        </div>
-
-                      </form>
+                      </div>
+                    </form>
                   </div>
-                  <hr/>
-                  <div class="container my-4 mx-4">
-                      <h3><strong>Outputs:</strong></h3>
-                                           <div class="row my-2">
-                                             <div class="col-12">Area of Circular Section (A)</div>
-                                             <div class="col-8">
-                                                 <input id="F24" class="out form-control" type='text' readonly='readonly' value="7853.98" style='background-color: LightGray'>
-                                             </div>
-                                             <div class="col-2">mm<sup>2</sup></div>
-                                         </div>
-                                         <div class="row my-2">
-                                             <div class="col-12">CG from Top/Bottom (<span style="text-decoration: overline;">Y</span>)</div>
-                                             <div class="col-8">
-                                                 <input id="F25" class="out form-control" type='text' readonly='readonly' value="50" style='background-color: LightGray'>
-                                             </div>
-                                             <div class="col-2">mm</div>
-                                         </div>
-                                         <div class="row my-2">
-                                             <div class="col-12">Moment of Inertia about zz (I<sub>ZZ</sub>)</div>
-                                             <div class="col-8">
-                                                 <input id="F26" class="out form-control" type='text' readonly='readonly' value="4908738.52" style='background-color: LightGray'>
-                                             </div>
-                                             <div class="col-2">mm<sup>4</sup></div>
-                                         </div>
-                                         <div class="row my-2">
-                                             <div class="col-12">Radius of Gyration (R<sub>ZZ</sub>)</div>
-                                             <div class="col-8">
-                                                 <input id="F27" class="out form-control" type='text' readonly='readonly' value="25" style='background-color: LightGray'>
-                                             </div>
-                                             <div class="col-2">mm</div>
-                                         </div>
-                                         <div class="row my-2">
-                                             <div class="col-12">NPA<sub>YY</sub> from Top/Bottom</div>
-                                             <div class="col-8">
-                                                 <input id="F28" class="out form-control" type='text' readonly='readonly' value="50" style='background-color: LightGray'>
-                                             </div>
-                                             <div class="col-2">mm</div>
-                                         </div>
-                                         <div class="row my-2">
-                                             <div class="col-12">Elastic section modulus (Ze<sub>ZZ</sub>)</div>
-                                             <div class="col-8">
-                                                 <input id="F29" class="out form-control" type='text' readonly='readonly' value="98174.77" style='background-color: LightGray'>
-                                             </div>
-                                             <div class="col-2">mm<sup>3</sup></div>
-                                         </div>
-                                         <div class="row my-2">
-                                             <div class="col-12">Plastic section modulus (Zp<sub>ZZ</sub>)</div>
-                                             <div class="col-8">
-                                                 <input id="F30" class="out form-control" type='text' readonly='readonly' value="166666.67" style='background-color: LightGray'>
-                                             </div>
-                                             <div class="col-2">mm<sup>3</sup></div>
-                                         </div>
-                                         <div class="row my-2">
-                                             <div class="col-12">Moment of Inertia about yy (I<sub>YY</sub>)</div>
-                                             <div class="col-8">
-                                                 <input id="F31" class="out form-control" type='text' readonly='readonly' value="4908738.52" style='background-color: LightGray'>
-                                             </div>
-                                             <div class="col-2">mm<sup>4</sup></div>
-                                         </div>
-                                         <div class="row my-2">
-                                             <div class="col-12">Radius of Gyration (R<sub>YY</sub>)</div>
-                                             <div class="col-8">
-                                                 <input id="F32" class="out form-control" type='text' readonly='readonly' value="25" style='background-color: LightGray'>
-                                             </div>
-                                             <div class="col-2">mm</div>
-                                         </div>
-                                         <div class="row my-2">
-                                             <div class="col-12">NPA<sub>ZZ</sub> from Top/Bottom</div>
-                                             <div class="col-8">
-                                                 <input id="F33" class="out form-control" type='text' readonly='readonly' value="50" style='background-color: LightGray'>
-                                             </div>
-                                             <div class="col-2">mm</div>
-                                         </div>
-                                         <div class="row my-2">
-                                             <div class="col-12">Elastic section modulus (Ze<sub>YY</sub>)</div>
-                                             <div class="col-8">
-                                                 <input id="F34" class="out form-control" type='text' readonly='readonly' value="98174.77" style='background-color: LightGray'>
-                                             </div>
-                                             <div class="col-2">mm<sup>3</sup></div>
-                                         </div>
-                                         <div class="row my-2">
-                                             <div class="col-12">Plastic section modulus (Zp<sub>YY</sub>)</div>
-                                             <div class="col-8">
-                                                 <input id="F35" class="out form-control" type='text' readonly='readonly' value="166666.67" style='background-color: LightGray'>
-                                             </div>
-                                             <div class="col-2">mm<sup>3</sup></div>
-                                         </div>
+
+                  <hr />
+
+                  <!-- OUTPUTS -->
+                  <div class="container my-4">
+                    <h3><strong>Outputs:</strong></h3>
+
+                    <div class="row my-2">
+                      <div class="col-12">Area (A = &pi;D²/4)</div>
+                      <div class="col-8"><input id="F24" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-2">mm<sup>2</sup></div>
+                    </div>
+
+                    <div class="row my-2">
+                      <div class="col-12">CG from Top / Bottom (= D/2)</div>
+                      <div class="col-8"><input id="F25" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-2">mm</div>
+                    </div>
+
+                    <h3 class="mt-4"><strong>About ZZ axis (horizontal centroidal):</strong></h3>
+
+                    <div class="row my-2">
+                      <div class="col-12">Moment of Inertia (I<sub>ZZ</sub> = &pi;D⁴/64)</div>
+                      <div class="col-8"><input id="F26" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-2">mm<sup>4</sup></div>
+                    </div>
+
+                    <div class="row my-2">
+                      <div class="col-12">Radius of Gyration (r<sub>ZZ</sub> = D/4)</div>
+                      <div class="col-8"><input id="F27" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-2">mm</div>
+                    </div>
+
+                    <div class="row my-2">
+                      <div class="col-12">Neutral Axis from Top / Bottom (= D/2)</div>
+                      <div class="col-8"><input id="F28" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-2">mm</div>
+                    </div>
+
+                    <div class="row my-2">
+                      <div class="col-12">Elastic Section Modulus (Z<sub>e,ZZ</sub> = &pi;D³/32)</div>
+                      <div class="col-8"><input id="F29" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-2">mm<sup>3</sup></div>
+                    </div>
+
+                    <div class="row my-2">
+                      <div class="col-12">Plastic Section Modulus (Z<sub>p,ZZ</sub> = D³/6)</div>
+                      <div class="col-8"><input id="F30" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-2">mm<sup>3</sup></div>
+                    </div>
+
+                    <h3 class="mt-4"><strong>About YY axis (vertical centroidal):</strong></h3>
+
+                    <div class="row my-2">
+                      <div class="col-12">Moment of Inertia (I<sub>YY</sub> = I<sub>ZZ</sub>)</div>
+                      <div class="col-8"><input id="F31" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-2">mm<sup>4</sup></div>
+                    </div>
+
+                    <div class="row my-2">
+                      <div class="col-12">Radius of Gyration (r<sub>YY</sub> = D/4)</div>
+                      <div class="col-8"><input id="F32" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-2">mm</div>
+                    </div>
+
+                    <div class="row my-2">
+                      <div class="col-12">Neutral Axis from Left / Right (= D/2)</div>
+                      <div class="col-8"><input id="F33" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-2">mm</div>
+                    </div>
+
+                    <div class="row my-2">
+                      <div class="col-12">Elastic Section Modulus (Z<sub>e,YY</sub> = Z<sub>e,ZZ</sub>)</div>
+                      <div class="col-8"><input id="F34" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-2">mm<sup>3</sup></div>
+                    </div>
+
+                    <div class="row my-2">
+                      <div class="col-12">Plastic Section Modulus (Z<sub>p,YY</sub> = Z<sub>p,ZZ</sub>)</div>
+                      <div class="col-8"><input id="F35" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-2">mm<sup>3</sup></div>
+                    </div>
 
                   </div>
+                </div>
               </div>
-              <script>
-document.addEventListener('input', function (event) {
-const F15 = parseFloat(document.getElementById('F15').value) || 100.00;
-
-const F24 = Math.PI / 4 * Math.pow(F15, 2);
-const F25 = F15 / 2;
-const F26 = Math.PI / 4 * Math.pow(F15 / 2, 4);
-const F27 = Math.sqrt(F26 / F24);
-const F28 = F25;
-const F29 = F26 / F28;
-const F30 = 4 / 3 * Math.pow(F15 / 2, 3);
-const F31 = Math.PI / 4 * Math.pow(F15 / 2, 4);
-const F32 = Math.sqrt(F31 / F24);
-const F33 = F15 / 2;
-const F34 = F31 / F33;
-const F35 = 4 / 3 * Math.pow(F15 / 2, 3);
-
-// Assign values to output fields
-document.getElementById('F24').value = F24.toFixed(2);
-document.getElementById('F25').value = F25.toFixed(2);
-document.getElementById('F26').value = F26.toFixed(2);
-document.getElementById('F27').value = F27.toFixed(2);
-document.getElementById('F28').value = F28.toFixed(2);
-document.getElementById('F29').value = F29.toFixed(2);
-document.getElementById('F30').value = F30.toFixed(2);
-document.getElementById('F31').value = F31.toFixed(2);
-document.getElementById('F32').value = F32.toFixed(2);
-document.getElementById('F33').value = F33.toFixed(2);
-document.getElementById('F34').value = F34.toFixed(2);
-document.getElementById('F35').value = F35.toFixed(2);
-
-// Repeat for other output fields as needed
-});
-</script>
             </div>
           </div>
-        </div>
-      </Section>
-    </main>
+        </section>
+      </main>
+    </div>
+
+    <div class="ad-side ad-block"><p>Advertisement - Sidebar</p></div>
   </div>
-  <div class="ad-side ad-block">
-    <p>Advertisement - Sidebar</p>
-  </div>
-</div>
 
-
-<div class="subfooter-container">
-  <h3 class="subfooter-title">CALCULATORS</h3>
-  <div class="subfooter">
-    <div class="calculator-category">
-      <h3>Estimation Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Foundation_Quantity_Estimation">Foundation Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Column_Quantity_Estimation">Column Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Beam_Quantity_Estimation">Beam Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Slab_Quantity_Estimation">Slab Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Brick_Quantity_Estimation">Brick Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Quantity_Estimation">RCC Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Plate_Girder_Quantity_Estimation">Plate Girder Quantity Estimation</a></li>
-      </ul>
-
-    </div>
-    <div class="calculator-category">
-      <h3>Section Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">T Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">Circular Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">Pipe Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">Rectangular Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">Box Section Properties</a></li>
-        <!--
-                <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Channel_Section_Properties">Channel Section Properties</a></li>
-                <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Composite_Section_Properties">Composite Section Properties</a></li>
-        -->
-      </ul>
-
-    </div>
-    <div class="calculator-category">
-      <h3>RCC Design Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Singly Reinforced Beam Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Doubly Reinforced Beam Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Column_Design">RCC Column Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_One_Way_Slab_Design">RCC 1 Way Slab Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Two_Way_Slab_Design">RCC 2 Way Slab Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Isolated_Footing_Design">Isolated Footing Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Combined_Footing_Design">Combined Footing Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Trapezoidal_Footing_Design">Trapezoidal Footing Design</a></li>
-      </ul>
-
-    </div>
-    <div class="calculator-category">
-      <h3>Geotechnical Engineering Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Important_Basic_Formulae">Important Basic Formulae</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Seive_Size_Analysis">Sieve Size Analysis</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Active_Earth_Pressure">Active Earth Pressure</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Passive_Earth_Pressure">Passive Earth Pressure</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Soil_Bearing_Capacity">Soil Bearing Capacity</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pile_Capacity">Pile Capacity</a></li>
-      </ul>
+  <div class="subfooter-container">
+    <h3 class="subfooter-title">CALCULATORS</h3>
+    <div class="subfooter">
+      <div class="calculator-category">
+        <h3>Estimation Calculators</h3>
+        <ul>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Foundation_Quantity_Estimation">Foundation Quantity Estimation</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Column_Quantity_Estimation">Column Quantity Estimation</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Beam_Quantity_Estimation">Beam Quantity Estimation</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Slab_Quantity_Estimation">Slab Quantity Estimation</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Brick_Quantity_Estimation">Brick Quantity Estimation</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Quantity_Estimation">RCC Quantity Estimation</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Plate_Girder_Quantity_Estimation">Plate Girder Quantity Estimation</a></li>
+        </ul>
+      </div>
+      <div class="calculator-category">
+        <h3>Section Calculators</h3>
+        <ul>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section Properties</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">T Section Properties</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">Circular Section Properties</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">Pipe Section Properties</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">Rectangular Section Properties</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section Properties</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">Box Section Properties</a></li>
+        </ul>
+      </div>
+      <div class="calculator-category">
+        <h3>RCC Design Calculators</h3>
+        <ul>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Singly Reinforced Beam Design</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Doubly Reinforced Beam Design</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Column_Design">RCC Column Design</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_One_Way_Slab_Design">RCC 1 Way Slab Design</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Two_Way_Slab_Design">RCC 2 Way Slab Design</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Isolated_Footing_Design">Isolated Footing Design</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Combined_Footing_Design">Combined Footing Design</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Trapezoidal_Footing_Design">Trapezoidal Footing Design</a></li>
+        </ul>
+      </div>
+      <div class="calculator-category">
+        <h3>Geotechnical Engineering Calculators</h3>
+        <ul>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Important_Basic_Formulae">Important Basic Formulae</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Seive_Size_Analysis">Sieve Size Analysis</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Active_Earth_Pressure">Active Earth Pressure</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Passive_Earth_Pressure">Passive Earth Pressure</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Soil_Bearing_Capacity">Soil Bearing Capacity</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pile_Capacity">Pile Capacity</a></li>
+        </ul>
+      </div>
     </div>
   </div>
-</div>
 
-<footer>
+  <footer>
     <div class="footer-container">
-        <div class="footer-icons">
-            <a href="#"><img src="../../assets/svg/telegram-favicon.png" alt="Telegram"></a>
-            <a href="#"><img src="../../assets/svg/youtube-favicon.png" alt="YouTube"></a>
-            <a href="#"><img src="../../assets/svg/instagram-favicon.png" alt="Instagram"></a>
-            <a href="#"><img src="../../assets/svg/x-favicon.png" alt="X"></a>
-        </div>
-        <p>&copy; 2025 Your Website Name. All rights reserved.</p>
+      <div class="footer-icons">
+        <a href="#"><img src="../../assets/svg/telegram-favicon.png" alt="Telegram"></a>
+        <a href="#"><img src="../../assets/svg/youtube-favicon.png" alt="YouTube"></a>
+        <a href="#"><img src="../../assets/svg/instagram-favicon.png" alt="Instagram"></a>
+        <a href="#"><img src="../../assets/svg/x-favicon.png" alt="X"></a>
+      </div>
+      <p>&copy; 2025 Your Website Name. All rights reserved.</p>
     </div>
-</footer>
-
-
+  </footer>
 
 <script>
-  function toggleMenu() {
-    const nav = document.querySelector("header nav");
-    nav.classList.toggle("show");
+/* ═══════════════════════════════════════════════
+   CALCULATION ENGINE
+   D = diameter,  R = D/2
+   Izz = Iyy = π/4·R⁴  (= π/64·D⁴)
+   rg  = D/4
+   Ze  = π/32·D³ = Izz/R
+   Zp  = 4/3·R³  = D³/6
+═══════════════════════════════════════════════ */
+function calculate() {
+  const D = parseFloat(document.getElementById('F15').value);
+  const ids = ['F24','F25','F26','F27','F28','F29','F30','F31','F32','F33','F34','F35'];
+  if (isNaN(D) || D <= 0) {
+    ids.forEach(id => { document.getElementById(id).value = ''; });
+    drawSketch(100); return;
   }
-</script>
+  const R  = D / 2;
+  const A  = Math.PI / 4 * D * D;
+  const cg = R;
+  const I  = Math.PI / 4 * Math.pow(R, 4);
+  const rg = Math.sqrt(I / A);           // = D/4
+  const Ze = I / R;
+  const Zp = (4 / 3) * Math.pow(R, 3);  // = D³/6
 
+  document.getElementById('F24').value = A.toFixed(2);
+  document.getElementById('F25').value = cg.toFixed(2);
+  document.getElementById('F26').value = I.toFixed(2);
+  document.getElementById('F27').value = rg.toFixed(2);
+  document.getElementById('F28').value = cg.toFixed(2);
+  document.getElementById('F29').value = Ze.toFixed(2);
+  document.getElementById('F30').value = Zp.toFixed(2);
+  document.getElementById('F31').value = I.toFixed(2);
+  document.getElementById('F32').value = rg.toFixed(2);
+  document.getElementById('F33').value = cg.toFixed(2);
+  document.getElementById('F34').value = Ze.toFixed(2);
+  document.getElementById('F35').value = Zp.toFixed(2);
+
+  drawSketch(D);
+}
+
+/* ═══════════════════════════════════════════════
+   INTERACTIVE SKETCH — all text horizontal
+   Zones:
+     Left  (80px) : D/2 vertical bracket + label
+     Right (100px): D dim line + label (horizontal)
+     Top   (50px) : D/2 horizontal bracket + label, YY label
+     Bottom(48px) : spare
+═══════════════════════════════════════════════ */
+function drawSketch(D) {
+  const canvas = document.getElementById('circSketch');
+  const CW = Math.min(canvas.parentElement.clientWidth - 4, 460);
+  const CH = 320;
+  canvas.width = CW; canvas.height = CH;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, CW, CH);
+
+  if (!D || D <= 0) {
+    ctx.fillStyle = '#dc3545'; ctx.font = '13px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('Invalid diameter', CW/2, CH/2); return;
+  }
+
+  const mL = 80, mR = 100, mT = 52, mB = 48;
+  const drawW = CW - mL - mR;
+  const drawH = CH - mT - mB;
+  const sc  = Math.min(drawW, drawH) / D;
+  const pxR = D / 2 * sc;
+
+  // Circle centre
+  const cx = mL + drawW / 2;
+  const cy = mT + drawH / 2;
+
+  /* ── Circle ── */
+  ctx.beginPath();
+  ctx.arc(cx, cy, pxR, 0, 2 * Math.PI);
+  ctx.fillStyle = '#cfe2ff'; ctx.fill();
+  ctx.strokeStyle = '#343a40'; ctx.lineWidth = 2; ctx.stroke();
+
+  /* ── Centroidal axes (dashed red) ── */
+  const ext = 14;
+  ctx.strokeStyle = '#dc3545'; ctx.lineWidth = 1.2; ctx.setLineDash([5, 4]);
+  ctx.beginPath(); ctx.moveTo(cx - pxR - ext, cy); ctx.lineTo(cx + pxR + ext, cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, cy - pxR - ext); ctx.lineTo(cx, cy + pxR + ext); ctx.stroke();
+  ctx.setLineDash([]);
+
+  /* ── Centroid cross ── */
+  ctx.strokeStyle = '#dc3545'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cx - 7, cy); ctx.lineTo(cx + 7, cy);
+  ctx.moveTo(cx, cy - 7); ctx.lineTo(cx, cy + 7);
+  ctx.stroke();
+
+  /* ── Axis labels (both horizontal) ── */
+  ctx.font = 'bold 10px sans-serif'; ctx.fillStyle = '#dc3545';
+  ctx.textAlign = 'right';
+  ctx.fillText('ZZ', cx - pxR - ext - 3, cy + 4);      // left of circle
+  ctx.textAlign = 'center';
+  ctx.fillText('YY', cx, cy - pxR - ext - 5);            // above circle
+
+  /* ── D dimension line — right side, vertical, label horizontal ── */
+  const dimX = cx + pxR + 26;
+  ctx.strokeStyle = '#495057'; ctx.fillStyle = '#495057'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(dimX - 5, cy - pxR); ctx.lineTo(dimX + 5, cy - pxR);  // top tick
+  ctx.moveTo(dimX - 5, cy + pxR); ctx.lineTo(dimX + 5, cy + pxR);  // bot tick
+  ctx.moveTo(dimX, cy - pxR);     ctx.lineTo(dimX, cy + pxR);
+  ctx.stroke();
+  tip(ctx, dimX, cy - pxR, 'up');
+  tip(ctx, dimX, cy + pxR, 'down');
+  ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText(`D = ${D} mm`, dimX + 8, cy + 4);         // centred vertically
+
+  /* ── D/2 vertical bracket — left margin, centroid → bottom ── */
+  const vbX = cx - pxR - 22;
+  ctx.strokeStyle = '#198754'; ctx.fillStyle = '#198754'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(vbX + 5, cy);      ctx.lineTo(vbX, cy);
+  ctx.lineTo(vbX, cy + pxR);   ctx.lineTo(vbX + 5, cy + pxR);
+  ctx.stroke();
+  ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'right';
+  ctx.fillText(`D/2 = ${(D/2).toFixed(1)} mm`, vbX - 3, (cy + cy + pxR) / 2 + 4);
+
+  /* ── D/2 horizontal bracket — top margin, left edge → centroid ── */
+  const hbY = cy - pxR - 18;
+  ctx.strokeStyle = '#198754'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cx - pxR, hbY + 5); ctx.lineTo(cx - pxR, hbY);
+  ctx.lineTo(cx, hbY);            ctx.lineTo(cx, hbY + 5);
+  ctx.stroke();
+  ctx.fillStyle = '#198754'; ctx.textAlign = 'center';
+  ctx.fillText(`D/2 = ${(D/2).toFixed(1)} mm`, cx - pxR / 2, hbY - 5);
+}
+
+function tip(ctx, x, y, dir) {
+  ctx.fillStyle = '#495057'; ctx.beginPath();
+  if (dir === 'up')   { ctx.moveTo(x,y); ctx.lineTo(x-4,y+8); ctx.lineTo(x+4,y+8); }
+  if (dir === 'down') { ctx.moveTo(x,y); ctx.lineTo(x-4,y-8); ctx.lineTo(x+4,y-8); }
+  ctx.closePath(); ctx.fill();
+}
+
+function toggleMenu() { document.querySelector('header nav').classList.toggle('show'); }
+
+document.getElementById('F15').addEventListener('input', calculate);
+window.addEventListener('resize', () => drawSketch(parseFloat(document.getElementById('F15').value) || 100));
+window.onload = calculate;
+</script>
 </body>
 </html>
