@@ -197,12 +197,12 @@
 
                     <div class="row my-2">
                       <div class="col-12">Reaction at A (R<sub>A</sub>)</div>
-                      <div class="col-8"><input id="oRA" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oRA" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">kN</div>
                     </div>
                     <div class="row my-2">
                       <div class="col-12">Reaction at B (R<sub>B</sub>)</div>
-                      <div class="col-8"><input id="oRB" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oRB" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">kN</div>
                     </div>
                   </div>
@@ -227,40 +227,64 @@
                     </div>
                     <div class="row my-2">
                       <div class="col-12">Location of M<sub>max</sub> from A</div>
-                      <div class="col-8"><input id="oXM" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oXM" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">m</div>
                     </div>
                     <div class="row my-2">
                       <div class="col-12">Location of y<sub>max</sub> from A</div>
-                      <div class="col-8"><input id="oXY" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oXY" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">m</div>
                     </div>
                   </div>
 
-                  <!-- ═══ SLIDER ═══ -->
+                                    <!-- SECTION X -->
                   <div class="container my-4">
                     <h3><strong>Values at Section x:</strong>
                       <span class="slider-val-box" id="sliderLabel">x = 3.000 m</span>
                     </h3>
-                    <div class="slider-wrap">
+
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-md-auto mb-1">Input mode:</div>
+                      <div class="col-8 col-md-4">
+                        <select class="in form-control form-control-sm" style="background-color:LightBlue" id="xMode" onchange="onXModeChange()">
+                          <option value="slider" selected>Slider</option>
+                          <option value="input">User Input</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div id="sliderWrap" class="slider-wrap">
                       <input type="range" id="xSlider" min="0" max="1000" value="500" oninput="onSlider()">
-                      <div class="slider-labels"><span>0 m</span><span id="sliderMax">L m</span></div>
+                      <div class="slider-labels"><span>0 m (A)</span><span id="sliderMax">L m</span></div>
+                    </div>
+
+                    <div id="userInputWrap" style="display:none;" class="row my-2 align-items-center">
+                      <div class="col-12">Enter x (0 to L)</div>
+                      <div class="col-8">
+                        <input class="in form-control" style="background-color:LightBlue" type="number" id="xUserInput" value="3" min="0" step="0.01" oninput="onUserX()" />
+                      </div>
+                      <div class="col-4">m</div>
                     </div>
 
                     <div class="row my-2 mt-3">
                       <div class="col-12">Shear Force at x (V<sub>x</sub>)</div>
-                      <div class="col-8"><input id="oVx" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oVx" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">kN</div>
                     </div>
                     <div class="row my-2">
                       <div class="col-12">Bending Moment at x (M<sub>x</sub>)</div>
-                      <div class="col-8"><input id="oMx" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oMx" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">kN&middot;m</div>
                     </div>
                     <div class="row my-2">
                       <div class="col-12">Deflection at x (y<sub>x</sub>)</div>
-                      <div class="col-8"><input id="oYx" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oYx" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">mm</div>
+                    </div>
+                    <div class="row my-2">
+                      <div class="col-12">Slope at x (&theta;<sub>x</sub>)</div>
+                      <div class="col-8"><input id="oTx" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-2">rad</div>
                     </div>
                   </div>
 
@@ -281,6 +305,11 @@
                     <div class="graph-wrap">
                       <h5>Deflection Diagram</h5>
                       <canvas id="defChart" class="graph-canvas" height="160"></canvas>
+                    </div>
+
+                    <div class="graph-wrap">
+                      <h5>Slope Diagram (&theta;)</h5>
+                      <canvas id="sloChart" class="graph-canvas" height="130"></canvas>
                     </div>
                   </div>
 
@@ -369,7 +398,7 @@
    GLOBALS
 ═══════════════════════════════════════════════════════ */
 const N_PTS = 600;   // number of divisions along beam
-let gXs = [], gV = [], gM = [], gY = [];   // global arrays for slider
+let gXs = [], gV = [], gM = [], gY = [], gTh = [];   // global arrays for slider
 let gL  = 6;
 
 const LOAD_COLORS = ['#dc3545','#0d6efd','#198754','#fd7e14','#6f42c1','#20c997'];
@@ -379,7 +408,7 @@ const LOAD_TYPES = [
   { val:'UDL', label:'UDL (Uniform)',           unit:'kN/m',    dist:true  },
   { val:'UVL', label:'UVL (Linearly Varying)',  unit:'kN/m',    dist:true  },
   { val:'PM',  label:'Point Moment',            unit:'kN·m',    dist:false },
-  { val:'USM', label:'USM (Uniform Surface)',   unit:'kN/m²',   dist:true  },
+  { val:'UVM', label:'UVM (Uniformly Varying Moment)', unit:'kN·m/m', dist:true  },
   { val:'UDM', label:'UDM (Uniform Dist. Mom)', unit:'kN·m/m',  dist:true  }
 ];
 
@@ -427,7 +456,7 @@ function buildLoads() {
       <div class="row my-1">
         <div class="col-12" id="la_lbl${i}">Position from A</div>
         <div class="col-8">
-          <input class="in form-control" style="background-color:LightBlue" type="number" id="la${i}" value="0" min="0" step="0.1" />
+          <input class="in form-control" style="background-color:LightBlue" type="number" id="la${i}" value="${(parseFloat(document.getElementById('bL').value)||6)/2}" min="0" step="0.1" />
         </div>
         <div class="col-4">m</div>
       </div>
@@ -436,7 +465,7 @@ function buildLoads() {
       <div class="row my-1" id="lb_row${i}">
         <div class="col-12">End Position from A</div>
         <div class="col-8">
-          <input class="in form-control" style="background-color:LightBlue" type="number" id="lb${i}" value="6" min="0" step="0.1" />
+          <input class="in form-control" style="background-color:LightBlue" type="number" id="lb${i}" value="${parseFloat(document.getElementById('bL').value)||6}" min="0" step="0.1" />
         </div>
         <div class="col-4">m</div>
       </div>
@@ -513,7 +542,7 @@ function computeReactions(loads, L) {
     if (type === 'PL') {
       sumV  += va;
       sumMa += va * la;
-    } else if (type === 'UDL' || type === 'USM' || type === 'UDM') {
+    } else if (type === 'UDL') {
       const len = Math.max(lb - la, 0);
       sumV  += va * len;
       sumMa += va * len * (la + len / 2);
@@ -523,6 +552,9 @@ function computeReactions(loads, L) {
       const xBar = len > 0 ? la + len * (va + 2*vb) / (3*(va+vb+1e-12)) : la;
       sumV  += W;
       sumMa += W * xBar;
+    } else if (type === 'UVM') {
+      const len = Math.max(lb - la, 0);
+      sumMa += 0.5 * (va + vb) * len;
     } else if (type === 'PM') {
       sumMa += va; // CW positive
     }
@@ -540,7 +572,7 @@ function shearAt(x, RA, loads) {
     const right = Math.min(x, lb);
     if (type === 'PL' && x > la) {
       V -= va;
-    } else if ((type === 'UDL' || type === 'USM' || type === 'UDM') && x > la) {
+    } else if ((type === 'UDL') && x > la) {
       V -= va * (right - la);
     } else if (type === 'UVL' && x > la) {
       const len  = lb - la;
@@ -561,12 +593,16 @@ function momentAt(x, RA, loads) {
     const right = Math.min(x, lb);
     if (type === 'PL' && x > la) {
       M -= va * (x - la);
-    } else if ((type === 'UDL' || type === 'USM') && x > la) {
+    } else if ((type === 'UDL' ) && x > la) {
       const d = right - la;
       M -= va * d * (x - la - d / 2);
     } else if (type === 'UDM' && x > la) {
       const d = right - la;
-      M -= va * d * (x - la - d / 2);
+      M -= va * d;
+    } else if (type === 'UVM' && x > la) {
+      const len = Math.max(lb - la, 1e-9);
+      const d   = right - la;
+      M -= va * d + 0.5 * (vb - va) / len * d * d;
     } else if (type === 'UVL' && x > la) {
       const len  = lb - la;
       const d    = right - la;
@@ -599,7 +635,9 @@ function computeDeflection(xs, M_arr, EI) {
 
   // BCs: y(0)=0, y(L)=0  →  C2=0, C1=-y0[n-1]/L
   const C1 = -y0[n-1] / xs[n-1];
-  return y0.map((v, i) => (v + C1*xs[i]) * 1000); // m → mm
+  const defl  = y0.map((v, i) => (v + C1*xs[i]) * 1000); // m → mm
+  const slope = th.map(v => v + C1);                       // rad (corrected)
+  return { defl, slope };
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -620,9 +658,9 @@ function runCalc() {
   // For SFD: evaluate just after each point to catch discontinuities
   const V_arr = xs.map((x, i) => shearAt(x + (i < N_PTS ? 1e-9 : -1e-9), RA, loads));
   const M_arr = xs.map(x => momentAt(x, RA, loads));
-  const Y_arr = computeDeflection(xs, M_arr, EI);
+  const { defl: Y_arr, slope: Th_arr } = computeDeflection(xs, M_arr, EI);
 
-  gXs = xs; gV = V_arr; gM = M_arr; gY = Y_arr;
+  gXs = xs; gV = V_arr; gM = M_arr; gY = Y_arr; gTh = Th_arr;
 
   // maxima
   const absV   = V_arr.map(Math.abs);
@@ -647,9 +685,10 @@ function runCalc() {
   onSlider();   // update x-section values
 
   // draw charts
-  drawChart('sfdChart', 'Shear Force (kN)',      '#0d6efd', xs, V_arr, 'V (kN)');
-  drawChart('bmdChart', 'Bending Moment (kN·m)', '#dc3545', xs, M_arr, 'M (kN·m)');
-  drawChart('defChart', 'Deflection (mm)',        '#198754', xs, Y_arr, 'y (mm)');
+  drawChart('sfdChart', 'Shear Force (kN)',      '#0d6efd', xs, V_arr,  'V (kN)');
+  drawChart('bmdChart', 'Bending Moment (kN·m)', '#dc3545', xs, M_arr,  'M (kN·m)');
+  drawChart('defChart', 'Deflection (mm)',        '#198754', xs, Y_arr,  'y (mm)');
+  drawChart('sloChart', 'Slope θ (rad)',          '#fd7e14', xs, Th_arr, 'θ (rad)');
 
   drawSketch(RA, RB, loads, L);
 }
@@ -670,9 +709,10 @@ function onSlider() {
   const i    = Math.min(Math.max(idx, 0), N_PTS);
 
   document.getElementById('sliderLabel').textContent = 'x = ' + x.toFixed(3) + ' m';
-  setO('oVx', gV[i] !== undefined ? gV[i].toFixed(3) : '');
-  setO('oMx', gM[i] !== undefined ? gM[i].toFixed(3) : '');
-  setO('oYx', gY[i] !== undefined ? gY[i].toFixed(3) : '');
+  setO('oVx', gV[i]  !== undefined ? gV[i].toFixed(4)  : '');
+  setO('oMx', gM[i]  !== undefined ? gM[i].toFixed(4)  : '');
+  setO('oYx', gY[i]  !== undefined ? gY[i].toFixed(4)  : '');
+  setO('oTx', gTh[i] !== undefined ? gTh[i].toFixed(6) : '');
 
   updateSliderGradient();
   updateChartMarkers(x);
@@ -753,14 +793,12 @@ function drawChart(id, label, color, xs, ys, yLabel) {
 }
 
 function updateChartMarkers(x) {
-  ['sfdChart','bmdChart','defChart'].forEach(id => {
+  const chartMap = { sfdChart: gV, bmdChart: gM, defChart: gY, sloChart: gTh };
+  Object.entries(chartMap).forEach(([id, arr]) => {
     const ch = chartInstances[id];
-    if (!ch) return;
-    const arr = id==='sfdChart' ? gV : id==='bmdChart' ? gM : gY;
-    const idx = Math.round((x / gL) * N_PTS);
-    const y   = arr[Math.min(idx, N_PTS)] || 0;
-    // update marker dataset
-    ch.data.datasets[1].data = [{ x, y: Math.min(...arr)*1.2 }, { x, y: Math.max(...arr)*1.2 }];
+    if (!ch || !arr.length) return;
+    const mn = Math.min(...arr) * 1.2, mx = Math.max(...arr) * 1.2;
+    ch.data.datasets[1].data = [{ x, y: mn }, { x, y: mx }];
     ch.update('none');
   });
 }
@@ -832,7 +870,7 @@ function drawSketch(RA, RB, loads, L) {
         drawMoment(ctx, px, beamY - 14 - stackOff, 12, col, ld.va);
       }
     } else {
-      // distributed: draw UDL/UVL/USM/UDM
+      // distributed: draw UDL/UVL/UVM/UDM
       const xa = margin + ld.la * sc;
       const xb = margin + ld.lb * sc;
       const segKey = Math.round((xa + xb) / 2);
@@ -898,7 +936,7 @@ function drawUDL(ctx, xa, xb, y, h, c, w, type) {
   ctx.strokeStyle=c; ctx.stroke();
   const step = Math.max(18, (xb-xa)/6);
   for (let px=xa+step/2; px<xb; px+=step) drawDownArrow(ctx,px,y,h-2,c);
-  const lbl = w+(type==='USM'?' kN/m²':type==='UDM'?' kNm/m':' kN/m');
+  const lbl = w+((type==='UVM'||type==='UDM')?' kN·m/m':' kN/m');
   ctx.font='9px sans-serif'; ctx.textAlign='center'; ctx.fillStyle=c;
   ctx.fillText(lbl,(xa+xb)/2,y-h-3);
 }
@@ -952,6 +990,54 @@ window.onload = function() {
     );
   });
 };
+
+/* ── X-section mode toggle ── */
+function onXModeChange() {
+  const mode = document.getElementById('xMode').value;
+  const sw = document.getElementById('sliderWrap');
+  const uw = document.getElementById('userInputWrap');
+  if (mode === 'slider') {
+    sw.style.display = ''; uw.style.display = 'none';
+    onSlider();
+  } else {
+    sw.style.display = 'none'; uw.style.display = '';
+    onUserX();
+  }
+}
+
+function onUserX() {
+  if (!gXs.length) return;
+  const L   = gL;
+  let x     = parseFloat(document.getElementById('xUserInput').value) || 0;
+  x = Math.min(Math.max(x, 0), L);
+  const frac = x / L;
+  // sync slider position visually
+  document.getElementById('xSlider').value = Math.round(frac * 1000);
+  updateSliderGradient();
+  const i = Math.min(Math.max(Math.round(frac * N_PTS), 0), N_PTS);
+  document.getElementById('sliderLabel').textContent = 'x = ' + x.toFixed(3) + ' m';
+  setO('oVx', gV[i] !== undefined ? gV[i].toFixed(4) : '');
+  setO('oMx', gM[i] !== undefined ? gM[i].toFixed(4) : '');
+  setO('oYx', gY[i] !== undefined ? gY[i].toFixed(4) : '');
+  if (typeof gTh !== 'undefined' && gTh.length)
+    setO('oTx', gTh[i] !== undefined ? gTh[i].toFixed(6) : '');
+  updateChartMarkers(x);
+  const sketchRA = parseFloat(document.getElementById('oRA') ? document.getElementById('oRA').value : 0) || 0;
+  const sketchMA = parseFloat(document.getElementById('oMA') ? document.getElementById('oMA').value : 0) || 0;
+  const sketchRB = parseFloat(document.getElementById('oRB') ? document.getElementById('oRB').value : 0) || 0;
+  const sketchMB = parseFloat(document.getElementById('oMB') ? document.getElementById('oMB').value : 0) || 0;
+  if (typeof drawSketch === 'function') {
+    try {
+      if (document.getElementById('fbSketch'))
+        drawSketch(sketchRA, sketchMA, sketchRB, sketchMB, readLoads(), gL);
+      else if (document.getElementById('cbSketch'))
+        drawSketch(sketchRA, sketchMA, readLoads(), gL);
+      else
+        drawSketch(sketchRA, sketchRB, readLoads(), gL);
+    } catch(e) {}
+  }
+}
+
 </script>
 </body>
 </html>
