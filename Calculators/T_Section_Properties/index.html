@@ -1,41 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Construction-Calculator</title>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>T Section Properties | Construction-Calculator</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="../../assets/css/main.css">
-
-
+  <style>
+    input.out-hi{background-color:#d4edda!important;font-weight:700!important;color:#155724!important;}
+    #sketch{width:100%;max-width:420px;border:1px solid #dee2e6;border-radius:4px;background:#fff;display:block;margin-bottom:16px;}
+  </style>
 </head>
-<body style="background-color: teal;">
-
-
-  <header>
-    <div class="hamburger" onclick="toggleMenu()">☰</div>
-
-    <div class="logo-container">
-      <img src="../../assets/svg/logo.png" alt="Logo">
-      <span href="https://abilassg.github.io/Construction-Calculator/">Construction-Calculator</span>
-    </div>
-    <nav>
-      <a href="https://abilassg.github.io/Construction-Calculator/">Home</a>
-      <a href="https://abilassg.github.io/Construction-Calculator/Blogs">Blogs</a>
-      <a href="https://abilassg.github.io/Construction-Calculator/Calculators" class="active">Calculator</a>
-      <a href="https://abilassg.github.io/Construction-Calculator/About_us">About us</a>
-      <a href="https://abilassg.github.io/Construction-Calculator/Contact_us">Contact us</a>
-    </nav>
-  </header>
-
-
-<div class="ad-block ad-top">
-  <p>Advertisement - Top Banner</p>
-</div>
-
+<body style="background-color:teal;">
+<header>
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
+  <div class="logo-container"><img src="../../assets/svg/logo.png" alt="Logo"><span>Construction-Calculator</span></div>
+  <nav>
+    <a href="https://abilassg.github.io/Construction-Calculator/">Home</a>
+    <a href="https://abilassg.github.io/Construction-Calculator/Blogs">Blogs</a>
+    <a href="https://abilassg.github.io/Construction-Calculator/Calculators" class="active">Calculator</a>
+    <a href="https://abilassg.github.io/Construction-Calculator/About_us">About us</a>
+    <a href="https://abilassg.github.io/Construction-Calculator/Contact_us">Contact us</a>
+  </nav>
+</header>
+<div class="ad-block ad-top"><p>Advertisement - Top Banner</p></div>
 <div class="e-con-inner">
-  <!-- Left sidebar: Menu -->
   <div class="ad-side ad-block" aria-label="Primary Navigation">
     <h3>Section Properties Calculators</h3>
     <ul>
@@ -46,437 +35,289 @@
       <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">Pipe Section Properties</a></li>
       <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">Box Section Properties</a></li>
       <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section Properties</a></li>
-      <!--
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Channel_Section_Properties">Channel Section Properties</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Composite_Section_Properties">Composite Section Properties</a></li>
-     -->
-       </ul>
+    </ul>
   </div>
-
-
-
-
   <div class="content">
     <main id="main">
-      <Section id="Calculation">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-12">
-
-              <h3><strong>T Section Properties Calculator</strong></h3>
-              <img src="../../assets/svg/T_Section_Properties_00.jpg" alt="T_Section_Properties_00" width="200">
-
-              <div class="page-container p-4 my-2 mx-4 border">
-                  <div class="container">
-                      <h3><strong>Inputs:</strong></h3>
-                      <form id="calcForm">
-                                                 <div class="row my-2">
-                                                     <div class="col-12">Flange length (b)</div>
-                                                     <div class="col-8">
-                                                         <input class="in form-control" style="background-color: LightBlue" type="text" id="F15" value="200" size="5" required>
-                                                     </div>
-                                                 <div class="col-4">mm</div>
-                                             </div>
-                                                 <div class="row my-2">
-                                                     <div class="col-12">Web Length (d)</div>
-                                                     <div class="col-8">
-                                                         <input class="in form-control" style="background-color: LightBlue" type="text" id="F16" value="200" size="5" required>
-                                                     </div>
-                                                 <div class="col-4">mm</div>
-                                             </div>
-                                                 <div class="row my-2">
-                                                     <div class="col-12">Thickness of flange (t)</div>
-                                                     <div class="col-8">
-                                                         <input class="in form-control" style="background-color: LightBlue" type="text" id="F17" value="20" size="5" required>
-                                                     </div>
-                                                 <div class="col-4">mm</div>
-                                             </div>
-                                                 <div class="row my-2">
-                                                     <div class="col-12">Thickness of web (t<sub>w</sub>)</div>
-                                                     <div class="col-8">
-                                                         <input class="in form-control" style="background-color: LightBlue" type="text" id="F18" value="20" size="5" required>
-                                                     </div>
-                                                 <div class="col-4">mm</div>
-                                             </div>
-
-                      </form>
-                  </div>
-                  <hr/>
-                  <div class="container my-4 mx-4">
-                      <h3><strong>Outputs:</strong></h3>
-                                           <div class="row my-2">
-                                               <div class="col-12">Area of I Section (A)</div>
-                                               <div class="col-8">
-                                                   <input id="F24" class="out form-control" type='text' readonly='readonly' value="8000" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm<sup>2</sup></div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">CG from Top Flange (<span style="text-decoration: overline;">Y</span>
-                      )</div>
-                                               <div class="col-8">
-                                                   <input id="F25" class="out form-control" type='text' readonly='readonly' value="65" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm</div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">CG from Bottom Flange (<span style="text-decoration: overline;">Y</span>
-                      )</div>
-                                               <div class="col-8">
-                                                   <input id="F26" class="out form-control" type='text' readonly='readonly' value="155" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm</div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">C/C distance between flanges (h)</div>
-                                               <div class="col-8">
-                                                   <input id="F27" class="out form-control" type='text' readonly='readonly' value="37666666.67" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm</div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">Moment of Inertia about zz (I<sub>ZZ</sub>)</div>
-                                               <div class="col-8">
-                                                   <input id="F28" class="out form-control" type='text' readonly='readonly' value="68.62" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm<sup>4</sup></div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">Radius of Gyration (R<sub>Z</sub>)</div>
-                                               <div class="col-8">
-                                                   <input id="F29" class="out form-control" type='text' readonly='readonly' value="65" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm</div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">Y<sub>NPA</sub> from Top Flange</div>
-                                               <div class="col-8">
-                                                   <input id="F30" class="out form-control" type='text' readonly='readonly' value="155" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm</div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">Y<sub>NPA</sub> from Bottom Flange</div>
-                                               <div class="col-8">
-                                                   <input id="F31" class="out form-control" type='text' readonly='readonly' value="579487.18" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm</div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">Elastic section modulus from top (Ze<sub>ZZ</sub>)</div>
-                                               <div class="col-8">
-                                                   <input id="F32" class="out form-control" type='text' readonly='readonly' value="243010.75" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm<sup>3</sup></div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">Elastic section modulus from bottom (Ze<sub>ZZ</sub>)</div>
-                                               <div class="col-8">
-                                                   <input id="F33" class="out form-control" type='text' readonly='readonly' value="440000" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm<sup>3</sup></div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">Plastic section modulus (Zp<sub>ZZ</sub>)</div>
-                                               <div class="col-8">
-                                                   <input id="F34" class="out form-control" type='text' readonly='readonly' value="13466666.67" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm<sup>3</sup></div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">Moment of Inertia about yy (I<sub>YY</sub>)</div>
-                                               <div class="col-8">
-                                                   <input id="F35" class="out form-control" type='text' readonly='readonly' value="41.03" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm<sup>4</sup></div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">Radius of Gyration (R<sub>Y</sub>)</div>
-                                               <div class="col-8">
-                                                   <input id="F36" class="out form-control" type='text' readonly='readonly' value="100" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm</div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">Z<sub>NPA</sub> from Right Edge</div>
-                                               <div class="col-8">
-                                                   <input id="F37" class="out form-control" type='text' readonly='readonly' value="100" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm</div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">Z<sub>NPA</sub> from Left Edge</div>
-                                               <div class="col-8">
-                                                   <input id="F38" class="out form-control" type='text' readonly='readonly' value="134666.67" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm</div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">Elastic section modulus from top (Ze<sub>YY</sub>)</div>
-                                               <div class="col-8">
-                                                   <input id="F39" class="out form-control" type='text' readonly='readonly' value="134666.67" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm<sup>3</sup></div>
-                                           </div>
-                                           <div class="row my-2">
-                                               <div class="col-12">Elastic section modulus from bottom (Ze<sub>YY</sub>)</div>
-                                               <div class="col-8">
-                                                   <input id="F40" class="out form-control" type='text' readonly='readonly' value="220000" style='background-color: LightGray'>
-                                               </div>
-                                               <div class="col-2">mm<sup>3</sup></div>
-                                           </div>
-
-
-                  </div>
-              </div>
-              <script>
-                  document.addEventListener('input', function (event) {
-                  const F15 = parseFloat(document.getElementById('F15').value) || 200.00;
-                  const F16 = parseFloat(document.getElementById('F16').value) || 200.00;
-                  const F17 = parseFloat(document.getElementById('F17').value) || 20.00;
-                  const F18 = parseFloat(document.getElementById('F18').value) || 20.00;
-
-                  const F24 = F15 * F17 + F16 * F18;
-                  const F25 = (F15 * Math.pow(F17, 2) + F18 * F16 * (2 * F17 + F16)) / (2 * (F17 * F15 + F18 * F16));
-                  const F26 = F16 + F17 - F25;
-                  const F27 = (F15 * Math.pow(F16 + F17, 3) - Math.pow(F16, 3) * (F15 - F18)) / 3 - F24 * Math.pow(F16 + F17 - F25, 2);
-                  const F28 = Math.sqrt(F27 / F24);
-                  const F29 = F25;
-                  const F30 = F16 + F17 - F29;
-                  const F31 = F27 / F29;
-                  const F32 = F27 / F30;
-                  const F33 = (F18 * Math.pow(F16, 2) / 2) + (F15 * Math.pow(F17, 2) / 2);
-                  const F34 = (F17 * Math.pow(F15, 3) + F16 * Math.pow(F18, 3)) / 12;
-                  const F35 = Math.sqrt(F34 / F24);
-                  const F36 = F15 / 2;
-                  const F37 = F15 - F36;
-                  const F38 = F34 / F36;
-                  const F39 = F34 / F37;
-                  const F40 = (F17 * Math.pow(F15, 2) / 4) + (F16 * Math.pow(F18, 2) / 4);
-
-                  // Assign values to output fields
-                  document.getElementById('F24').value = F24.toFixed(2);
-                  document.getElementById('F25').value = F25.toFixed(2);
-                  document.getElementById('F26').value = F26.toFixed(2);
-                  document.getElementById('F27').value = F27.toFixed(2);
-                  document.getElementById('F28').value = F28.toFixed(2);
-                  document.getElementById('F29').value = F29.toFixed(2);
-                  document.getElementById('F30').value = F30.toFixed(2);
-                  document.getElementById('F31').value = F31.toFixed(2);
-                  document.getElementById('F32').value = F32.toFixed(2);
-                  document.getElementById('F33').value = F33.toFixed(2);
-                  document.getElementById('F34').value = F34.toFixed(2);
-                  document.getElementById('F35').value = F35.toFixed(2);
-                  document.getElementById('F36').value = F36.toFixed(2);
-                  document.getElementById('F37').value = F37.toFixed(2);
-                  document.getElementById('F38').value = F38.toFixed(2);
-                  document.getElementById('F39').value = F39.toFixed(2);
-                  document.getElementById('F40').value = F40.toFixed(2);
-
-                  // Repeat for other output fields as needed
-                });
-              </script>
-
-
-
+      <section id="Calculation">
+        <div class="container"><div class="row"><div class="col-md-12">
+          <div class="page-container p-4 my-2 border">
+            <h3><strong>T Section Properties Calculator</strong></h3>
+            <p class="text-muted mb-3" style="font-size:12.5px;">T-section with top flange and web. b = flange width, d = web depth, t = flange thickness, t<sub>w</sub> = web thickness. Origin at top of flange. ZZ = horizontal centroidal axis, YY = vertical centroidal axis (symmetric).</p>
+            <canvas id="sketch" height="360"></canvas>
+            <div class="container my-4">
+              <h3><strong>Inputs:</strong></h3>
+              <form id="calcForm">
+                <div class="row my-2"><div class="col-12">Flange Width (b)</div><div class="col-8"><input class="in form-control" style="background-color:LightBlue" type="number" id="F15" value="200" min="1" step="1"/></div><div class="col-4">mm</div></div>
+                <div class="row my-2"><div class="col-12">Web Depth (d)</div><div class="col-8"><input class="in form-control" style="background-color:LightBlue" type="number" id="F16" value="200" min="1" step="1"/></div><div class="col-4">mm</div></div>
+                <div class="row my-2"><div class="col-12">Flange Thickness (t)</div><div class="col-8"><input class="in form-control" style="background-color:LightBlue" type="number" id="F17" value="20" min="1" step="0.5"/></div><div class="col-4">mm</div></div>
+                <div class="row my-2"><div class="col-12">Web Thickness (t<sub>w</sub>)</div><div class="col-8"><input class="in form-control" style="background-color:LightBlue" type="number" id="F18" value="20" min="1" step="0.5"/></div><div class="col-4">mm</div></div>
+              </form>
+            </div>
+            <hr/>
+            <div class="container my-4">
+              <h3><strong>Outputs:</strong></h3>
+              <div class="row my-2"><div class="col-12">Area (A)</div><div class="col-8"><input id="F24" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm<sup>2</sup></div></div>
+              <div class="row my-2"><div class="col-12">CG from Top (ȳ<sub>top</sub>)</div><div class="col-8"><input id="F25" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm</div></div>
+              <div class="row my-2"><div class="col-12">CG from Bottom (ȳ<sub>bot</sub>)</div><div class="col-8"><input id="F26" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm</div></div>
+              <h3 class="mt-4"><strong>About ZZ axis (horizontal centroidal):</strong></h3>
+              <div class="row my-2"><div class="col-12">Moment of Inertia (I<sub>ZZ</sub>)</div><div class="col-8"><input id="F27" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm<sup>4</sup></div></div>
+              <div class="row my-2"><div class="col-12">Radius of Gyration (r<sub>ZZ</sub>)</div><div class="col-8"><input id="F28" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm</div></div>
+              <div class="row my-2"><div class="col-12">NA from Top (= ȳ<sub>top</sub>)</div><div class="col-8"><input id="F29" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm</div></div>
+              <div class="row my-2"><div class="col-12">NA from Bottom (= ȳ<sub>bot</sub>)</div><div class="col-8"><input id="F30" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm</div></div>
+              <div class="row my-2"><div class="col-12">Elastic Section Modulus — top (Z<sub>e,ZZ,top</sub>)</div><div class="col-8"><input id="F31" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm<sup>3</sup></div></div>
+              <div class="row my-2"><div class="col-12">Elastic Section Modulus — bottom (Z<sub>e,ZZ,bot</sub>)</div><div class="col-8"><input id="F32" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm<sup>3</sup></div></div>
+              <div class="row my-2"><div class="col-12">Plastic Section Modulus (Z<sub>p,ZZ</sub>)</div><div class="col-8"><input id="F33" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm<sup>3</sup></div></div>
+              <h3 class="mt-4"><strong>About YY axis (vertical centroidal):</strong></h3>
+              <div class="row my-2"><div class="col-12">Moment of Inertia (I<sub>YY</sub>)</div><div class="col-8"><input id="F34" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm<sup>4</sup></div></div>
+              <div class="row my-2"><div class="col-12">Radius of Gyration (r<sub>YY</sub>)</div><div class="col-8"><input id="F35" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm</div></div>
+              <div class="row my-2"><div class="col-12">NA from Left / Right (= b/2)</div><div class="col-8"><input id="F36" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm</div></div>
+              <div class="row my-2"><div class="col-12">Elastic Section Modulus (Z<sub>e,YY</sub>)</div><div class="col-8"><input id="F38" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm<sup>3</sup></div></div>
+              <div class="row my-2"><div class="col-12">Plastic Section Modulus (Z<sub>p,YY</sub>)</div><div class="col-8"><input id="F40" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div><div class="col-2">mm<sup>3</sup></div></div>
             </div>
           </div>
-        </div>
-      </Section>
+        </div></div></div>
+      </section>
     </main>
   </div>
-
-  <div class="ad-side ad-block">
-    <p>Advertisement - Sidebar</p>
-  </div>
+  <div class="ad-side ad-block"><p>Advertisement - Sidebar</p></div>
 </div>
 
-
-<div class="subfooter-container">
-  <h3 class="subfooter-title">CALCULATORS</h3>
-  <div class="subfooter">
-    <div class="calculator-category">
-      <h3>Estimation Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Foundation_Quantity_Estimation">Foundation Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Column_Quantity_Estimation">Column Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Beam_Quantity_Estimation">Beam Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Slab_Quantity_Estimation">Slab Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Brick_Quantity_Estimation">Brick Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Quantity_Estimation">RCC Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Plate_Girder_Quantity_Estimation">Plate Girder Quantity Estimation</a></li>
-      </ul>
-
-    </div>
-    <div class="calculator-category">
-      <h3>Section Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">T Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">Circular Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">Pipe Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">Rectangular Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">Box Section Properties</a></li>
-        <!--
-                <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Channel_Section_Properties">Channel Section Properties</a></li>
-                <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Composite_Section_Properties">Composite Section Properties</a></li>
-        -->
-      </ul>
-
-    </div>
-    <div class="calculator-category">
-      <h3>RCC Design Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Singly Reinforced Beam Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Doubly Reinforced Beam Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Column_Design">RCC Column Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_One_Way_Slab_Design">RCC 1 Way Slab Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Two_Way_Slab_Design">RCC 2 Way Slab Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Isolated_Footing_Design">Isolated Footing Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Combined_Footing_Design">Combined Footing Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Trapezoidal_Footing_Design">Trapezoidal Footing Design</a></li>
-      </ul>
-
-    </div>
-    <div class="calculator-category">
-      <h3>Geotechnical Engineering Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Important_Basic_Formulae">Important Basic Formulae</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Seive_Size_Analysis">Sieve Size Analysis</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Active_Earth_Pressure">Active Earth Pressure</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Passive_Earth_Pressure">Passive Earth Pressure</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Soil_Bearing_Capacity">Soil Bearing Capacity</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pile_Capacity">Pile Capacity</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<footer>
-    <div class="footer-container">
-        <div class="footer-icons">
-            <a href="#"><img src="../../assets/svg/telegram-favicon.png" alt="Telegram"></a>
-            <a href="#"><img src="../../assets/svg/youtube-favicon.png" alt="YouTube"></a>
-            <a href="#"><img src="../../assets/svg/instagram-favicon.png" alt="Instagram"></a>
-            <a href="#"><img src="../../assets/svg/x-favicon.png" alt="X"></a>
-        </div>
-        <p>&copy; 2025 Your Website Name. All rights reserved.</p>
-    </div>
-</footer>
-
-
+<div class="subfooter-container"><h3 class="subfooter-title">CALCULATORS</h3><div class="subfooter">
+  <div class="calculator-category"><h3>Estimation Calculators</h3><ul>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Foundation_Quantity_Estimation">Foundation Quantity Estimation</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Column_Quantity_Estimation">Column Quantity Estimation</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Beam_Quantity_Estimation">Beam Quantity Estimation</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Slab_Quantity_Estimation">Slab Quantity Estimation</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Brick_Quantity_Estimation">Brick Quantity Estimation</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Quantity_Estimation">RCC Quantity Estimation</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Plate_Girder_Quantity_Estimation">Plate Girder Quantity Estimation</a></li>
+  </ul></div>
+  <div class="calculator-category"><h3>Section Calculators</h3><ul>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section Properties</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">T Section Properties</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">Circular Section Properties</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">Pipe Section Properties</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">Rectangular Section Properties</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section Properties</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">Box Section Properties</a></li>
+  </ul></div>
+  <div class="calculator-category"><h3>RCC Design Calculators</h3><ul>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Singly Reinforced Beam Design</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Doubly Reinforced Beam Design</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Column_Design">RCC Column Design</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_One_Way_Slab_Design">RCC 1 Way Slab Design</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Two_Way_Slab_Design">RCC 2 Way Slab Design</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Isolated_Footing_Design">Isolated Footing Design</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Combined_Footing_Design">Combined Footing Design</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Trapezoidal_Footing_Design">Trapezoidal Footing Design</a></li>
+  </ul></div>
+  <div class="calculator-category"><h3>Geotechnical Engineering Calculators</h3><ul>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Important_Basic_Formulae">Important Basic Formulae</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Seive_Size_Analysis">Sieve Size Analysis</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Active_Earth_Pressure">Active Earth Pressure</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Passive_Earth_Pressure">Passive Earth Pressure</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Soil_Bearing_Capacity">Soil Bearing Capacity</a></li>
+    <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pile_Capacity">Pile Capacity</a></li>
+  </ul></div>
+</div></div>
+<footer><div class="footer-container"><div class="footer-icons">
+  <a href="#"><img src="../../assets/svg/telegram-favicon.png" alt="Telegram"></a>
+  <a href="#"><img src="../../assets/svg/youtube-favicon.png" alt="YouTube"></a>
+  <a href="#"><img src="../../assets/svg/instagram-favicon.png" alt="Instagram"></a>
+  <a href="#"><img src="../../assets/svg/x-favicon.png" alt="X"></a>
+</div><p>&copy; 2025 Your Website Name. All rights reserved.</p></div></footer>
 
 <script>
-  // Calculator logic: calculate and update output fields on input changes
-  function calculate() {
-    // Get inputs
-    const w1 = parseFloat(document.getElementById('F15').value);
-    const w2 = parseFloat(document.getElementById('F16').value);
-    const t = parseFloat(document.getElementById('F17').value);
+/* ══ CALC ══
+   b=flange width, d=web depth, t=flange thick, tw=web thick
+   H=total height=d+t
+   CG from top:
+     yCG = (b*t*(t/2) + tw*d*(t+d/2)) / A   ✓
+   Izz about base = (b*H³ - (b-tw)*d³)/3
+   Izz_cg = Izz_base - A*(H-yCG)²           ✓
+   ZpZZ — CORRECTED: PNA where cumul area from top = A/2
+     If A/2 ≤ b*t → PNA in flange: pna = A/(2*b)
+     Else          → PNA in web:   pna = t + (A/2 - b*t)/tw
+   Then Zp = first moments about PNA (each part):
+     flange: b*t*|pna - t/2|
+     web above PNA: tw*(pna-t)²/2   [if pna>t]
+     web below PNA: tw*(d+t-pna)²/2
+*/
+function calculate(){
+  const b =parseFloat(document.getElementById('F15').value);
+  const d =parseFloat(document.getElementById('F16').value);
+  const t =parseFloat(document.getElementById('F17').value);
+  const tw=parseFloat(document.getElementById('F18').value);
+  const ids=['F24','F25','F26','F27','F28','F29','F30','F31','F32','F33','F34','F35','F36','F38','F40'];
+  if([b,d,t,tw].some(v=>isNaN(v)||v<=0)){ids.forEach(id=>document.getElementById(id).value='');drawSketch(200,200,20,20);return;}
 
-    if (isNaN(w1) || isNaN(w2) || isNaN(t) || w1 <= 0 || w2 <= 0 || t <= 0) {
-      // Clear outputs if inputs invalid
-      ['F24','F25','F26','F27','F28','F29','F30','F31','F32','F33','F34','F35','F36','F37','F38'].forEach(id => {
-        document.getElementById(id).value = '';
-      });
-      return;
-    }
+  const H=d+t;
+  const A=b*t+d*tw;
 
-    // Calculations:
-    // Area of angle Section (two legs)
-    const A = t * (w1 + w2 - t);
+  /* CG from top */
+  const yCG=(b*t*(t/2)+tw*d*(t+d/2))/A;
+  const yCG_bot=H-yCG;
 
-    // CG from top flange:
-    const Y_top = ((t * w1) * (w1 / 2) + (t * (w2 - t)) * (w1 + (w2 - t)/2)) / A;
+  /* Izz — about base then shift */
+  const Izz_base=(b*Math.pow(H,3)-(b-tw)*Math.pow(d,3))/3;
+  const Izz=Izz_base-A*Math.pow(H-yCG,2);
+  const Rzz=Math.sqrt(Izz/A);
 
-    // CG from bottom flange:
-    const Y_bottom = w1 + w2 - Y_top;
+  /* Ze ZZ */
+  const ZeZZ_top=Izz/yCG;
+  const ZeZZ_bot=Izz/yCG_bot;
 
-    // Moment of inertia about zz (Izz)
-    // Using formula for two rectangles and parallel axis theorem
-    const Izz_leg1 = (t * Math.pow(w1, 3)) / 12;
-    const Izz_leg2 = ((w2 - t) * Math.pow(t, 3)) / 12;
-    // Distance of each leg CG to neutral axis
-    const d1 = Y_top - w1 / 2;
-    const d2 = (w1 + (w2 - t)/2) - Y_top;
-    const Izz = Izz_leg1 + A * d1 * d1 + Izz_leg2 + A * d2 * d2;
+  /* ZpZZ — CORRECTED */
+  const halfA=A/2;
+  let pna;
+  if(halfA<=b*t){ pna=halfA/b; }
+  else           { pna=t+(halfA-b*t)/tw; }
+  // first moments
+  const ZpZZ = b*t*Math.abs(pna-t/2)
+              + (pna>t ? tw*Math.pow(pna-t,2)/2 : 0)
+              + tw*Math.pow(H-pna,2)/2;   // web below pna
 
-    // Radius of gyration Rzz
-    const Rzz = Math.sqrt(Izz / A);
+  /* Iyy */
+  const Iyy=(t*Math.pow(b,3)+d*Math.pow(tw,3))/12;
+  const Ryy=Math.sqrt(Iyy/A);
+  const ZeYY=Iyy/(b/2);
+  const ZpYY=t*Math.pow(b,2)/4+d*Math.pow(tw,2)/4;
 
-    // Neutral axis YY from top flange and bottom flange
-    // For angle Section about y-axis:
-    // Calculate x coordinates of CG
-    // Assume thickness is t, legs length w1 and w2
-    // Coordinates of centroids of legs:
-    // Leg1 at x = t/2
-    // Leg2 at x = (w2 - t)/2 + t
-    const A1 = t * w1;
-    const A2 = t * (w2 - t);
-    const Xcg = (A1 * (t / 2) + A2 * (t + (w2 - t)/2)) / (A1 + A2);
+  document.getElementById('F24').value=A.toFixed(2);
+  document.getElementById('F25').value=yCG.toFixed(2);
+  document.getElementById('F26').value=yCG_bot.toFixed(2);
+  document.getElementById('F27').value=Izz.toFixed(2);
+  document.getElementById('F28').value=Rzz.toFixed(2);
+  document.getElementById('F29').value=yCG.toFixed(2);
+  document.getElementById('F30').value=yCG_bot.toFixed(2);
+  document.getElementById('F31').value=ZeZZ_top.toFixed(2);
+  document.getElementById('F32').value=ZeZZ_bot.toFixed(2);
+  document.getElementById('F33').value=ZpZZ.toFixed(2);
+  document.getElementById('F34').value=Iyy.toFixed(2);
+  document.getElementById('F35').value=Ryy.toFixed(2);
+  document.getElementById('F36').value=(b/2).toFixed(2);
+  document.getElementById('F38').value=ZeYY.toFixed(2);
+  document.getElementById('F40').value=ZpYY.toFixed(2);
+  drawSketch(b,d,t,tw);
+}
 
-    // Neutral axis YY from top flange is Xcg (mm)
-    const NPA_YY_top = Xcg;
-    // From bottom flange
-    const NPA_YY_bottom = t + (w2 - t) - Xcg;
+/* ══ SKETCH — T-section ══
+   Zones: left(82px)=yCG bracket, right(110px)=H dim, top(44px)=b dim, bottom(48px)=spare */
+function drawSketch(b,d,t,tw){
+  const canvas=document.getElementById('sketch');
+  const CW=Math.min(canvas.parentElement.clientWidth-4,460);
+  const CH=360;
+  canvas.width=CW; canvas.height=CH;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,CW,CH);
 
-    // Elastic Section modulus ZeZZ from top and bottom
-    const ZeZZ_top = Izz / Y_top;
-    const ZeZZ_bottom = Izz / Y_bottom;
+  const H=d+t;
+  const mL=82, mR=110, mT=44, mB=48;
+  const sc=Math.min((CW-mL-mR)/b,(CH-mT-mB)/H);
+  const pxB=b*sc, pxD=d*sc, pxT=t*sc, pxTw=tw*sc, pxH=H*sc;
 
-    // Plastic Section modulus ZpZZ (approximate)
-    const ZpZZ = A * (w1 + w2 - t) / 4; // rough approx
+  const midX=mL+(CW-mL-mR)/2;
+  const oy=mT;
+  const ox=midX-pxB/2;
+  const wL=midX-pxTw/2, wR=midX+pxTw/2;
 
-    // Moment of inertia about yy (Iyy)
-    const Iyy_leg1 = (w1 * Math.pow(t,3)) / 12;
-    const Iyy_leg2 = ((w2 - t) * Math.pow((w2 - t), 3)) / 12; // Note: w2 leg thickness is length here; rough estimate
-    // Actually, for yy axis: Iyy = sum of Iyy for legs plus parallel axis terms
-    // Let's approximate
-    const Iyy = Iyy_leg1 + Iyy_leg2; // rough approx
+  /* T-shape */
+  ctx.fillStyle='#cfe2ff'; ctx.strokeStyle='#343a40'; ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(ox,oy);
+  ctx.lineTo(ox+pxB,oy);
+  ctx.lineTo(ox+pxB,oy+pxT);
+  ctx.lineTo(wR,oy+pxT);
+  ctx.lineTo(wR,oy+pxH);
+  ctx.lineTo(wL,oy+pxH);
+  ctx.lineTo(wL,oy+pxT);
+  ctx.lineTo(ox,oy+pxT);
+  ctx.closePath();
+  ctx.fill(); ctx.stroke();
 
-    // Radius of gyration Ryy
-    const Ryy = Math.sqrt(Iyy / A);
+  /* CG */
+  const A=b*t+d*tw;
+  const yCG=(b*t*(t/2)+tw*d*(t+d/2))/A;
+  const cgY_px=oy+yCG*sc;
 
-    // Elastic Section modulus ZeYY from outside and inside leg (approximate)
-    const ZeYY_outside = Iyy / (w1 / 2);
-    const ZeYY_inside = Iyy / (w2 / 2);
+  /* Axes */
+  ctx.strokeStyle='#dc3545'; ctx.lineWidth=1.2; ctx.setLineDash([5,4]);
+  ctx.beginPath(); ctx.moveTo(ox-10,cgY_px); ctx.lineTo(ox+pxB+10,cgY_px); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(midX,oy-10); ctx.lineTo(midX,oy+pxH+10); ctx.stroke();
+  ctx.setLineDash([]);
 
-    // Plastic Section modulus ZpYY (approximate)
-    const ZpYY = A * Math.max(w1, w2) / 4;
+  ctx.strokeStyle='#dc3545'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(midX-7,cgY_px); ctx.lineTo(midX+7,cgY_px); ctx.moveTo(midX,cgY_px-7); ctx.lineTo(midX,cgY_px+7); ctx.stroke();
 
-    // Assign to output fields with fixed decimals
-    document.getElementById('F24').value = A.toFixed(2);
-    document.getElementById('F25').value = Y_top.toFixed(2);
-    document.getElementById('F26').value = Y_bottom.toFixed(2);
-    document.getElementById('F27').value = Izz.toFixed(2);
-    document.getElementById('F28').value = Rzz.toFixed(2);
-    document.getElementById('F29').value = NPA_YY_top.toFixed(2);
-    document.getElementById('F30').value = NPA_YY_bottom.toFixed(2);
-    document.getElementById('F31').value = ZeZZ_top.toFixed(2);
-    document.getElementById('F32').value = ZeZZ_bottom.toFixed(2);
-    document.getElementById('F33').value = ZpZZ.toFixed(2);
-    document.getElementById('F34').value = Iyy.toFixed(2);
-    document.getElementById('F35').value = Ryy.toFixed(2);
-    document.getElementById('F36').value = ZeYY_outside.toFixed(2);
-    document.getElementById('F37').value = ZeYY_inside.toFixed(2);
-    document.getElementById('F38').value = ZpYY.toFixed(2);
-  }
+  ctx.font='bold 10px sans-serif'; ctx.fillStyle='#dc3545';
+  ctx.textAlign='right'; ctx.fillText('ZZ',ox-12,cgY_px+4);
+  ctx.textAlign='center'; ctx.fillText('YY',midX,oy-5);
 
-  // Attach event listeners to inputs
-  document.querySelectorAll('#calcForm input').forEach(input => {
-    input.addEventListener('input', calculate);
-  });
+  /* H dimension — right side */
+  const dimX=ox+pxB+28;
+  ctx.strokeStyle='#495057'; ctx.fillStyle='#495057'; ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.moveTo(dimX-5,oy); ctx.lineTo(dimX+5,oy);
+  ctx.moveTo(dimX-5,oy+pxH); ctx.lineTo(dimX+5,oy+pxH);
+  ctx.moveTo(dimX,oy); ctx.lineTo(dimX,oy+pxH);
+  ctx.stroke();
+  tip(ctx,dimX,oy,'up'); tip(ctx,dimX,oy+pxH,'down');
+  ctx.font='bold 10px sans-serif'; ctx.textAlign='left';
+  ctx.fillText(`H = ${H} mm`,dimX+8,oy+pxH/2+4);
 
-  // Initial calculation on page load
-  window.onload = calculate;
+  /* b dimension — above flange */
+  const bY=oy-20;
+  ctx.strokeStyle='#495057'; ctx.fillStyle='#495057'; ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.moveTo(ox,bY-5); ctx.lineTo(ox,bY+5);
+  ctx.moveTo(ox+pxB,bY-5); ctx.lineTo(ox+pxB,bY+5);
+  ctx.moveTo(ox,bY); ctx.lineTo(ox+pxB,bY);
+  ctx.stroke();
+  tip(ctx,ox,bY,'left'); tip(ctx,ox+pxB,bY,'right');
+  ctx.textAlign='center'; ctx.fillText(`b = ${b} mm`,midX,bY-5);
+
+  /* t label inside flange */
+  ctx.fillStyle='#0d6efd'; ctx.font='bold 10px sans-serif'; ctx.textAlign='center';
+  ctx.fillText(`t = ${t} mm`,midX,oy+pxT/2+4);
+
+  /* tw label inside web */
+  if(pxD>20) ctx.fillText(`t_w = ${tw} mm`,midX,oy+pxT+pxD/2+4);
+
+  /* yCG bracket — left margin */
+  const vbX=ox-22;
+  ctx.strokeStyle='#198754'; ctx.fillStyle='#198754'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(vbX+5,oy); ctx.lineTo(vbX,oy); ctx.lineTo(vbX,cgY_px); ctx.lineTo(vbX+5,cgY_px); ctx.stroke();
+  ctx.font='bold 10px sans-serif'; ctx.textAlign='right';
+  ctx.fillText(`ȳ = ${yCG.toFixed(1)} mm`,vbX-3,(oy+cgY_px)/2+4);
+
+  /* yCG_bot bracket — left margin */
+  ctx.strokeStyle='#198754'; ctx.fillStyle='#198754'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(vbX+5,cgY_px); ctx.lineTo(vbX,cgY_px); ctx.lineTo(vbX,oy+pxH); ctx.lineTo(vbX+5,oy+pxH); ctx.stroke();
+  const yCG_bot=H-yCG;
+  ctx.fillText(`ȳ_b = ${yCG_bot.toFixed(1)} mm`,vbX-3,(cgY_px+oy+pxH)/2+4);
+}
+
+function tip(ctx,x,y,dir){
+  ctx.fillStyle='#495057'; ctx.beginPath();
+  if(dir==='up')  {ctx.moveTo(x,y);ctx.lineTo(x-4,y+8);ctx.lineTo(x+4,y+8);}
+  if(dir==='down'){ctx.moveTo(x,y);ctx.lineTo(x-4,y-8);ctx.lineTo(x+4,y-8);}
+  if(dir==='left'){ctx.moveTo(x,y);ctx.lineTo(x+8,y-4);ctx.lineTo(x+8,y+4);}
+  if(dir==='right'){ctx.moveTo(x,y);ctx.lineTo(x-8,y-4);ctx.lineTo(x-8,y+4);}
+  ctx.closePath();ctx.fill();
+}
+
+function toggleMenu(){document.querySelector('header nav').classList.toggle('show');}
+document.querySelectorAll('#calcForm input').forEach(el=>el.addEventListener('input',calculate));
+window.addEventListener('resize',()=>{
+  drawSketch(
+    parseFloat(document.getElementById('F15').value)||200,
+    parseFloat(document.getElementById('F16').value)||200,
+    parseFloat(document.getElementById('F17').value)||20,
+    parseFloat(document.getElementById('F18').value)||20
+  );
+});
+window.onload=calculate;
 </script>
-<script>
-  function toggleMenu() {
-    const nav = document.querySelector("header nav");
-    nav.classList.toggle("show");
-  }
-</script>
-
 </body>
 </html>
