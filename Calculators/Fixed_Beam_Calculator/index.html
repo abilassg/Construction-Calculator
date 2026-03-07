@@ -161,22 +161,22 @@
 
                     <div class="row my-2">
                       <div class="col-12">Vertical Reaction at A (R<sub>A</sub>)</div>
-                      <div class="col-8"><input id="oRA" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oRA" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">kN</div>
                     </div>
                     <div class="row my-2">
                       <div class="col-12">Fixed-End Moment at A (M<sub>A</sub>) &nbsp;<small class="text-muted">(+ve sagging)</small></div>
-                      <div class="col-8"><input id="oMA" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oMA" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">kN&middot;m</div>
                     </div>
                     <div class="row my-2">
                       <div class="col-12">Vertical Reaction at B (R<sub>B</sub>)</div>
-                      <div class="col-8"><input id="oRB" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oRB" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">kN</div>
                     </div>
                     <div class="row my-2">
                       <div class="col-12">Fixed-End Moment at B (M<sub>B</sub>) &nbsp;<small class="text-muted">(+ve sagging)</small></div>
-                      <div class="col-8"><input id="oMB" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oMB" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">kN&middot;m</div>
                     </div>
                   </div>
@@ -201,39 +201,58 @@
                     </div>
                     <div class="row my-2">
                       <div class="col-12">Location of |M<sub>max</sub>| from A</div>
-                      <div class="col-8"><input id="oXM" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oXM" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">m</div>
                     </div>
                     <div class="row my-2">
                       <div class="col-12">Location of |y<sub>max</sub>| from A</div>
-                      <div class="col-8"><input id="oXY" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oXY" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">m</div>
                     </div>
                   </div>
 
-                  <!-- SLIDER -->
+                                    <!-- SECTION X -->
                   <div class="container my-4">
                     <h3><strong>Values at Section x:</strong>
                       <span class="slider-val-box" id="sliderLabel">x = 3.000 m</span>
                     </h3>
-                    <div class="slider-wrap">
+
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-md-auto mb-1">Input mode:</div>
+                      <div class="col-8 col-md-4">
+                        <select class="in form-control form-control-sm" style="background-color:LightBlue" id="xMode" onchange="onXModeChange()">
+                          <option value="slider" selected>Slider</option>
+                          <option value="input">User Input</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div id="sliderWrap" class="slider-wrap">
                       <input type="range" id="xSlider" min="0" max="1000" value="500" oninput="onSlider()">
-                      <div class="slider-labels"><span>0 m (A)</span><span id="sliderMax">L m (B)</span></div>
+                      <div class="slider-labels"><span>0 m (A)</span><span id="sliderMax">L m</span></div>
+                    </div>
+
+                    <div id="userInputWrap" style="display:none;" class="row my-2 align-items-center">
+                      <div class="col-12">Enter x (0 to L)</div>
+                      <div class="col-8">
+                        <input class="in form-control" style="background-color:LightBlue" type="number" id="xUserInput" value="3" min="0" step="0.01" oninput="onUserX()" />
+                      </div>
+                      <div class="col-4">m</div>
                     </div>
 
                     <div class="row my-2 mt-3">
                       <div class="col-12">Shear Force at x (V<sub>x</sub>)</div>
-                      <div class="col-8"><input id="oVx" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oVx" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">kN</div>
                     </div>
                     <div class="row my-2">
                       <div class="col-12">Bending Moment at x (M<sub>x</sub>)</div>
-                      <div class="col-8"><input id="oMx" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oMx" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">kN&middot;m</div>
                     </div>
                     <div class="row my-2">
                       <div class="col-12">Deflection at x (y<sub>x</sub>)</div>
-                      <div class="col-8"><input id="oYx" class="out form-control" type="text" readonly style="background-color:LightGray" /></div>
+                      <div class="col-8"><input id="oYx" class="out form-control out-hi" type="text" readonly style="background-color:LightGray" /></div>
                       <div class="col-2">mm</div>
                     </div>
                   </div>
@@ -354,7 +373,7 @@ const LOAD_TYPES = [
   { val:'UDL', label:'UDL (Uniform)',            unit:'kN/m',     dist:true  },
   { val:'UVL', label:'UVL (Linearly Varying)',   unit:'kN/m',     dist:true  },
   { val:'PM',  label:'Point Moment',             unit:'kN·m',     dist:false },
-  { val:'USM', label:'USM (Uniform Surface)',    unit:'kN/m²',    dist:true  },
+  { val:'UVM', label:'UVM (Uniformly Varying Moment)', unit:'kN·m/m', dist:true  },
   { val:'UDM', label:'UDM (Uniform Dist. Mom)',  unit:'kN·m/m',   dist:true  }
 ];
 
@@ -401,7 +420,7 @@ function buildLoads() {
       <div class="row my-1">
         <div class="col-12" id="la_lbl${i}">Position from A</div>
         <div class="col-8">
-          <input class="in form-control" style="background-color:LightBlue" type="number" id="la${i}" value="3" min="0" step="0.1" />
+          <input class="in form-control" style="background-color:LightBlue" type="number" id="la${i}" value="${(parseFloat(document.getElementById('bL').value)||6)/2}" min="0" step="0.1" />
         </div>
         <div class="col-4">m</div>
       </div>
@@ -409,7 +428,7 @@ function buildLoads() {
       <div class="row my-1" id="lbrow${i}">
         <div class="col-12">End Position from A</div>
         <div class="col-8">
-          <input class="in form-control" style="background-color:LightBlue" type="number" id="lb${i}" value="6" min="0" step="0.1" />
+          <input class="in form-control" style="background-color:LightBlue" type="number" id="lb${i}" value="${parseFloat(document.getElementById('bL').value)||6}" min="0" step="0.1" />
         </div>
         <div class="col-4">m</div>
       </div>
@@ -493,7 +512,7 @@ function ssReactions(loads, L) {
     const {type,va,vb,la,lb} = ld;
     if (type==='PL') {
       sumV+=va; sumMa+=va*la;
-    } else if (type==='UDL'||type==='USM'||type==='UDM') {
+    } else if (type==='UDL'||type==='UDM') {
       const len=Math.max(lb-la,0), W=va*len;
       sumV+=W; sumMa+=W*(la+len/2);
     } else if (type==='UVL') {
@@ -501,7 +520,11 @@ function ssReactions(loads, L) {
       const W=0.5*(va+vb)*len;
       const xBar=len>0 ? la+len*(va+2*vb)/(3*(va+vb+1e-12)) : la;
       sumV+=W; sumMa+=W*xBar;
-      } else if (type==='PM') {
+      } else if (type==='UVM') {
+      // Linearly varying moment: no net force, net moment = 0.5*(va+vb)*(lb-la)
+      const len=Math.max(lb-la,0);
+      sumMa += 0.5*(va+vb)*len;
+    } else if (type==='PM') {
       sumMa+=va;
     }
   }
@@ -518,7 +541,7 @@ function ssMomentAt(x, RA_ss, loads) {
     const right = Math.min(x,lb);
     if (type==='PL') {
       M -= va*(x-la);
-    } else if (type==='UDL'||type==='USM'||type==='UDM') {
+    } else if (type==='UDL'||type==='UDM') {
       const d=right-la;
       M -= va*d*(x-la-d/2);
     } else if (type==='UVL') {
@@ -587,7 +610,7 @@ function fixedReactions(loads, L) {
     const {type,va,vb,la,lb}=ld;
     if (type==='PL') {
       sumV+=va; sumMa+=va*la;
-    } else if (type==='UDL'||type==='USM'||type==='UDM') {
+    } else if (type==='UDL'||type==='UDM') {
       const len=Math.max(lb-la,0),W=va*len;
       sumV+=W; sumMa+=W*(la+len/2);
     } else if (type==='UVL') {
@@ -595,6 +618,10 @@ function fixedReactions(loads, L) {
       const W=0.5*(va+vb)*len;
       const xBar=len>0?la+len*(va+2*vb)/(3*(va+vb+1e-12)):la;
       sumV+=W; sumMa+=W*xBar;
+    } else if (type==='UVM') {
+      // Linearly varying moment: no net force, net moment = 0.5*(va+vb)*(lb-la)
+      const len=Math.max(lb-la,0);
+      sumMa += 0.5*(va+vb)*len;
     } else if (type==='PM') {
       sumMa+=va;
     }
@@ -615,7 +642,7 @@ function shearAt(x, RA, loads) {
     const right=Math.min(x,lb);
     if (type==='PL'&&x>la) {
       V-=va;
-    } else if ((type==='UDL'||type==='USM'||type==='UDM')&&x>la) {
+    } else if ((type==='UDL'||type==='UDM')&&x>la) {
       V-=va*(right-la);
     } else if (type==='UVL'&&x>la) {
       const len=lb-la,d=right-la,wr=va+(vb-va)*d/len;
@@ -637,12 +664,15 @@ function momentAt(x, RA, MA, loads) {
     const right=Math.min(x,lb);
     if (type==='PL'&&x>la) {
       M-=va*(x-la);
-    } else if ((type==='UDL'||type==='USM'||type==='UDM')&&x>la) {
+    } else if ((type==='UDL'||type==='UDM')&&x>la) {
       const d=right-la;
       M-=va*d*(x-la-d/2);
     } else if (type==='UVL'&&x>la) {
       const len=lb-la,d=right-la,wr=va+(vb-va)*d/len,xla=x-la;
       M-=va*d*(xla-d/2)+(vb-va)/len*(d*d/2)*(xla-2*d/3);
+    } else if (type==='UVM'&&x>la) {
+      const len=Math.max(lb-la,1e-9), d=right-la;
+      M-=va*d+0.5*(vb-va)/len*d*d;
     } else if (type==='PM'&&x>la) {
       M-=va;
     }
@@ -941,7 +971,7 @@ function drawUDL(ctx,xa,xb,y,h,c,w,type) {
   ctx.beginPath(); ctx.rect(xa,y-h,xb-xa,h); ctx.fill(); ctx.stroke();
   const step=Math.max(18,(xb-xa)/6);
   for(let px=xa+step/2;px<xb;px+=step) drawDownArrow(ctx,px,y,h-2,c);
-  const lbl=w+(type==='USM'?' kN/m²':type==='UDM'?' kNm/m':' kN/m');
+  const lbl=w+((type==='UVM'||type==='UDM')?' kN·m/m':' kN/m');
   ctx.font='9px sans-serif'; ctx.textAlign='center'; ctx.fillStyle=c;
   ctx.fillText(lbl,(xa+xb)/2,y-h-3);
 }
@@ -991,6 +1021,54 @@ window.onload = function() {
     );
   });
 };
+
+/* ── X-section mode toggle ── */
+function onXModeChange() {
+  const mode = document.getElementById('xMode').value;
+  const sw = document.getElementById('sliderWrap');
+  const uw = document.getElementById('userInputWrap');
+  if (mode === 'slider') {
+    sw.style.display = ''; uw.style.display = 'none';
+    onSlider();
+  } else {
+    sw.style.display = 'none'; uw.style.display = '';
+    onUserX();
+  }
+}
+
+function onUserX() {
+  if (!gXs.length) return;
+  const L   = gL;
+  let x     = parseFloat(document.getElementById('xUserInput').value) || 0;
+  x = Math.min(Math.max(x, 0), L);
+  const frac = x / L;
+  // sync slider position visually
+  document.getElementById('xSlider').value = Math.round(frac * 1000);
+  updateSliderGradient();
+  const i = Math.min(Math.max(Math.round(frac * N_PTS), 0), N_PTS);
+  document.getElementById('sliderLabel').textContent = 'x = ' + x.toFixed(3) + ' m';
+  setO('oVx', gV[i] !== undefined ? gV[i].toFixed(4) : '');
+  setO('oMx', gM[i] !== undefined ? gM[i].toFixed(4) : '');
+  setO('oYx', gY[i] !== undefined ? gY[i].toFixed(4) : '');
+  if (typeof gTh !== 'undefined' && gTh.length)
+    setO('oTx', gTh[i] !== undefined ? gTh[i].toFixed(6) : '');
+  updateChartMarkers(x);
+  const sketchRA = parseFloat(document.getElementById('oRA') ? document.getElementById('oRA').value : 0) || 0;
+  const sketchMA = parseFloat(document.getElementById('oMA') ? document.getElementById('oMA').value : 0) || 0;
+  const sketchRB = parseFloat(document.getElementById('oRB') ? document.getElementById('oRB').value : 0) || 0;
+  const sketchMB = parseFloat(document.getElementById('oMB') ? document.getElementById('oMB').value : 0) || 0;
+  if (typeof drawSketch === 'function') {
+    try {
+      if (document.getElementById('fbSketch'))
+        drawSketch(sketchRA, sketchMA, sketchRB, sketchMB, readLoads(), gL);
+      else if (document.getElementById('cbSketch'))
+        drawSketch(sketchRA, sketchMA, readLoads(), gL);
+      else
+        drawSketch(sketchRA, sketchRB, readLoads(), gL);
+    } catch(e) {}
+  }
+}
+
 </script>
 </body>
 </html>
