@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Seismic ESM Calculator (IS 1893:2025) | Construction-Calculator</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <style>
+    input.out-hi  { background-color:#d4edda!important; font-weight:700!important; color:#155724!important; }
+    select.in     { background-color:LightBlue; }
+    .section-card { background:#f8f9fa; border:1px solid #dee2e6; border-radius:6px; padding:16px 20px; margin-bottom:16px; }
+    .section-card h5 { font-weight:700; color:#0d6efd; border-bottom:2px solid #0d6efd; padding-bottom:6px; margin-bottom:14px; font-size:14px; letter-spacing:.5px; text-transform:uppercase; }
+    .formula-box  { background:#fff3cd; border:1px solid #ffc107; border-radius:4px; padding:10px 14px; font-size:12.5px; font-family:monospace; margin-bottom:12px; }
+    .change-box   { background:#e8f4f8; border:1px solid #0dcaf0; border-radius:4px; padding:8px 14px; font-size:11.5px; margin-bottom:12px; }
+    .change-box b { color:#055160; }
+    .result-big   { font-size:1.4rem; font-weight:800; }
+    .result-label { font-size:11px; color:rgba(255,255,255,0.8); text-transform:uppercase; letter-spacing:.5px; }
+    #chartWrap, #chartWrap2 { position:relative; width:100%; max-width:640px; margin-bottom:20px; }
+    .radio-group label { margin-right:16px; font-weight:500; cursor:pointer; }
+    .codal-inputs.active, .manual-inputs.active { display:block; }
+    .codal-inputs, .manual-inputs { display:none; }
+    .note-text    { font-size:11.5px; color:#6c757d; font-style:italic; }
+    .ah-highlight { background:#0d6efd; color:#fff; border-radius:8px; padding:12px 20px; text-align:center; margin-bottom:8px; }
+    .av-highlight { background:#198754; color:#fff; border-radius:8px; padding:12px 20px; text-align:center; }
+    .result-row   { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+    .result-row > div { flex:1; min-width:140px; }
+    .warn-banner  { background:#fff3cd; border:1px solid #ffc107; border-radius:4px; padding:7px 12px; font-size:12px; color:#856404; margin-top:6px; display:none; }
+    .warn-banner.show { display:block; }
+    .tr-display   { font-size:11px; color:#6c757d; margin-top:3px; }
+    .new-badge    { background:#dc3545; color:#fff; font-size:10px; padding:1px 6px; border-radius:10px; vertical-align:middle; }
+    .changed-badge { background:#fd7e14; color:#fff; font-size:10px; padding:1px 6px; border-radius:10px; vertical-align:middle; }
+    .badge-info-sm { background:#0dcaf0; color:#055160; font-size:10px; padding:1px 6px; border-radius:10px; }
+    .min-shear-box { background:#f8d7da; border:1px solid #f5c2c7; border-radius:4px; padding:8px 12px; font-size:12px; margin-top:8px; }
+  </style>
+</head>
+<body style="background-color:teal;">
+
+<header>
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
+  <div class="logo-container">
+    <img src="../../assets/svg/logo.png" alt="Logo">
+    <span>Construction-Calculator</span>
+  </div>
+  <nav>
+    <a href="https://abilassg.github.io/Construction-Calculator/">Home</a>
+    <a href="https://abilassg.github.io/Construction-Calculator/Blogs">Blogs</a>
+    <a href="https://abilassg.github.io/Construction-Calculator/Calculators" class="active">Calculator</a>
+    <a href="https://abilassg.github.io/Construction-Calculator/About_us">About us</a>
+    <a href="https://abilassg.github.io/Construction-Calculator/Contact_us">Contact us</a>
+  </nav>
+</header>
+
+<div class="ad-block ad-top"><p>Advertisement - Top Banner</p></div>
+
+<div class="e-con-inner">
+  <!-- Left sidebar -->
+  <div class="ad-side ad-block" aria-label="Primary Navigation">
+    <h3>Seismic Calculators</h3>
+    <ul>
+      <li><a href="#">ESM — IS 1893:2025 <span class="new-badge">NEW</span></a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/IS1893_ESM">ESM — IS 1893:2016</a></li>
+    </ul>
+    <h3 style="margin-top:16px;">Section Properties</h3>
+    <ul>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">T Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">Rectangular Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">Circular Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">Pipe Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">Box Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section Properties</a></li>
+    </ul>
+  </div>
+
+  <!-- Main content -->
+  <div class="content">
+    <main id="main">
+      <section id="Calculation">
+        <div class="container-fluid px-0">
+          <div class="row no-gutters">
+            <div class="col-md-12">
+              <div class="page-container p-4 my-2 border">
+
+                <h3><strong>Seismic Analysis — Equivalent Static Method</strong></h3>
+                <p class="text-muted mb-1" style="font-size:12.5px;">
+                  As per <strong>IS 1893 (Part 1 &amp; Part 5) : 2025</strong> &nbsp;|&nbsp; Seventh Revision
+                  &nbsp;|&nbsp; Cl. 6.2.2, 6.2.3, 8.2 &nbsp;|&nbsp; Table 1, 3, 4
+                </p>
+
+                <div class="formula-box mb-1">
+                  A<sub>HD</sub> = A<sub>NH</sub>(T) × Z × I / R &nbsp;&nbsp;
+                  A<sub>VD</sub> = (2/3) × A<sub>HD</sub> &nbsp;&nbsp;
+                  V<sub>BD,min</sub> = 0.625 × Z × I / R
+                </div>
+
+                <!-- KEY CHANGES NOTICE -->
+                <div class="change-box mb-3">
+                  <b>Key changes from IS 1893:2016 →</b>
+                  <b class="text-danger">Zone VI</b> added (Himalayas/NE India, Z=0.50–0.75) &nbsp;|&nbsp;
+                  <b>Z now depends on Return Period</b> (not fixed per zone) &nbsp;|&nbsp;
+                  <b>Importance Factor I=1.0</b> uniform; hazard via TR selection &nbsp;|&nbsp;
+                  <b>ANH replaces Sa/g</b> with updated long-period shape (1/T<sup>0.9</sup>) &nbsp;|&nbsp;
+                  <b>OMRF banned</b> in Zones IV, V, VI &nbsp;|&nbsp;
+                  <b>Site classes A–D</b> (Vs-based) replace old Type I–III &nbsp;|&nbsp;
+                  <b>Spectrum extended to 10 s</b>
+                </div>
+
+                <!-- ══ SECTION 1: STRUCTURE CATEGORY ══ -->
+                <div class="section-card">
+                  <h5>1. Structure Category &amp; Return Period (Table 1)</h5>
+                  <div class="container-fluid px-0">
+
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Structure Category</div>
+                      <div class="col-12 col-sm-6">
+                        <select class="in form-control" id="strCat" style="background-color:LightBlue" onchange="onCatChange()">
+                          <option value="normal_115">Normal — Residential / Commercial (I=1.15)</option>
+                          <option value="normal_100" selected>Normal — Other buildings (I=1.0)</option>
+                          <option value="important">Important — Schools, Malls, Offices (I=1.0)</option>
+                          <option value="critical">Critical / Lifeline — Hospitals, Emergency (I=1.0)</option>
+                          <option value="special">Special — Monuments, Toxic containment (I=1.0)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Design Type</div>
+                      <div class="col-12 col-sm-6">
+                        <select class="in form-control" id="designType" style="background-color:LightBlue" onchange="onDesignTypeChange()">
+                          <option value="SD" selected>Strength Design (SD) — primary seismic design</option>
+                          <option value="SC">Serviceability Check (SC) — operational check</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Design Return Period (T<sub>R</sub>)</div>
+                      <div class="col-8 col-sm-4">
+                        <input class="out form-control out-hi" type="text" id="oTR" readonly style="background-color:LightGray"/>
+                      </div>
+                      <div class="col-4 col-sm-3">
+                        <span class="tr-display" id="trNote"></span>
+                      </div>
+                    </div>
+
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Importance Factor (I)</div>
+                      <div class="col-8 col-sm-4">
+                        <input class="out form-control out-hi" type="text" id="oI" readonly style="background-color:LightGray"/>
+                      </div>
+                      <div class="col-4 col-sm-3">
+                        <span class="note-text">Uniform for all categories (TR governs hazard)</span>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <!-- ══ SECTION 2: SEISMIC PARAMETERS ══ -->
+                <div class="section-card">
+                  <h5>2. Seismic Zone &amp; Zone Factor (Table 3)</h5>
+                  <div class="container-fluid px-0">
+
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Earthquake Zone (Cl. 6.2.1)</div>
+                      <div class="col-12 col-sm-5">
+                        <select class="in form-control" id="zone" style="background-color:LightBlue" onchange="onZoneChange()">
+                          <option value="II">Zone II — Low Seismicity</option>
+                          <option value="III">Zone III — Moderate</option>
+                          <option value="IV" selected>Zone IV — Severe</option>
+                          <option value="V">Zone V — Very Severe</option>
+                          <option value="VI">Zone VI — Extreme (Himalayan belt) <span class="new-badge">NEW</span></option>
+                        </select>
+                      </div>
+                      <div class="col-2"><span id="zVal" class="badge badge-primary">Z = —</span></div>
+                    </div>
+
+                    <div id="omrfWarn" class="warn-banner">
+                      ⚠️ <strong>OMRF is prohibited</strong> in Zones IV, V and VI as per IS 1893 (Part 5):2025. Only SMRF and ductile systems are permitted.
+                    </div>
+
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Zone Factor (Z) for T<sub>R</sub></div>
+                      <div class="col-8 col-sm-4">
+                        <input class="out form-control out-hi" type="text" id="oZ" readonly style="background-color:LightGray"/>
+                      </div>
+                      <div class="col-4 col-sm-3 note-text">from Table 3, IS 1893:2025</div>
+                    </div>
+
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Elastic Force Reduction Factor R (Table, Part 5)</div>
+                      <div class="col-12 col-sm-5">
+                        <select class="in form-control" id="rFactor" style="background-color:LightBlue" onchange="onRChange()">
+                          <optgroup label="RC Frame Systems">
+                            <option value="5.0" data-tp="rc_mrf" data-omrf="no">RC SMRF — Special Moment Resisting Frame (R=5.0)</option>
+                            <option value="3.0" data-tp="rc_mrf_infill" data-omrf="yes">RC OMRF — Ordinary MRF (R=3.0) ⚠️ Zones II &amp; III only</option>
+                          </optgroup>
+                          <optgroup label="RC Dual Systems (SMRF + Shear Wall)">
+                            <option value="6.0" data-tp="other" data-omrf="no">RC SMRF + Shear Wall with Boundary Elem (R=6.0)</option>
+                            <option value="5.5" data-tp="other" data-omrf="no">RC SMRF + Shear Wall Non-Boundary Elem (R=5.5)</option>
+                          </optgroup>
+                          <optgroup label="Steel Frame Systems">
+                            <option value="5.0" data-tp="steel_mrf" data-omrf="no">Steel SMRF (R=5.0)</option>
+                            <option value="4.0" data-tp="other" data-omrf="no">Steel SCBF — Special CBF (R=4.0)</option>
+                            <option value="5.0" data-tp="other" data-omrf="no">Steel EBF — Eccentrically Braced Frame (R=5.0)</option>
+                          </optgroup>
+                          <optgroup label="Other">
+                            <option value="3.0" data-tp="other" data-omrf="no">Flat Slab Structure (R=3.0)</option>
+                            <option value="3.0" data-tp="other" data-omrf="no">Reinforced Masonry (R=3.0)</option>
+                            <option value="1.5" data-tp="other" data-omrf="no">Unreinforced Masonry (R=1.5) — Zone II only</option>
+                          </optgroup>
+                        </select>
+                      </div>
+                      <div class="col-2"><span id="rVal" class="badge badge-warning text-dark">R = 5.0</span></div>
+                    </div>
+
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Damping Ratio (Table 7)</div>
+                      <div class="col-12 col-sm-5">
+                        <select class="in form-control" id="damp" style="background-color:LightBlue">
+                          <option value="1.40">2% — Steel structures, pre-stressed concrete (η=1.40)</option>
+                          <option value="1.00" selected>5% — RCC structures (η=1.00) — Default</option>
+                          <option value="0.80">10% — (η=0.80)</option>
+                          <option value="0.70">15% — (η=0.70)</option>
+                          <option value="0.60">20% — (η=0.60)</option>
+                          <option value="0.55">25% — (η=0.55)</option>
+                          <option value="0.50">30% — (η=0.50)</option>
+                        </select>
+                      </div>
+                      <div class="col-2"><span id="dampVal" class="badge badge-info">η=1.00</span></div>
+                    </div>
+
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Site Class (Table 4 — V<sub>s30</sub> based)</div>
+                      <div class="col-12 col-sm-5">
+                        <select class="in form-control" id="siteClass" style="background-color:LightBlue">
+                          <option value="AB">A/B — Hard Rock / Rock (V<sub>s</sub> &gt; 760 m/s)</option>
+                          <option value="C" selected>C — Dense Soil / Soft Rock (360–760 m/s)</option>
+                          <option value="D">D — Stiff Soil (180–360 m/s)</option>
+                          <option value="E" disabled>E — Soft Clay (&lt;180 m/s) → Site-specific assessment required</option>
+                        </select>
+                      </div>
+                      <div class="col-2"><span id="siteVal" class="badge badge-dark">Site C</span></div>
+                    </div>
+
+                    <p class="note-text ml-1">Site Class E requires site-specific hazard assessment per IS 1893:2025 and cannot be calculated with this general formula.</p>
+                  </div>
+                </div>
+
+                <!-- ══ SECTION 3: TIME PERIOD ══ -->
+                <div class="section-card">
+                  <h5>3. Fundamental Time Period (T) — Cl. 7.6, Part 5</h5>
+
+                  <div class="radio-group mb-3">
+                    <label><input type="radio" name="tMode" value="codal" id="tCodeRadio" checked onchange="onTModeChange()"> &nbsp;Codal Formula</label>
+                    <label><input type="radio" name="tMode" value="manual" id="tManualRadio" onchange="onTModeChange()"> &nbsp;Manual Entry (from 3D analysis)</label>
+                  </div>
+
+                  <!-- Codal inputs -->
+                  <div class="codal-inputs active" id="codalDiv">
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Structure Type for T<sub>a</sub></div>
+                      <div class="col-12 col-sm-5">
+                        <select class="in form-control" id="structType" style="background-color:LightBlue" onchange="onStructTypeChange()">
+                          <option value="rc_mrf">RC MRF (bare frame): T = 0.075 × h<sup>0.75</sup></option>
+                          <option value="rc_mrf_infill">RC MRF with brick infill: T = 0.09h / √d</option>
+                          <option value="steel_mrf">Steel MRF (bare frame): T = 0.085 × h<sup>0.75</sup></option>
+                          <option value="other">Other (shear wall / CBF / masonry): T = 0.09h / √d</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Building Height (h)</div>
+                      <div class="col-8 col-sm-4"><input class="in form-control" style="background-color:LightBlue" type="number" id="bHeight" value="15" min="1" step="0.5"/></div>
+                      <div class="col-4 col-sm-3">m</div>
+                    </div>
+                    <div id="baseRow" class="row my-2 align-items-center" style="display:none!important">
+                      <div class="col-12 col-sm-5">Base Dimension along EQ direction (d)</div>
+                      <div class="col-8 col-sm-4"><input class="in form-control" style="background-color:LightBlue" type="number" id="bBase" value="20" min="1" step="0.5"/></div>
+                      <div class="col-4 col-sm-3">m</div>
+                    </div>
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Codal Time Period T<sub>a</sub></div>
+                      <div class="col-8 col-sm-4"><input class="out form-control out-hi" type="text" id="tCodal" readonly style="background-color:LightGray"/></div>
+                      <div class="col-4 col-sm-3">sec</div>
+                    </div>
+                    <p class="note-text ml-1">Max T from analysis must not exceed 1.25 × T<sub>a</sub> for regular buildings (Cl. 7.6.2, Part 5).</p>
+                  </div>
+
+                  <!-- Manual inputs -->
+                  <div class="manual-inputs" id="manualDiv">
+                    <div class="row my-2 align-items-center">
+                      <div class="col-12 col-sm-5">Time Period T (from 3D analysis / software)</div>
+                      <div class="col-8 col-sm-4"><input class="in form-control" style="background-color:LightBlue" type="number" id="tManual" value="0.5" min="0.01" step="0.01"/></div>
+                      <div class="col-4 col-sm-3">sec</div>
+                    </div>
+                    <p class="note-text ml-1">For normal structures: T limited to 0.6 s; important: 2 s; critical: 4 s (conservative per Nepalese/draft guidance). Check compliance with 1.25×T<sub>a</sub> cap.</p>
+                  </div>
+                </div>
+
+                <!-- ══ SECTION 4: RESULTS ══ -->
+                <div class="section-card">
+                  <h5>4. Results</h5>
+
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">Earthquake Zone</div>
+                    <div class="col-8 col-sm-4"><input id="rZone" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">Design Return Period (T<sub>R</sub>)</div>
+                    <div class="col-8 col-sm-4"><input id="rTR" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                    <div class="col-4">years</div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">Zone Factor (Z)</div>
+                    <div class="col-8 col-sm-4"><input id="rZ" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">Importance Factor (I)</div>
+                    <div class="col-8 col-sm-4"><input id="rI" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">Elastic Force Reduction Factor (R)</div>
+                    <div class="col-8 col-sm-4"><input id="rR" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">Damping Multiplier (η)</div>
+                    <div class="col-8 col-sm-4"><input id="rEta" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">Design Time Period (T)</div>
+                    <div class="col-8 col-sm-4"><input id="rT" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                    <div class="col-4">sec</div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">Normalised Spectral Acceleration A<sub>NH</sub>(T) — selected site + damping</div>
+                    <div class="col-8 col-sm-4"><input id="rANH" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+
+                  <hr/>
+
+                  <!-- Big result boxes -->
+                  <div class="result-row">
+                    <div>
+                      <div class="ah-highlight">
+                        <div class="result-label">Design Horizontal Seismic Coefficient</div>
+                        <div class="result-big" id="bigAhd">—</div>
+                        <div style="font-size:11px;color:rgba(255,255,255,0.7)">A<sub>HD</sub> = A<sub>NH</sub> × Z × I / R</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="av-highlight">
+                        <div class="result-label">Design Vertical Seismic Coefficient</div>
+                        <div class="result-big" id="bigAvd">—</div>
+                        <div style="font-size:11px;color:rgba(255,255,255,0.7)">A<sub>VD</sub> = (2/3) × A<sub>HD</sub></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5"><strong>Design Horizontal Coeff. (A<sub>HD</sub>)</strong></div>
+                    <div class="col-8 col-sm-4"><input id="rAHD" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5"><strong>Design Vertical Coeff. (A<sub>VD</sub>)</strong></div>
+                    <div class="col-8 col-sm-4"><input id="rAVD" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+
+                  <div class="min-shear-box">
+                    <strong>Minimum A<sub>HD</sub></strong> (Cl. — min base shear): 
+                    &nbsp; A<sub>HD,min</sub> = 0.625 × Z × I / R = <strong id="rAHDmin">—</strong>
+                    &nbsp; | &nbsp; Governing A<sub>HD</sub> = <strong id="rAHDgov">—</strong>
+                  </div>
+
+                  <!-- ANH for all soil types -->
+                  <hr/>
+                  <h6 class="mt-3" style="font-weight:700;color:#495057;">A<sub>HD</sub> at same T — All Site Classes:</h6>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">A<sub>HD</sub> — Site A/B (Hard Rock/Rock)</div>
+                    <div class="col-8 col-sm-4"><input id="rAHD_AB" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">A<sub>HD</sub> — Site C (Dense/Medium Soil)</div>
+                    <div class="col-8 col-sm-4"><input id="rAHD_C" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                  <div class="row my-2 align-items-center">
+                    <div class="col-12 col-sm-5">A<sub>HD</sub> — Site D (Stiff Soil)</div>
+                    <div class="col-8 col-sm-4"><input id="rAHD_D" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
+                  </div>
+                </div>
+
+                <!-- ══ SECTION 5: GRAPHS ══ -->
+                <div class="section-card">
+                  <h5>5. Response Spectrum — A<sub>NH</sub> vs T (IS 1893:2025)</h5>
+                  <p class="note-text mb-2">Curves shown at selected damping. Vertical marker = design T. Note the modified long-period shape (1/T<sup>0.9</sup>) compared to 2016 code (1/T).</p>
+                  <div id="chartWrap">
+                    <canvas id="anhChart"></canvas>
+                  </div>
+                  <hr/>
+                  <h5>6. A<sub>HD</sub> vs T — All Site Classes</h5>
+                  <p class="note-text mb-2">A<sub>HD</sub> for selected Zone, T<sub>R</sub>, I, R and damping. Vertical marker = design T.</p>
+                  <div id="chartWrap2">
+                    <canvas id="ahdChart"></canvas>
+                  </div>
+                </div>
+
+                <!-- ══ ZONE FACTOR TABLE ══ -->
+                <div class="section-card">
+                  <h5>7. Zone Factor Table (Table 3, IS 1893:2025) — for reference</h5>
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-sm" style="font-size:12px;">
+                      <thead class="thead-dark">
+                        <tr>
+                          <th>Zone</th>
+                          <th>T<sub>R</sub>=73 yr</th>
+                          <th>T<sub>R</sub>=225 yr</th>
+                          <th>T<sub>R</sub>=475 yr</th>
+                          <th>T<sub>R</sub>=975 yr</th>
+                          <th>T<sub>R</sub>=2475 yr</th>
+                          <th>T<sub>R</sub>=4975 yr</th>
+                          <th>T<sub>R</sub>=9975 yr</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td><b>II</b></td><td>0.037</td><td>0.050</td><td>0.060</td><td>0.075</td><td>0.100</td><td>0.113</td><td>0.150</td></tr>
+                        <tr><td><b>III</b></td><td>0.063</td><td>0.085</td><td>0.100</td><td>0.125</td><td>0.167</td><td>0.188</td><td>0.250</td></tr>
+                        <tr><td><b>IV</b></td><td>0.140</td><td>0.175</td><td>0.210</td><td>0.233</td><td>0.280</td><td>0.292</td><td>0.350</td></tr>
+                        <tr><td><b>V</b></td><td>0.200</td><td>0.250</td><td>0.300</td><td>0.333</td><td>0.400</td><td>0.417</td><td>0.500</td></tr>
+                        <tr class="table-danger"><td><b>VI <span class="new-badge">NEW</span></b></td><td>0.300</td><td>0.375</td><td>0.500</td><td>0.600</td><td>0.750</td><td>0.938</td><td>1.125</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p class="note-text">For Strength Design use: Normal=475yr, Important=975yr, Critical=2475yr, Special=4975yr. For Serviceability Check use: Normal=73yr, Important=225yr, Critical=475yr, Special=975yr.</p>
+                </div>
+
+                <!-- ══ REFERENCE ══ -->
+                <div class="section-card" style="background:#e8f4f8;border-color:#bee5eb;">
+                  <h5 style="color:#0c6674;border-color:#0c6674;">Reference — IS 1893 : 2025 Key Clauses</h5>
+                  <small>
+                    <b>Part 1, Cl. 6.2.1:</b> Earthquake zones II–VI &nbsp;|&nbsp;
+                    <b>Cl. 6.2.2.2:</b> Zone factor Z from Table 3 per return period &nbsp;|&nbsp;
+                    <b>Cl. 6.2.3.2:</b> ANH spectral acceleration &nbsp;|&nbsp;
+                    <b>Table 4:</b> Site classes A–E (Vs30 based) &nbsp;|&nbsp;
+                    <b>Part 5, Cl. 8.2:</b> AHD = ANH × Z × I / R &nbsp;|&nbsp;
+                    <b>Cl. 8.2.3:</b> Elastic Force Reduction Factor R (renamed from 2016) &nbsp;|&nbsp;
+                    <b>Part 5 Table:</b> OMRF prohibited in Zones IV, V, VI &nbsp;|&nbsp;
+                    <b>Min base shear:</b> VBD,min = 0.625 × Z × I / R &nbsp;|&nbsp;
+                    <b>Spectrum:</b> Extended to T = 10 s
+                  </small>
+                </div>
+
+              </div><!-- end page-container -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="ad-side ad-block"><p>Advertisement - Sidebar</p></div>
+</div><!-- end e-con-inner -->
+
+<!-- Sub-footer -->
+<div class="subfooter-container">
+  <h3 class="subfooter-title">CALCULATORS</h3>
+  <div class="subfooter">
+    <div class="calculator-category"><h3>Estimation Calculators</h3><ul>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Foundation_Quantity_Estimation">Foundation Quantity Estimation</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Beam_Quantity_Estimation">Beam Quantity Estimation</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Slab_Quantity_Estimation">Slab Quantity Estimation</a></li>
+    </ul></div>
+    <div class="calculator-category"><h3>Section Calculators</h3><ul>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">T Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">Circular Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">Pipe Section Properties</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">Rectangular Section Properties</a></li>
+    </ul></div>
+    <div class="calculator-category"><h3>RCC Design Calculators</h3><ul>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Beam Design</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Column_Design">RCC Column Design</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Isolated_Footing_Design">Isolated Footing Design</a></li>
+    </ul></div>
+    <div class="calculator-category"><h3>Seismic Calculators</h3><ul>
+      <li><a href="#">ESM — IS 1893:2025</a></li>
+      <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/IS1893_ESM">ESM — IS 1893:2016</a></li>
+    </ul></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-container">
+    <div class="footer-icons">
+      <a href="#"><img src="../../assets/svg/telegram-favicon.png" alt="Telegram"></a>
+      <a href="#"><img src="../../assets/svg/youtube-favicon.png" alt="YouTube"></a>
+      <a href="#"><img src="../../assets/svg/instagram-favicon.png" alt="Instagram"></a>
+      <a href="#"><img src="../../assets/svg/x-favicon.png" alt="X"></a>
+    </div>
+    <p>&copy; 2025 Construction-Calculator. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════
+   IS 1893 (Part 1 & Part 5) : 2025 — Equivalent Static Method
+   ════════════════════════════════════════════════════════════════════
+
+   KEY CHANGES from 2016:
+   • Zone VI introduced (Himalayan belt), Z_VI_475 = 0.50, Z_VI_2475 = 0.75
+   • Z now varies with Return Period TR (not fixed per zone)
+   • Structure category → TR → Z (replaces Importance Factor scaling)
+   • I = 1.0 uniform; AHD = ANH × Z × I / R  (no Z/2 — Z is already at DBE level)
+   • ANH long-period: 1.36/T^0.9 for Site C, 1.67/T^0.9 for Site D (vs 1/T in 2016)
+   • Site classes A–D based on Vs30 (replaces Type I–III)
+   • OMRF prohibited in Zones IV, V, VI
+   • Spectrum extended to 10 s
+   • Min base shear: VBD,min = 0.625 × Z × I / R
+════════════════════════════════════════════════════════════════════ */
+
+/* ── Zone Factor Table (Table 3, IS 1893:2025) ── */
+const Z_TABLE = {
+  //           73       225      475      975      2475     4975     9975
+  'II':  [0.0375, 0.0500,  0.0600,  0.0750,  0.1000,  0.1125,  0.1500],
+  'III': [0.0625, 0.0850,  0.1000,  0.1250,  0.1667,  0.1875,  0.2500],
+  'IV':  [0.1400, 0.1750,  0.2100,  0.2333,  0.2800,  0.2917,  0.3500],
+  'V':   [0.2000, 0.2500,  0.3000,  0.3333,  0.4000,  0.4167,  0.5000],
+  'VI':  [0.3000, 0.3750,  0.5000,  0.6000,  0.7500,  0.9375,  1.1250],
+};
+const TR_VALS = [73, 225, 475, 975, 2475, 4975, 9975];
+
+/* Structure category → [SD_TR, SC_TR, I] */
+const CAT_MAP = {
+  'normal_115': [475,  73,  1.15],
+  'normal_100': [475,  73,  1.00],
+  'important':  [975,  225, 1.00],
+  'critical':   [2475, 475, 1.00],
+  'special':    [4975, 975, 1.00],
+};
+
+function getZ(zone, tr) {
+  const idx = TR_VALS.indexOf(tr);
+  return idx >= 0 ? Z_TABLE[zone][idx] : 0;
+}
+
+/* ── ANH at 5% damping ── */
+function anh5(T, sc) {
+  if (T < 0) T = 0;
+  switch(sc) {
+    case 'AB': // Hard rock / Rock — same as 2016 Type I
+      if (T <= 0.40) return 2.5;
+      if (T <= 10.0) return 1.00 / T;
+      return 0.10;
+    case 'C':  // Dense/Medium — KEY CHANGE: 1.36/T^0.9
+      if (T <= 0.55) return 2.5;
+      if (T <= 10.0) return 1.36 / Math.pow(T, 0.9);
+      return 1.36 / Math.pow(10, 0.9);
+    case 'D':  // Stiff soil — KEY CHANGE: 1.67/T^0.9
+      if (T <= 0.67) return 2.5;
+      if (T <= 10.0) return 1.67 / Math.pow(T, 0.9);
+      return 1.67 / Math.pow(10, 0.9);
+    default: return 0;
+  }
+}
+
+function anh(T, sc, eta) { return anh5(T, sc) * eta; }
+
+/* ── Time period — codal ── */
+function codalT(st, h, d) {
+  switch(st) {
+    case 'rc_mrf':        return 0.075 * Math.pow(h, 0.75);
+    case 'steel_mrf':     return 0.085 * Math.pow(h, 0.75);
+    default:              return 0.09 * h / Math.sqrt(d);
+  }
+}
+
+/* ── Return period from category + design type ── */
+function getTR() {
+  const cat  = document.getElementById('strCat').value;
+  const dt   = document.getElementById('designType').value;
+  const [sd, sc, I] = CAT_MAP[cat];
+  return { tr: dt === 'SD' ? sd : sc, I };
+}
+
+/* ── Structure type → show/hide base dim ── */
+function onStructTypeChange() {
+  const st = document.getElementById('structType').value;
+  const need = (st === 'rc_mrf_infill' || st === 'other');
+  document.getElementById('baseRow').style.setProperty('display', need ? 'flex' : 'none', 'important');
+  calculate();
+}
+
+function onTModeChange() {
+  const codal = document.getElementById('tCodeRadio').checked;
+  document.getElementById('codalDiv').classList.toggle('active', codal);
+  document.getElementById('manualDiv').classList.toggle('active', !codal);
+  calculate();
+}
+
+function onCatChange()        { calculate(); }
+function onDesignTypeChange() { calculate(); }
+function onZoneChange()       { checkOMRF(); calculate(); }
+function onRChange()          { checkOMRF(); calculate(); }
+
+function checkOMRF() {
+  const zone = document.getElementById('zone').value;
+  const sel  = document.getElementById('rFactor');
+  const isOMRF = sel.options[sel.selectedIndex].dataset.omrf === 'yes';
+  const highZone = ['IV','V','VI'].includes(zone);
+  document.getElementById('omrfWarn').classList.toggle('show', isOMRF && highZone);
+}
+
+/* ── Chart instances ── */
+let anhChartInst = null, ahdChartInst = null;
+
+function tArray(n, tmax) {
+  const arr = [];
+  for (let i = 0; i <= n; i++) arr.push(+(i * tmax / n).toFixed(3));
+  return arr;
+}
+
+/* ── MAIN CALCULATE ── */
+function calculate() {
+  const { tr, I } = getTR();
+  const zone    = document.getElementById('zone').value;
+  const Z       = getZ(zone, tr);
+  const R       = parseFloat(document.getElementById('rFactor').value);
+  const eta     = parseFloat(document.getElementById('damp').value);
+  const sc      = document.getElementById('siteClass').value;
+
+  /* badges */
+  document.getElementById('zVal').textContent   = 'Z = ' + Z.toFixed(4);
+  document.getElementById('rVal').textContent   = 'R = ' + R;
+  document.getElementById('dampVal').textContent = 'η=' + eta.toFixed(2);
+  const scNames = { AB:'Site A/B', C:'Site C', D:'Site D' };
+  document.getElementById('siteVal').textContent = scNames[sc] || sc;
+
+  /* display TR and I */
+  document.getElementById('oTR').value  = tr;
+  document.getElementById('oI').value   = I.toFixed(2);
+  document.getElementById('oZ').value   = Z.toFixed(4);
+  const dtLabel = document.getElementById('designType').value;
+  document.getElementById('trNote').textContent = dtLabel + ' (return period)';
+
+  /* Time period */
+  let T;
+  if (document.getElementById('tCodeRadio').checked) {
+    const st = document.getElementById('structType').value;
+    const h  = parseFloat(document.getElementById('bHeight').value) || 15;
+    const d  = parseFloat(document.getElementById('bBase').value)   || 20;
+    T = codalT(st, h, d);
+    document.getElementById('tCodal').value = T.toFixed(4);
+  } else {
+    T = parseFloat(document.getElementById('tManual').value) || 0.5;
+  }
+
+  /* ANH */
+  const ANH_sel = anh(T, sc, eta);
+
+  /* AHD = ANH × Z × I / R  (no Z/2 — Z is already DBE) */
+  const AHD     = ANH_sel * Z * I / R;
+  const AVD     = (2/3) * AHD;
+  const AHD_min = 0.625 * Z * I / R;
+  const AHD_gov = Math.max(AHD, AHD_min);
+
+  /* AHD for all soil types */
+  const AHD_AB  = anh(T,'AB',eta) * Z * I / R;
+  const AHD_C   = anh(T,'C', eta) * Z * I / R;
+  const AHD_D   = anh(T,'D', eta) * Z * I / R;
+
+  /* Fill outputs */
+  document.getElementById('rZone').value   = 'Zone ' + zone;
+  document.getElementById('rTR').value     = tr;
+  document.getElementById('rZ').value      = Z.toFixed(4);
+  document.getElementById('rI').value      = I.toFixed(2);
+  document.getElementById('rR').value      = R.toFixed(1);
+  document.getElementById('rEta').value    = eta.toFixed(2);
+  document.getElementById('rT').value      = T.toFixed(4);
+  document.getElementById('rANH').value    = ANH_sel.toFixed(4);
+  document.getElementById('rAHD').value    = AHD.toFixed(4);
+  document.getElementById('rAVD').value    = AVD.toFixed(4);
+  document.getElementById('rAHD_AB').value = AHD_AB.toFixed(4);
+  document.getElementById('rAHD_C').value  = AHD_C.toFixed(4);
+  document.getElementById('rAHD_D').value  = AHD_D.toFixed(4);
+  document.getElementById('rAHDmin').textContent = AHD_min.toFixed(4);
+  document.getElementById('rAHDgov').textContent = AHD_gov.toFixed(4);
+
+  document.getElementById('bigAhd').textContent = AHD_gov.toFixed(4);
+  document.getElementById('bigAvd').textContent = ((2/3)*AHD_gov).toFixed(4);
+
+  /* charts */
+  drawANHChart(T, sc, eta);
+  drawAHDChart(T, Z, I, R, eta);
+}
+
+/* ══ ANH chart ══ */
+function drawANHChart(T_d, scSel, eta) {
+  const Ts  = tArray(400, 6.0);
+  const dAB = Ts.map(t => anh(t,'AB',eta));
+  const dC  = Ts.map(t => anh(t,'C', eta));
+  const dD  = Ts.map(t => anh(t,'D', eta));
+  const mk  = Ts.map(t => Math.abs(t - T_d) < 0.01 ? anh(t, scSel, eta) : null);
+
+  const cfg = {
+    type: 'line',
+    data: {
+      labels: Ts,
+      datasets: [
+        { label:'Site A/B — Hard Rock/Rock', data:dAB, borderColor:'#0d6efd', backgroundColor:'rgba(13,110,253,0.05)', borderWidth:2, pointRadius:0, fill:true, tension:0 },
+        { label:'Site C — Dense/Medium Soil', data:dC, borderColor:'#fd7e14', backgroundColor:'rgba(253,126,20,0.05)', borderWidth:2, pointRadius:0, fill:true, tension:0 },
+        { label:'Site D — Stiff Soil', data:dD, borderColor:'#dc3545', backgroundColor:'rgba(220,53,69,0.05)', borderWidth:2, pointRadius:0, fill:true, tension:0 },
+        { label:`T = ${T_d.toFixed(3)} s (design)`,
+          data: mk, borderColor:'#198754', backgroundColor:'#198754',
+          borderWidth:0, pointRadius: Ts.map(t => Math.abs(t-T_d)<0.01 ? 9:0),
+          pointStyle:'triangle', showLine:false },
+      ]
+    },
+    options: {
+      responsive:true,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        title:{display:true, text:'Normalised Spectral Acceleration ANH vs T (IS 1893:2025, 5% base — scaled by η)', font:{size:13}},
+        legend:{position:'top', labels:{font:{size:11}}},
+        tooltip:{callbacks:{label: c => c.parsed.y!=null ? `${c.dataset.label}: ${c.parsed.y.toFixed(4)}` : ''}}
+      },
+      scales:{
+        x:{type:'linear', title:{display:true, text:'Time Period T (sec)'}, min:0, max:6.0, ticks:{stepSize:0.5}},
+        y:{title:{display:true, text:'ANH'}, min:0, max:3.0}
+      }
+    }
+  };
+  if (anhChartInst) anhChartInst.destroy();
+  anhChartInst = new Chart(document.getElementById('anhChart'), cfg);
+}
+
+/* ══ AHD chart ══ */
+function drawAHDChart(T_d, Z, I, R, eta) {
+  const Ts   = tArray(400, 6.0);
+  const fn   = (t,sc) => Math.max(anh(t,sc,eta)*Z*I/R, 0.625*Z*I/R);
+  const dAB  = Ts.map(t => fn(t,'AB'));
+  const dC   = Ts.map(t => fn(t,'C'));
+  const dD   = Ts.map(t => fn(t,'D'));
+  const mkY  = Math.max(fn(T_d,'D'), fn(T_d,'C')) * 1.1;
+  const mLine= [{x:T_d,y:0},{x:T_d,y:mkY}];
+
+  const cfg = {
+    type:'line',
+    data:{
+      labels:Ts,
+      datasets:[
+        {label:'AHD — Site A/B', data:dAB, borderColor:'#0d6efd', backgroundColor:'rgba(13,110,253,0.05)', borderWidth:2, pointRadius:0, fill:true, tension:0},
+        {label:'AHD — Site C',   data:dC,  borderColor:'#fd7e14', backgroundColor:'rgba(253,126,20,0.05)', borderWidth:2, pointRadius:0, fill:true, tension:0},
+        {label:'AHD — Site D',   data:dD,  borderColor:'#dc3545', backgroundColor:'rgba(220,53,69,0.05)',  borderWidth:2, pointRadius:0, fill:true, tension:0},
+        {label:`T = ${T_d.toFixed(3)} s`,
+          data:mLine, type:'line', borderColor:'#198754', borderWidth:2,
+          borderDash:[6,4], pointRadius:0, showLine:true,
+          parsing:{xAxisKey:'x',yAxisKey:'y'}},
+      ]
+    },
+    options:{
+      responsive:true,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        title:{display:true, text:'Design Seismic Coefficient AHD vs T (IS 1893:2025)', font:{size:13}},
+        legend:{position:'top', labels:{font:{size:11}}},
+        tooltip:{callbacks:{label: c => c.parsed.y!=null ? `${c.dataset.label}: ${c.parsed.y.toFixed(4)}` : ''}}
+      },
+      scales:{
+        x:{type:'linear', title:{display:true, text:'Time Period T (sec)'}, min:0, max:6.0, ticks:{stepSize:0.5}},
+        y:{title:{display:true, text:'AHD'}, min:0}
+      }
+    }
+  };
+  if (ahdChartInst) ahdChartInst.destroy();
+  ahdChartInst = new Chart(document.getElementById('ahdChart'), cfg);
+}
+
+/* ══ Event wiring ══ */
+function toggleMenu() { document.querySelector('header nav').classList.toggle('show'); }
+
+['strCat','designType','zone','rFactor','damp','siteClass','bHeight','bBase','tManual'].forEach(id => {
+  document.getElementById(id).addEventListener('change', calculate);
+  document.getElementById(id).addEventListener('input',  calculate);
+});
+
+window.onload = () => { onStructTypeChange(); checkOMRF(); calculate(); };
+</script>
+</body>
+</html>
