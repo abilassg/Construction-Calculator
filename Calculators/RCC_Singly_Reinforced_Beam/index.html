@@ -7,19 +7,83 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../../assets/css/main.css">
   <style>
-    input.out-hi   { background-color:#d4edda !important; font-weight:700 !important; color:#155724 !important; }
-    input.out-fail { background-color:#f8d7da !important; font-weight:700 !important; color:#721c24 !important; }
-    .checks-table    { width:100%; border-collapse:collapse; font-size:13px; }
-    .checks-table th { background:#343a40; color:#fff; padding:7px 10px; text-align:left; font-size:12px; }
-    .checks-table td { padding:6px 10px; border-bottom:1px solid #dee2e6; vertical-align:middle; }
+    /* ── Result rows ── */
+    .res-row {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:7px 14px; border-bottom:1px solid #dee2e6; font-size:14px;
+    }
+    .res-row:nth-child(even) { background:#f8f9fa; }
+    .res-row .res-lbl { color:#343a40; flex:1; }
+    .res-row .res-val { font-weight:700; color:#343a40; white-space:nowrap; margin-left:12px; }
+    .res-row.highlight { background:#d4edda; }
+    .res-row.highlight .res-lbl,
+    .res-row.highlight .res-val { color:#155724; }
+    .res-row.fail-row { background:#f8d7da; }
+    .res-row.fail-row .res-lbl,
+    .res-row.fail-row .res-val { color:#721c24; }
+
+    /* ── Section header ── */
+    .sec-hdr {
+      background:#008080; color:#fff; font-weight:700; font-size:14px;
+      padding:7px 14px; margin-top:18px; margin-bottom:0; border-radius:3px 3px 0 0;
+    }
+    .sec-hdr:first-child { margin-top:0; }
+
+    /* ── Inputs ── */
+    .inp-group { padding:8px 0 2px; }
+    .inp-group label { font-size:14px; font-weight:700; color:#343a40; margin-bottom:3px; display:block; }
+    .inp-group .form-control {
+      background:#e3f6f5; border:1px solid #b2dfdb; font-size:14px; font-weight:700;
+    }
+    .inp-group .form-control:focus { background:#c8eeec; border-color:#008080; box-shadow:none; }
+    .inp-unit { font-size:13px; color:#6c757d; align-self:center; padding-left:6px; }
+
+    /* ── Toggle switch ── */
+    .toggle-row { display:flex; align-items:center; justify-content:space-between; padding:8px 0; }
+    .toggle-row label { font-size:14px; font-weight:700; color:#343a40; margin:0; }
+    .switch { position:relative; display:inline-block; width:44px; height:24px; }
+    .switch input { opacity:0; width:0; height:0; }
+    .slider-sw {
+      position:absolute; cursor:pointer; top:0;left:0;right:0;bottom:0;
+      background:#ccc; border-radius:24px; transition:.3s;
+    }
+    .slider-sw:before {
+      position:absolute; content:""; height:18px; width:18px; left:3px; bottom:3px;
+      background:#fff; border-radius:50%; transition:.3s;
+    }
+    input:checked + .slider-sw { background:#008080; }
+    input:checked + .slider-sw:before { transform:translateX(20px); }
+
+    /* ── Checks table ── */
+    .checks-table { width:100%; border-collapse:collapse; font-size:13px; margin-top:0; }
+    .checks-table th {
+      background:#343a40; color:#fff; padding:8px 10px;
+      text-align:left; font-size:13px; font-weight:700;
+    }
+    .checks-table td { padding:7px 10px; border-bottom:1px solid #dee2e6; vertical-align:middle; font-size:13px; }
     .checks-table tr:nth-child(even) td { background:#f8f9fa; }
-    .res-ok   { display:inline-block; background:#28a745; color:#fff; font-size:11px; font-weight:700; border-radius:3px; padding:1px 8px; }
-    .res-fail { display:inline-block; background:#dc3545; color:#fff; font-size:11px; font-weight:700; border-radius:3px; padding:1px 8px; }
-    canvas.sketch-canvas { max-width:100%; border:1px solid #dee2e6; border-radius:4px; background:#fff; display:block; }
-    .formula-note { font-size:11px; color:#6c757d; font-family:monospace; background:#f8f9fa; border:1px solid #dee2e6; border-radius:3px; padding:3px 8px; margin:4px 0 8px; }
+    .check-clause { font-size:11px; color:#6c757d; display:block; }
+    .badge-ok   { display:inline-block; background:#28a745; color:#fff; font-size:12px; font-weight:700; border-radius:3px; padding:2px 8px; }
+    .badge-fail { display:inline-block; background:#dc3545; color:#fff; font-size:12px; font-weight:700; border-radius:3px; padding:2px 8px; }
+
+    /* ── Canvas sketch ── */
+    #secSketch {
+      width:100%; max-width:480px; display:block; margin:0 auto;
+      border:1px solid #dee2e6; border-radius:4px; background:#fff;
+    }
+
+    /* ── Legend ── */
+    .legend-grid {
+      display:grid; grid-template-columns:1fr 1fr; gap:4px 16px;
+      padding:10px 14px; background:#f8f9fa; border:1px solid #dee2e6;
+      border-radius:0 0 4px 4px; font-size:13px; font-weight:700;
+    }
+    .legend-item { display:flex; align-items:center; gap:8px; }
+    .leg-dot { width:14px; height:14px; border-radius:50%; flex-shrink:0; border:2px solid rgba(0,0,0,.25); }
+    .leg-rect { width:16px; height:11px; border:2.5px solid #28a745; flex-shrink:0; }
   </style>
 </head>
-<body style="background-color: teal;">
+<body style="background-color:teal;">
 
   <header>
     <div class="hamburger" onclick="toggleMenu()">☰</div>
@@ -39,7 +103,6 @@
   <div class="ad-block ad-top"><p>Advertisement - Top Banner</p></div>
 
   <div class="e-con-inner">
-
     <div class="ad-side ad-block" aria-label="RCC Design Calculators">
       <h3>RCC Design</h3>
       <ul>
@@ -49,7 +112,6 @@
         <li><a href="#">One Way Slab</a></li>
         <li><a href="#">Two Way Slab</a></li>
         <li><a href="#">Isolated Footing</a></li>
-        <li><a href="#">Combined Footing</a></li>
       </ul>
       <h3 style="margin-top:16px;">Beam Analysis</h3>
       <ul>
@@ -62,55 +124,62 @@
 
     <div class="content">
       <main id="main">
-        <Section id="Calculation">
+        <section id="Calculation">
           <div class="container">
             <div class="row">
               <div class="col-md-12">
                 <div class="page-container p-4 my-2 border">
 
-                  <h3><strong>RCC Singly Reinforced Beam Design (IS 456 : 2000)</strong></h3>
-                  <p class="text-muted mb-3" style="font-size:12.5px;">Limit State Design &nbsp;·&nbsp; IS 456:2000 &nbsp;·&nbsp; IS 13920:2018 &nbsp;·&nbsp; SP 16:1980</p>
+                  <h3><strong>RCC Singly Reinforced Beam Design</strong></h3>
+                  <p class="text-muted mb-4" style="font-size:13px;">
+                    Limit State Design &nbsp;·&nbsp; IS 456 : 2000 &nbsp;·&nbsp; IS 13920 : 2018
+                  </p>
 
-                  <!-- ELEVATION SKETCH -->
-                  <div class="container my-4">
-                    <h3><strong>Beam Elevation:</strong></h3>
-                    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><canvas id="elevSketch" class="sketch-canvas"></canvas></div>
+                  <!-- ══════════════════════════════════════════════════
+                       CROSS-SECTION SKETCH
+                  ══════════════════════════════════════════════════ -->
+                  <canvas id="secSketch"></canvas>
+                  <div class="legend-grid">
+                    <div class="legend-item"><span class="leg-dot" style="background:#F0A500;border-color:#C06000;"></span>Corner bar (orange)</div>
+                    <div class="legend-item"><span class="leg-dot" style="background:#FFCC02;border-color:#997700;"></span>Intermediate bar (yellow)</div>
+                    <div class="legend-item"><span class="leg-dot" style="background:#BF360C;border-color:#7B1A00;"></span>Hanger bar (brown)</div>
+                    <div class="legend-item"><span class="leg-rect"></span>Stirrup (135° hook, IS 13920)</div>
                   </div>
 
-                  <!-- CROSS SECTION SKETCH -->
-                  <div class="container my-4">
-                    <h3><strong>Cross-Section View:</strong></h3>
-                    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><canvas id="secSketch" class="sketch-canvas"></canvas></div>
+                  <hr class="my-4"/>
+
+                  <!-- ══════════════════════════════════════════════════
+                       INPUTS
+                  ══════════════════════════════════════════════════ -->
+
+                  <!-- Beam Geometry -->
+                  <div class="sec-hdr">Beam Geometry</div>
+                  <div style="border:1px solid #dee2e6; border-top:none; padding:12px 14px 6px; margin-bottom:0;">
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Width &nbsp;b &nbsp;(mm)</label><input class="form-control" type="number" id="b" value="300" min="1" oninput="calc()"></div>
+                      <div class="col-4 inp-unit">mm</div>
+                    </div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Overall Depth &nbsp;D &nbsp;(mm)</label><input class="form-control" type="number" id="bigD" value="500" min="1" oninput="calc()"></div>
+                      <div class="col-4 inp-unit">mm</div>
+                    </div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Length &nbsp;L &nbsp;(mm)</label><input class="form-control" type="number" id="L" value="4000" min="1" oninput="calc()"></div>
+                      <div class="col-4 inp-unit">mm</div>
+                    </div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Clear Cover &nbsp;Cc &nbsp;(mm)</label><input class="form-control" type="number" id="Cc" value="25" min="1" oninput="calc()"></div>
+                      <div class="col-4 inp-unit">mm</div>
+                    </div>
                   </div>
 
-                  <!-- BEAM PROPERTIES -->
-                  <div class="container my-4">
-                    <h3><strong>Beam &amp; Material Properties:</strong></h3>
-
-                    <div class="row my-2">
-                      <div class="col-12">Width of Beam (b)</div>
-                      <div class="col-8"><input class="in form-control" style="background-color:LightBlue" type="number" id="b" value="300" min="1" step="1"></div>
-                      <div class="col-4">mm</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Overall Depth (D)</div>
-                      <div class="col-8"><input class="in form-control" style="background-color:LightBlue" type="number" id="D" value="500" min="1" step="1"></div>
-                      <div class="col-4">mm</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Length of Beam (L)</div>
-                      <div class="col-8"><input class="in form-control" style="background-color:LightBlue" type="number" id="L" value="5000" min="1" step="1"></div>
-                      <div class="col-4">mm</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Clear Cover (Cc)</div>
-                      <div class="col-8"><input class="in form-control" style="background-color:LightBlue" type="number" id="Cc" value="25" min="1" step="1"></div>
-                      <div class="col-4">mm</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Concrete Grade (fck)</div>
+                  <!-- Material Properties -->
+                  <div class="sec-hdr">Material Properties</div>
+                  <div style="border:1px solid #dee2e6; border-top:none; padding:12px 14px 6px; margin-bottom:0;">
+                    <div class="row align-items-end inp-group">
                       <div class="col-8">
-                        <select class="in form-control" style="background-color:LightBlue" id="fck">
+                        <label>Concrete Grade &nbsp;fck</label>
+                        <select class="form-control" id="fck" onchange="calc()">
                           <option value="15">M15</option>
                           <option value="20" selected>M20</option>
                           <option value="25">M25</option>
@@ -119,736 +188,551 @@
                           <option value="40">M40</option>
                         </select>
                       </div>
-                      <div class="col-4">MPa</div>
+                      <div class="col-4 inp-unit">MPa</div>
                     </div>
-                    <div class="row my-2">
-                      <div class="col-12">Steel Grade (fy)</div>
+                    <div class="row align-items-end inp-group">
                       <div class="col-8">
-                        <select class="in form-control" style="background-color:LightBlue" id="fy">
+                        <label>Steel Grade &nbsp;fy</label>
+                        <select class="form-control" id="fy" onchange="calc()">
                           <option value="250">Fe 250</option>
                           <option value="415">Fe 415</option>
                           <option value="500" selected>Fe 500</option>
                           <option value="550">Fe 550</option>
                         </select>
                       </div>
-                      <div class="col-4">MPa</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Exposure Condition</div>
-                      <div class="col-8">
-                        <select class="in form-control" style="background-color:LightBlue" id="exposure">
-                          <option value="mild" selected>Mild</option>
-                          <option value="moderate">Moderate</option>
-                          <option value="severe">Severe</option>
-                          <option value="very_severe">Very Severe</option>
-                        </select>
-                      </div>
-                      <div class="col-4">&mdash;</div>
+                      <div class="col-4 inp-unit">MPa</div>
                     </div>
                   </div>
 
-                  <hr />
-
-                  <!-- REINFORCEMENT -->
-                  <div class="container my-4">
-                    <h3><strong>Reinforcement Details:</strong></h3>
-
-                    <div class="row my-1"><div class="col-12"><strong>— Bottom Bars (Tension) —</strong></div></div>
-                    <div class="row my-2">
-                      <div class="col-12">Diameter (⌀<sub>bot</sub>)</div>
-                      <div class="col-8"><select class="in form-control" style="background-color:LightBlue" id="dia_bot">
-                          <option value="6">6 mm</option>
-                          <option value="8">8 mm</option>
-                          <option value="10">10 mm</option>
-                          <option value="12">12 mm</option>
-                          <option value="16" selected>16 mm</option>
-                          <option value="20">20 mm</option>
-                          <option value="25">25 mm</option>
-                          <option value="28">28 mm</option>
-                          <option value="32">32 mm</option>
-                          <option value="36">36 mm</option>
+                  <!-- Bottom Reinforcement -->
+                  <div class="sec-hdr">Bottom Reinforcement &nbsp;(Tension)</div>
+                  <div style="border:1px solid #dee2e6; border-top:none; padding:12px 14px 6px; margin-bottom:0;">
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8">
+                        <label>Corner Bar &nbsp;Ø &nbsp;(2 nos, at stirrup corners)</label>
+                        <select class="form-control" id="diaBot1" onchange="calc()">
+                          <option value="6">6 mm</option><option value="8">8 mm</option>
+                          <option value="10">10 mm</option><option value="12">12 mm</option>
+                          <option value="16" selected>16 mm</option><option value="20">20 mm</option>
+                          <option value="25">25 mm</option><option value="28">28 mm</option>
+                          <option value="32">32 mm</option><option value="36">36 mm</option>
                           <option value="40">40 mm</option>
-                        </select></div>
-                      <div class="col-4">mm</div>
+                        </select>
+                      </div>
+                      <div class="col-4 inp-unit">mm</div>
                     </div>
-                    <div class="row my-2">
-                      <div class="col-12">Number of Bars</div>
-                      <div class="col-8"><input class="in form-control" style="background-color:LightBlue" type="number" id="n_bot" value="3" min="1" step="1"></div>
-                      <div class="col-4">&mdash;</div>
+                    <div class="toggle-row">
+                      <label>Add intermediate bottom bars?</label>
+                      <label class="switch">
+                        <input type="checkbox" id="hasBot2" checked onchange="toggleBot2()">
+                        <span class="slider-sw"></span>
+                      </label>
                     </div>
+                    <div id="bot2Fields">
+                      <div class="row align-items-end inp-group">
+                        <div class="col-8">
+                          <label>Intermediate Bar &nbsp;Ø</label>
+                          <select class="form-control" id="diaBot2" onchange="calc()">
+                            <option value="6">6 mm</option><option value="8">8 mm</option>
+                            <option value="10">10 mm</option><option value="12" selected>12 mm</option>
+                            <option value="16">16 mm</option><option value="20">20 mm</option>
+                            <option value="25">25 mm</option><option value="28">28 mm</option>
+                            <option value="32">32 mm</option><option value="36">36 mm</option>
+                            <option value="40">40 mm</option>
+                          </select>
+                        </div>
+                        <div class="col-4 inp-unit">mm</div>
+                      </div>
+                      <div class="row align-items-end inp-group">
+                        <div class="col-8"><label>No. of Intermediate Bars</label><input class="form-control" type="number" id="nBot2" value="1" min="1" oninput="calc()"></div>
+                        <div class="col-4 inp-unit">—</div>
+                      </div>
+                    </div>
+                  </div>
 
-                    <div class="row my-1 mt-3"><div class="col-12"><strong>— Top Bars (Hanger / Compression) —</strong></div></div>
-                    <div class="row my-2">
-                      <div class="col-12">Diameter (⌀<sub>top</sub>)</div>
-                      <div class="col-8"><select class="in form-control" style="background-color:LightBlue" id="dia_top">
-                          <option value="6">6 mm</option>
-                          <option value="8">8 mm</option>
-                          <option value="10">10 mm</option>
-                          <option value="12" selected>12 mm</option>
-                          <option value="16">16 mm</option>
-                          <option value="20">20 mm</option>
-                          <option value="25">25 mm</option>
-                          <option value="28">28 mm</option>
-                          <option value="32">32 mm</option>
-                          <option value="36">36 mm</option>
+                  <!-- Top Reinforcement -->
+                  <div class="sec-hdr">Top Reinforcement &nbsp;(Hanger / Compression)</div>
+                  <div style="border:1px solid #dee2e6; border-top:none; padding:12px 14px 6px; margin-bottom:0;">
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8">
+                        <label>Top Bar &nbsp;Ø</label>
+                        <select class="form-control" id="diaTop" onchange="calc()">
+                          <option value="6">6 mm</option><option value="8">8 mm</option>
+                          <option value="10" selected>10 mm</option><option value="12">12 mm</option>
+                          <option value="16">16 mm</option><option value="20">20 mm</option>
+                          <option value="25">25 mm</option><option value="28">28 mm</option>
+                          <option value="32">32 mm</option><option value="36">36 mm</option>
                           <option value="40">40 mm</option>
-                        </select></div>
-                      <div class="col-4">mm</div>
+                        </select>
+                      </div>
+                      <div class="col-4 inp-unit">mm</div>
                     </div>
-                    <div class="row my-2">
-                      <div class="col-12">Number of Bars</div>
-                      <div class="col-8"><input class="in form-control" style="background-color:LightBlue" type="number" id="n_top" value="2" min="1" step="1"></div>
-                      <div class="col-4">&mdash;</div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>No. of Top Bars</label><input class="form-control" type="number" id="nTop" value="3" min="1" oninput="calc()"></div>
+                      <div class="col-4 inp-unit">—</div>
                     </div>
+                  </div>
 
-                    <div class="row my-1 mt-3"><div class="col-12"><strong>— Stirrups (Shear Reinforcement) —</strong></div></div>
-                    <div class="row my-2">
-                      <div class="col-12">Diameter (⌀<sub>sv</sub>)</div>
-                      <div class="col-8"><select class="in form-control" style="background-color:LightBlue" id="dia_sv">
+                  <!-- Shear Reinforcement -->
+                  <div class="sec-hdr">Shear Reinforcement &nbsp;(Stirrups)</div>
+                  <div style="border:1px solid #dee2e6; border-top:none; padding:12px 14px 6px; margin-bottom:0;">
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8">
+                        <label>Stirrup &nbsp;Ø</label>
+                        <select class="form-control" id="diaSv" onchange="calc()">
                           <option value="6">6 mm</option>
                           <option value="8" selected>8 mm</option>
                           <option value="10">10 mm</option>
                           <option value="12">12 mm</option>
-                        </select></div>
-                      <div class="col-4">mm</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Legs</div>
-                      <div class="col-8">
-                        <select class="in form-control" style="background-color:LightBlue" id="legs_sv">
-                          <option value="2" selected>2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
                         </select>
                       </div>
-                      <div class="col-4">&mdash;</div>
+                      <div class="col-4 inp-unit">mm</div>
+                    </div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8">
+                        <label>Stirrup Legs</label>
+                        <select class="form-control" id="legs" onchange="calc()">
+                          <option value="2" selected>2 legs</option>
+                          <option value="3">3 legs</option>
+                          <option value="4">4 legs</option>
+                        </select>
+                      </div>
+                      <div class="col-4 inp-unit">—</div>
+                    </div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Stirrup Spacing &nbsp;Sv &nbsp;(mm) — provided</label><input class="form-control" type="number" id="svProv" value="150" min="1" oninput="calc()"></div>
+                      <div class="col-4 inp-unit">mm</div>
                     </div>
                   </div>
 
-                  <hr />
-
-                  <!-- FORCES -->
-                  <div class="container my-4">
-                    <h3><strong>Applied Forces (from Analysis):</strong></h3>
-
-                    <div class="row my-2">
-                      <div class="col-12">Max Shear Force (V<sub>u</sub>)</div>
-                      <div class="col-8"><input class="in form-control" style="background-color:LightBlue" type="number" id="Vu" value="80" min="0" step="0.1"></div>
-                      <div class="col-4">kN</div>
+                  <!-- Applied Forces -->
+                  <div class="sec-hdr">Applied Forces</div>
+                  <div style="border:1px solid #dee2e6; border-top:none; padding:12px 14px 6px; margin-bottom:0;">
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Shear Force &nbsp;Vu &nbsp;(kN)</label><input class="form-control" type="number" id="vuKN" value="100" min="0" oninput="calc()"></div>
+                      <div class="col-4 inp-unit">kN</div>
                     </div>
-                    <div class="row my-2">
-                      <div class="col-12">Max BM – Bottom / Midspan (M<sub>u,bot</sub>)</div>
-                      <div class="col-8"><input class="in form-control" style="background-color:LightBlue" type="number" id="Mu_bot" value="60" min="0" step="0.1"></div>
-                      <div class="col-4">kNm</div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Moment &nbsp;Mu,bot &nbsp;(kNm)</label><input class="form-control" type="number" id="muBot" value="80" min="0" oninput="calc()"></div>
+                      <div class="col-4 inp-unit">kNm</div>
                     </div>
-                    <div class="row my-2">
-                      <div class="col-12">Max BM – Top / Support (M<sub>u,top</sub>)</div>
-                      <div class="col-8"><input class="in form-control" style="background-color:LightBlue" type="number" id="Mu_top" value="40" min="0" step="0.1"></div>
-                      <div class="col-4">kNm</div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Moment &nbsp;Mu,top &nbsp;(kNm)</label><input class="form-control" type="number" id="muTop" value="35" min="0" oninput="calc()"></div>
+                      <div class="col-4 inp-unit">kNm</div>
                     </div>
                   </div>
 
-                  <hr />
+                  <hr class="my-4"/>
 
-                  <!-- DERIVED PROPERTIES -->
-                  <div class="container my-4">
-                    <h3><strong>Derived Section Properties:</strong></h3>
+                  <!-- ══════════════════════════════════════════════════
+                       RESULTS
+                  ══════════════════════════════════════════════════ -->
+                  <div id="results"></div>
 
-                    <div class="row my-2">
-                      <div class="col-12">Effective Cover (C<sub>eff</sub>) = Cc + ⌀<sub>sv</sub> + ⌀<sub>bot</sub>/2</div>
-                      <div class="col-8"><input id="oCeff" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">mm</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Effective Depth (d) = D − C<sub>eff</sub></div>
-                      <div class="col-8"><input id="od" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">mm</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Ast Provided – Bottom (<span id="bot_desc">—</span>)</div>
-                      <div class="col-8"><input id="oAst_bot" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">mm²</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Ast Provided – Top (<span id="top_desc">—</span>)</div>
-                      <div class="col-8"><input id="oAst_top" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">mm²</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Asv Provided – Stirrups (<span id="sv_desc">—</span>)</div>
-                      <div class="col-8"><input id="oAsv" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">mm²</div>
-                    </div>
-                  </div>
-
-                  <hr />
-
-                  <!-- FLEXURE -->
-                  <div class="container my-4">
-                    <h3><strong>Design for Flexure:</strong></h3>
-
-                    <div class="row my-2">
-                      <div class="col-12">Moment Resistance M<sub>r</sub> = 0.133·fck·b·d²</div>
-                      <div class="col-8"><input id="oMr" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">kNm</div>
-                    </div>
-                    <div class="formula-note">M_r = 0.133 × fck × b × d²</div>
-                    <div class="row my-2">
-                      <div class="col-12">Beam Type</div>
-                      <div class="col-8"><input id="oBeamType" class="out form-control" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">&mdash;</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Ast min (Cl. 26.5.1.1) = 0.85·b·d / fy</div>
-                      <div class="col-8"><input id="oAst_min" class="out form-control" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">mm²</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Ast calculated – Bottom (from M<sub>u,bot</sub>)</div>
-                      <div class="col-8"><input id="oAst_calc" class="out form-control" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">mm²</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Ast required – Bottom = max(Ast_calc, Ast_min)</div>
-                      <div class="col-8"><input id="oAst_req" class="out form-control" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">mm²</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Ast required – Top (from M<sub>u,top</sub>)</div>
-                      <div class="col-8"><input id="oAst_top_req" class="out form-control" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">mm²</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Ast max (Cl. 26.5.1.2) = 0.04·b·D</div>
-                      <div class="col-8"><input id="oAst_max" class="out form-control" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">mm²</div>
-                    </div>
-                  </div>
-
-                  <hr />
-
-                  <!-- SHEAR -->
-                  <div class="container my-4">
-                    <h3><strong>Design for Shear:</strong></h3>
-
-                    <div class="row my-2">
-                      <div class="col-12">Nominal Shear Stress τ<sub>v</sub> = V<sub>u</sub> / (b·d)</div>
-                      <div class="col-8"><input id="otv" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">N/mm²</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Tension Steel Percentage (p<sub>t</sub>)</div>
-                      <div class="col-8"><input id="oPt" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">%</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">β = 0.8·fck / (6.89·p<sub>t</sub>) &nbsp;<small class="text-muted">(SP 16)</small></div>
-                      <div class="col-8"><input id="oBeta" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">&mdash;</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Design Shear Strength τ<sub>c</sub> &nbsp;<small class="text-muted">(Table 19)</small></div>
-                      <div class="col-8"><input id="oTc" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">N/mm²</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Size factor k &nbsp;<small class="text-muted">(Cl. 40.2.1.1)</small></div>
-                      <div class="col-8"><input id="oK" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">&mdash;</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">k · τ<sub>c</sub></div>
-                      <div class="col-8"><input id="oKtc" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">N/mm²</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">S<sub>v,max</sub> = 0.87·fy·Asv / (0.4·b) &nbsp;<small class="text-muted">(Cl. 26.5.1.6)</small></div>
-                      <div class="col-8"><input id="oSvmax" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">mm</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">0.75·d &nbsp;|&nbsp; 300 mm (spacing limit)</div>
-                      <div class="col-8"><input id="o075d" class="out form-control" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">mm</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12"><strong>Stirrup Spacing Provided (S<sub>v</sub>)</strong></div>
-                      <div class="col-8"><input id="oSv" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">mm</div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-12">Development Length L<sub>d</sub></div>
-                      <div class="col-8"><input id="oLd" class="out form-control out-hi" type="text" readonly style="background-color:LightGray"/></div>
-                      <div class="col-4">mm</div>
-                    </div>
-                  </div>
-
-                  <hr />
-
-                  <!-- CODE CHECKS -->
-                  <div class="container my-4">
-                    <h3><strong>Code Checks &amp; Summary:</strong></h3>
-                    <div class="table-responsive">
-                      <table class="checks-table">
-                        <thead>
-                          <tr><th>#</th><th>Check</th><th>Clause</th><th>Computed</th><th>Limit</th><th>Status</th></tr>
-                        </thead>
-                        <tbody id="checksBody"></tbody>
-                      </table>
-                    </div>
-                    <div class="alert alert-secondary mt-3 p-2" style="font-size:12px;">
-                      <strong>IS 13920-2018 Design Drawing Notes:</strong><br>
-                      1. Min 2 bars continuous at top and bottom throughout the beam (Cl. 6.2.1a).<br>
-                      2. Bottom steel at support ≥ 50% of top steel at support (Cl. 6.2.6).<br>
-                      3. Development length L<sub>d</sub> — not to be provided in middle ⅓ or at support ⅙ of span.<br>
-                      4. In L<sub>d</sub> zone, stirrup spacing ≤ 150 mm (Cl. 6.2.6).
-                    </div>
-                  </div>
-
-                </div><!-- /page-container -->
+                </div>
               </div>
             </div>
           </div>
-        </Section>
+        </section>
       </main>
-    </div><!-- /content -->
-
-    <div class="ad-side ad-block"><p>Advertisement - Sidebar</p></div>
-  </div><!-- /e-con-inner -->
-
-  <!-- Sub-footer -->
-  <div class="subfooter-container">
-    <h3 class="subfooter-title">CALCULATORS</h3>
-    <div class="subfooter">
-      <div class="calculator-category">
-        <h3>Estimation Calculators</h3>
-        <ul>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Foundation_Quantity_Estimation">Foundation Quantity Estimation</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Column_Quantity_Estimation">Column Quantity Estimation</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Beam_Quantity_Estimation">Beam Quantity Estimation</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Slab_Quantity_Estimation">Slab Quantity Estimation</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Brick_Quantity_Estimation">Brick Quantity Estimation</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Quantity_Estimation">RCC Quantity Estimation</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Plate_Girder_Quantity_Estimation">Plate Girder Quantity Estimation</a></li>
-        </ul>
-      </div>
-      <div class="calculator-category">
-        <h3>Section Calculators</h3>
-        <ul>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section Properties</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">T Section Properties</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">Circular Section Properties</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">Pipe Section Properties</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">Rectangular Section Properties</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section Properties</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">Box Section Properties</a></li>
-        </ul>
-      </div>
-      <div class="calculator-category">
-        <h3>RCC Design Calculators</h3>
-        <ul>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Singly_Reinforced_Beam_Design">RCC Singly Reinforced Beam Design</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Doubly Reinforced Beam Design</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Column_Design">RCC Column Design</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_One_Way_Slab_Design">RCC 1 Way Slab Design</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Two_Way_Slab_Design">RCC 2 Way Slab Design</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Isolated_Footing_Design">Isolated Footing Design</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Combined_Footing_Design">Combined Footing Design</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Trapezoidal_Footing_Design">Trapezoidal Footing Design</a></li>
-        </ul>
-      </div>
-      <div class="calculator-category">
-        <h3>Geotechnical Engineering Calculators</h3>
-        <ul>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Important_Basic_Formulae">Important Basic Formulae</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Seive_Size_Analysis">Sieve Size Analysis</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Active_Earth_Pressure">Active Earth Pressure</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Passive_Earth_Pressure">Passive Earth Pressure</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Soil_Bearing_Capacity">Soil Bearing Capacity</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pile_Capacity">Pile Capacity</a></li>
-        </ul>
-      </div>
     </div>
   </div>
+
+  <div class="ad-block ad-bottom"><p>Advertisement - Bottom Banner</p></div>
   <footer>
-    <div class="footer-container">
-      <div class="footer-icons">
-        <a href="#"><img src="../../assets/svg/telegram-favicon.png" alt="Telegram"></a>
-        <a href="#"><img src="../../assets/svg/youtube-favicon.png" alt="YouTube"></a>
-        <a href="#"><img src="../../assets/svg/instagram-favicon.png" alt="Instagram"></a>
-        <a href="#"><img src="../../assets/svg/x-favicon.png" alt="X"></a>
-      </div>
-      <p>&copy; 2025 Your Website Name. All rights reserved.</p>
-    </div>
+    <p>© 2024 Construction-Calculator. All rights reserved.</p>
   </footer>
 
-<script>
-/* ══ helpers ══ */
-function g(id)   { return document.getElementById(id); }
-function setV(id,v) { const e=g(id); if(e) e.value=v; }
-function setH(id,h) { const e=g(id); if(e) e.innerHTML=h; }
+  <script src="../../assets/js/main.js"></script>
+  <script>
+  // ══════════════════════════════════════════════════════════════════════════
+  //  HELPERS
+  // ══════════════════════════════════════════════════════════════════════════
+  const $ = id => document.getElementById(id);
+  const v  = id => parseFloat($(id).value) || 0;
+  const vi = id => parseInt($(id).value)   || 0;
 
-/* === SKETCH UTILITIES === */
-
-function setupCanvas(canvas, cssW, cssH) {
-  const dpr = window.devicePixelRatio || 1;
-  canvas.style.width  = cssW + 'px';
-  canvas.style.height = cssH + 'px';
-  canvas.width  = Math.round(cssW * dpr);
-  canvas.height = Math.round(cssH * dpr);
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-  return ctx;
-}
-
-function dimH(ctx, x1, y, x2, label, col) {
-  if (Math.abs(x2 - x1) < 4) return;
-  ctx.save();
-  ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
-  [[x1, 1],[x2, -1]].forEach(([x, d]) => {
-    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x+d*6, y-3); ctx.lineTo(x+d*6, y+3); ctx.closePath(); ctx.fill();
-  });
-  ctx.font = '9px Segoe UI,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-  ctx.fillText(label, (x1+x2)/2, y - 2);
-  ctx.restore();
-}
-
-function dimV(ctx, x, y1, y2, label, col) {
-  if (Math.abs(y2 - y1) < 4) return;
-  ctx.save();
-  ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x, y2); ctx.stroke();
-  [[y1, 1],[y2, -1]].forEach(([y, d]) => {
-    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x-3, y+d*6); ctx.lineTo(x+3, y+d*6); ctx.closePath(); ctx.fill();
-  });
-  ctx.font = '9px Segoe UI,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-  ctx.fillText(label, x + 4, (y1+y2)/2);
-  ctx.restore();
-}
-
-/* barPos handles all bar placement */
-function barPos(n, innerL, innerR) {
-  if (n <= 0) return [];
-  if (n === 1) return [(innerL + innerR) / 2];
-  const pos = [];
-  for (let i = 0; i < n; i++) pos.push(innerL + i * (innerR - innerL) / (n - 1));
-  return pos;
-}
-
-/* === ELEVATION SKETCH === */
-function drawElevation(b, D, L, n_bot, n_top, d_bot, d_top, d_sv, Sv) {
-  const wrap = g('elevSketch').parentElement;
-  const cssW = Math.max(wrap.clientWidth - 4, 260);
-  const cssH = 148;
-  const canvas = g('elevSketch');
-  const ctx = setupCanvas(canvas, cssW, cssH);
-
-  const lx = 8, bLen = cssW - 16, ty = 22, beamH = 52;
-
-  ctx.fillStyle = '#e9ecef';
-  ctx.fillRect(lx, ty, bLen, beamH);
-  ctx.strokeStyle = '#343a40'; ctx.lineWidth = 2;
-  ctx.strokeRect(lx, ty, bLen, beamH);
-
-  /* pin supports */
-  [lx, lx + bLen].forEach(x => {
-    const base = ty + beamH;
-    ctx.beginPath(); ctx.moveTo(x, base); ctx.lineTo(x-9, base+13); ctx.lineTo(x+9, base+13); ctx.closePath();
-    ctx.fillStyle = '#adb5bd'; ctx.fill(); ctx.strokeStyle = '#495057'; ctx.lineWidth = 1.5; ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(x-12, base+15); ctx.lineTo(x+12, base+15); ctx.stroke();
-  });
-
-  const rB = Math.min(5, Math.max(3, beamH * 0.09));
-  const rT = Math.min(4, Math.max(2.5, rB * 0.85));
-
-  /* bottom bars — equidistant in elevation view */
-  const nb = Math.min(n_bot, 8);
-  for (let i = 0; i < nb; i++) {
-    const bx = lx + (i+1) * bLen / (nb+1);
-    ctx.beginPath(); ctx.arc(bx, ty + beamH - rB - 2, rB, 0, Math.PI*2);
-    ctx.fillStyle = '#f0a500'; ctx.fill(); ctx.strokeStyle = '#c06000'; ctx.lineWidth = 0.8; ctx.stroke();
-  }
-  /* top bars */
-  const nt = Math.min(n_top, 8);
-  for (let i = 0; i < nt; i++) {
-    const bx = lx + (i+1) * bLen / (nt+1);
-    ctx.beginPath(); ctx.arc(bx, ty + rT + 2, rT, 0, Math.PI*2);
-    ctx.fillStyle = '#e05c00'; ctx.fill(); ctx.strokeStyle = '#a03000'; ctx.lineWidth = 0.8; ctx.stroke();
+  function toggleBot2() {
+    $('bot2Fields').style.display = $('hasBot2').checked ? '' : 'none';
+    calc();
   }
 
-  /* stirrups */
-  ctx.strokeStyle = '#28a745'; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
-  const svStep = Math.max(28, Math.min(Sv * bLen / L, bLen / 3));
-  for (let xi = lx + svStep * 0.6; xi < lx + bLen - 8; xi += svStep)
-    ctx.strokeRect(xi-5, ty+4, 10, beamH-8);
-  ctx.setLineDash([]);
-
-  /* A/B labels */
-  ctx.fillStyle = '#343a40'; ctx.font = 'bold 10px Segoe UI,sans-serif';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-  ctx.fillText('A', lx, ty - 2);
-  ctx.fillText('B', lx + bLen, ty - 2);
-
-  /* D label left, horizontal */
-  ctx.font = '9px Segoe UI,sans-serif'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-  ctx.fillText('D=' + D, lx - 2, ty + beamH/2);
-
-  /* L label below */
-  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  ctx.fillText('L = ' + (L/1000).toFixed(2) + ' m', lx + bLen/2, ty + beamH + 18);
-
-  /* legend row */
-  const ly = ty + beamH + 36;
-  ctx.textBaseline = 'middle'; ctx.font = '9px Segoe UI,sans-serif';
-  let lxx = lx;
-  ctx.fillStyle = '#f0a500'; ctx.fillRect(lxx, ly-4, 9, 8);
-  ctx.fillStyle = '#343a40'; ctx.textAlign = 'left'; ctx.fillText('Bot ' + n_bot + '\u2013\u00d8' + d_bot, lxx+11, ly);
-  lxx += Math.min(90, (cssW-lx)/3);
-  ctx.fillStyle = '#e05c00'; ctx.fillRect(lxx, ly-4, 9, 8);
-  ctx.fillStyle = '#343a40'; ctx.fillText('Top ' + n_top + '\u2013\u00d8' + d_top, lxx+11, ly);
-  lxx += Math.min(90, (cssW-lx)/3);
-  ctx.strokeStyle = '#28a745'; ctx.lineWidth = 1.5; ctx.strokeRect(lxx, ly-4, 9, 8);
-  ctx.fillStyle = '#343a40'; ctx.fillText('\u00d8' + d_sv + '@' + Sv + ' stir.', lxx+11, ly);
-}
-
-/* === CROSS-SECTION SKETCH === */
-function drawSection(b, D, Cc, d_bot, n_bot, d_top, n_top, d_sv, legs, d_eff) {
-  const wrap = g('secSketch').parentElement;
-  const cssW = Math.max(wrap.clientWidth - 4, 260);
-
-  /* drawing column = left 56%, annotation = right 44% */
-  const drawW = Math.round(cssW * 0.56);
-  const annoX = drawW + 6;
-  const annoW = cssW - annoX - 4;
-
-  const PAD_L = 32, PAD_R = 6, PAD_T = 36, PAD_B = 36;
-  const maxBW = drawW - PAD_L - PAD_R;
-  const maxBH = 240;
-  const sc    = Math.min(maxBW / b, maxBH / D);
-  const bW    = b * sc;
-  const bH    = D * sc;
-  const cssH  = bH + PAD_T + PAD_B;
-
-  const canvas = g('secSketch');
-  const ctx    = setupCanvas(canvas, cssW, cssH);
-  ctx.clearRect(0, 0, cssW, cssH);
-
-  const ox = PAD_L + (maxBW - bW) / 2;
-  const oy = PAD_T;
-
-  /* concrete */
-  ctx.fillStyle = '#e9ecef'; ctx.strokeStyle = '#343a40'; ctx.lineWidth = 2;
-  ctx.fillRect(ox, oy, bW, bH); ctx.strokeRect(ox, oy, bW, bH);
-
-  /* stirrup */
-  const ccPx  = Cc * sc;
-  const svLW  = Math.max(1.5, d_sv * sc * 0.55);
-  ctx.strokeStyle = '#28a745'; ctx.lineWidth = svLW;
-  ctx.strokeRect(ox + ccPx, oy + ccPx, bW - 2*ccPx, bH - 2*ccPx);
-
-  /* Ceff dashed box */
-  const Ceff_val = Cc + d_sv + d_bot / 2;
-  const cPx      = Ceff_val * sc;
-  ctx.strokeStyle = '#adb5bd'; ctx.lineWidth = 0.8; ctx.setLineDash([4,3]);
-  ctx.strokeRect(ox + cPx, oy + cPx, bW - 2*cPx, bH - 2*cPx);
-  ctx.setLineDash([]);
-
-  const rBot = Math.min(8, Math.max(3.5, (d_bot/2) * sc));
-  const rTop = Math.min(7, Math.max(3,   (d_top/2) * sc));
-
-  /* bar inner edges (corners of stirrup inner face) */
-  const innerL = ox + cPx;
-  const innerR = ox + bW - cPx;
-
-  /* BOTTOM BARS — corners of stirrup first, rest equidistant */
-  const botY  = oy + bH - cPx;
-  const botXs = barPos(Math.min(n_bot, 8), innerL, innerR);
-  botXs.forEach(bx => {
-    ctx.beginPath(); ctx.arc(bx, botY, rBot, 0, Math.PI*2);
-    ctx.fillStyle = '#f0a500'; ctx.fill(); ctx.strokeStyle = '#c06000'; ctx.lineWidth = 1; ctx.stroke();
-  });
-
-  /* TOP BARS */
-  const topY  = oy + cPx;
-  const topXs = barPos(Math.min(n_top, 8), innerL, innerR);
-  topXs.forEach(bx => {
-    ctx.beginPath(); ctx.arc(bx, topY, rTop, 0, Math.PI*2);
-    ctx.fillStyle = '#e05c00'; ctx.fill(); ctx.strokeStyle = '#a03000'; ctx.lineWidth = 1; ctx.stroke();
-  });
-
-  /* centroid line */
-  const dPx = d_eff * sc;
-  ctx.strokeStyle = '#6f42c1'; ctx.lineWidth = 1; ctx.setLineDash([5,4]);
-  ctx.beginPath(); ctx.moveTo(ox, oy + dPx); ctx.lineTo(ox + bW, oy + dPx); ctx.stroke();
-  ctx.setLineDash([]);
-
-  /* dimension lines */
-  dimH(ctx, ox, oy + bH + 20, ox + bW, 'b=' + b + ' mm', '#343a40');
-  dimV(ctx, ox - 20, oy, oy + bH, 'D=' + D, '#343a40');
-  dimH(ctx, ox, oy + bH - 8,  ox + ccPx, 'Cc=' + Cc, '#dc3545');
-  dimH(ctx, ox, oy + bH - 20, ox + cPx,  'Ceff=' + Ceff_val.toFixed(0), '#0056b3');
-  dimV(ctx, ox - 8, oy, oy + dPx, 'd=' + d_eff.toFixed(0), '#155724');
-
-  /* === ANNOTATION COLUMN === all horizontal, no overlap */
-  const lineH = 17;
-  let   ay    = oy;
-
-  ctx.textBaseline = 'top'; ctx.textAlign = 'left';
-
-  function aHead(txt, bg) {
-    ctx.fillStyle = bg || '#343a40';
-    ctx.fillRect(annoX, ay, annoW, 13);
-    ctx.fillStyle = '#fff'; ctx.font = 'bold 9px Segoe UI,sans-serif';
-    ctx.fillText(txt, annoX + 2, ay + 2);
-    ay += 15;
+  function resRow(lbl, val, cls='') {
+    return `<div class="res-row ${cls}"><span class="res-lbl">${lbl}</span><span class="res-val">${val}</span></div>`;
   }
-  function aDot(fill, txt) {
-    ctx.beginPath(); ctx.arc(annoX + 5, ay + 6, 4, 0, Math.PI*2);
-    ctx.fillStyle = fill; ctx.fill(); ctx.strokeStyle = '#555'; ctx.lineWidth = 0.7; ctx.stroke();
-    ctx.fillStyle = '#343a40'; ctx.font = '9px Segoe UI,sans-serif';
-    ctx.fillText(txt, annoX + 13, ay + 2);
-    ay += lineH;
+
+  // ══════════════════════════════════════════════════════════════════════════
+  //  MAIN CALCULATE
+  // ══════════════════════════════════════════════════════════════════════════
+  function calc() {
+    const b    = v('b'), D = v('bigD'), L = v('L'), Cc = v('Cc');
+    const fck  = vi('fck'), fy = vi('fy');
+    const vuKN = v('vuKN'), muBotKNm = v('muBot'), muTopKNm = v('muTop');
+    const diaBot1 = vi('diaBot1');
+    const hasBot2 = $('hasBot2').checked;
+    const nBot2   = hasBot2 ? (vi('nBot2') || 0) : 0;
+    const diaBot2 = hasBot2 ? vi('diaBot2') : 0;
+    const diaTop  = vi('diaTop'), nTop = vi('nTop');
+    const diaSv   = vi('diaSv'), legs = vi('legs');
+    const svProv  = vi('svProv');
+
+    if (!b || !D || !L || !Cc || !nTop || !svProv) return;
+
+    const PI = Math.PI;
+    const nBot1 = 2;
+
+    // ── Steel areas ───────────────────────────────────────────────────────
+    const astCorner = nBot1 * PI * diaBot1**2 / 4;
+    const astMiddle = (nBot2 > 0 && diaBot2 > 0) ? nBot2 * PI * diaBot2**2 / 4 : 0;
+    const astB  = astCorner + astMiddle;
+    const astT  = nTop * PI * diaTop**2 / 4;
+    const asv   = legs * PI * diaSv**2 / 4;
+
+    const ceff  = Cc + diaSv + diaBot1 / 2;
+    const d     = D - ceff;
+    const Vu    = vuKN * 1000;
+    const muBot = muBotKNm * 1e6;
+    const muTop_N = muTopKNm * 1e6;
+
+    // ── Flexure ───────────────────────────────────────────────────────────
+    const mr    = 0.133 * fck * b * d**2 / 1e6;
+    const mrOk  = mr >= muBotKNm;
+    const astMin = 0.85 * b * d / fy;
+    const astMax = 0.04 * b * D;
+
+    const rnB   = muBot / (b * d**2);
+    const discB = 1 - 4 * 1.1 * rnB / fck;
+    const astCalc = discB > 0
+      ? (fck / (2 * 0.87 * fy)) * (1 - Math.sqrt(discB)) * b * d : 0;
+    const astReq = Math.max(astCalc, astMin);
+
+    const rnT   = muTop_N / (b * d**2);
+    const discT = 1 - 4 * 1.1 * rnT / fck;
+    const astCalcTop = discT > 0
+      ? (fck / (2 * 0.87 * fy)) * (1 - Math.sqrt(discT)) * b * d : 0;
+    const astReqTop = Math.max(astCalcTop, astMin);
+
+    // ── Shear ─────────────────────────────────────────────────────────────
+    const tv   = Vu / (b * d);
+    const pt   = (astB / (b * d)) * 100;
+    const beta = (0.8 * fck) / (6.89 * Math.max(pt, 0.001));
+    const tc   = (0.85 * Math.sqrt(0.8 * fck) * (Math.sqrt(1 + 5 * beta) - 1)) / (6 * beta);
+    const k    = d < 150 ? 1.30 : d < 175 ? 1.25 : d < 200 ? 1.20 :
+                 d < 225 ? 1.15 : d < 275 ? 1.10 : d < 300 ? 1.05 : 1.00;
+    const kTc  = k * tc;
+    const Vus  = Math.max(Vu - kTc * b * d, 0);
+    const svMin    = 0.87 * fy * asv / (0.4 * b);
+    const svDesign = Vus > 0 ? 0.87 * fy * asv * d / Vus : Infinity;
+    let   svCalc   = Math.min(svMin, svDesign, 0.75 * d, 300);
+    svCalc = Math.max(10, Math.floor(svCalc / 5) * 5);
+    const ts = 0.87 * fy * asv / (b * svProv);
+
+    // ── Development length ────────────────────────────────────────────────
+    const govDia = (nBot2 > 0 && diaBot2 > diaBot1) ? diaBot2 : diaBot1;
+    const tauBd  = fck===20?1.2 : fck===25?1.4 : fck===30?1.5 : fck===35?1.7 : fck===40?1.9 : 1.2;
+    const ld = (0.87 * fy * govDia) / (4 * tauBd * 1.6);
+
+    // ── Deflection ────────────────────────────────────────────────────────
+    const fsVal  = 0.58 * fy * (astReq / astB);
+    const mf1Den = 0.225 + 0.00322 * fsVal - 0.625 * Math.log10((b * d) / (100 * astB));
+    const mf1    = Math.min(2.0, Math.max(0.2, 1.0 / mf1Den));
+    const pt2    = (astT / (b * d)) * 100;
+    const mf2    = Math.min(1.5, 1 + pt2 / (3 + pt2));
+    const ldAllow  = 26 * mf1 * mf2;
+    const ldActual = L / d;
+
+    const botDesc = (nBot2 > 0 && diaBot2 > 0)
+      ? `2-Ø${diaBot1} + ${nBot2}-Ø${diaBot2}` : `2-Ø${diaBot1}`;
+
+    // ── Checks ────────────────────────────────────────────────────────────
+    const checks = [
+      [1,  "Mr ≥ Mu (Moment Capacity)",        "Cl. 3.4, IS 456",         `Mr=${mr.toFixed(2)} kNm`,             `Mu=${muBotKNm.toFixed(2)} kNm`,          mrOk],
+      [2,  "Ast prov. ≥ Ast req. (Bot)",        "Cl. 26.5.1.1",            `${astB.toFixed(1)} mm² (${botDesc})`, `${astReq.toFixed(1)} mm²`,               astB >= astReq],
+      [3,  "Ast prov. ≥ Ast req. (Top)",        "Cl. 26.5.1.1",            `${astT.toFixed(1)} mm²`,              `${astReqTop.toFixed(1)} mm²`,            astT >= astReqTop],
+      [4,  "τv < k·τc + τs  (Shear)",           "Cl. 40.2.1, IS 456",      `τv=${tv.toFixed(4)} N/mm²`,           `k·τc+τs=${(kTc+ts).toFixed(4)} N/mm²`,  tv < kTc + ts],
+      [5,  "Sv prov. ≤ Sv calc. (Stirrups)",    "Cl. 26.5.1.5 / 40.4",    `Sv=${svProv} mm`,                     `Sv,calc=${svCalc.toFixed(0)} mm`,        svProv <= svCalc],
+      [6,  "L/d ≤ Allowable (Deflection)",      "Cl. 23.2.1",              `L/d=${ldActual.toFixed(2)}`,          `Allow=${ldAllow.toFixed(2)}`,            ldActual <= ldAllow],
+      [7,  "Min Ast ≥ 0.0012·b·D",             "Cl. 26.5.2.1",            `${astB.toFixed(1)} mm²`,              `${(0.0012*b*D).toFixed(1)} mm²`,         astB >= 0.0012*b*D],
+      [8,  "Max Ast ≤ 0.04·b·D",               "Cl. 26.5.1.2",            `${astB.toFixed(1)} mm²`,              `${astMax.toFixed(1)} mm²`,               astB <= astMax],
+      [9,  "d ≤ 750 mm (Side face R/F)",        "Cl. 26.5.1.3",            `d=${d.toFixed(0)} mm`,                `≤ 750 mm`,                               d <= 750],
+      [10, "b ≥ 200 mm",                        "Cl. 6.1.3, IS 13920",     `b=${b} mm`,                           `≥ 200 mm`,                               b >= 200],
+      [11, "b/D ≥ 0.3",                         "Cl. 6.1.2, IS 13920",     `b/D=${(b/D).toFixed(3)}`,             `≥ 0.3`,                                  b/D >= 0.3],
+      [12, "L/D ≥ 4",                           "Cl. 6.1.4, IS 13920",     `L/D=${(L/D).toFixed(3)}`,             `≥ 4`,                                    L/D >= 4],
+    ];
+
+    // ── Build results HTML ────────────────────────────────────────────────
+    const beamType  = mrOk ? "Singly Reinforced ✓" : "Doubly Reinforced Required ✗";
+    const beamClass = mrOk ? "highlight" : "fail-row";
+
+    let html = '';
+
+    // Section Properties
+    html += `<div class="sec-hdr">Section Properties</div>`;
+    html += `<div style="border:1px solid #dee2e6;border-top:none;margin-bottom:0;">`;
+    html += resRow("Effective Cover &nbsp; Ceff",         `${ceff.toFixed(2)} mm`);
+    html += resRow("Effective Depth &nbsp; d",            `${d.toFixed(2)} mm`);
+    html += resRow(`Bot Steel &nbsp; (${botDesc})`,       `${astB.toFixed(2)} mm²`);
+    html += resRow(`Top Steel &nbsp; (${nTop}-Ø${diaTop})`, `${astT.toFixed(2)} mm²`);
+    html += resRow(`Asv &nbsp; (${legs}-legged Ø${diaSv})`, `${asv.toFixed(2)} mm²`);
+    html += `</div>`;
+
+    // Flexure
+    html += `<div class="sec-hdr">Flexure</div>`;
+    html += `<div style="border:1px solid #dee2e6;border-top:none;margin-bottom:0;">`;
+    html += resRow("Limiting Moment &nbsp; Mr",            `${mr.toFixed(3)} kNm`);
+    html += resRow("Beam Type",                            beamType, beamClass);
+    html += resRow("Ast,min &nbsp; (Cl. 26.5.1.1)",       `${astMin.toFixed(2)} mm²`);
+    html += resRow("Ast,max &nbsp; (Cl. 26.5.1.2)",       `${astMax.toFixed(2)} mm²`);
+    html += resRow("Ast required",                         `${astReq.toFixed(2)} mm²`);
+    html += resRow("Ast provided &nbsp; (bottom)",         `${astB.toFixed(2)} mm²`, 'highlight');
+    html += `</div>`;
+
+    // Shear
+    html += `<div class="sec-hdr">Shear</div>`;
+    html += `<div style="border:1px solid #dee2e6;border-top:none;margin-bottom:0;">`;
+    html += resRow("τv",                                   `${tv.toFixed(5)} N/mm²`);
+    html += resRow("pt",                                   `${pt.toFixed(4)} %`);
+    html += resRow("β",                                    `${beta.toFixed(4)}`);
+    html += resRow("τc",                                   `${tc.toFixed(5)} N/mm²`);
+    html += resRow("k &nbsp; factor",                      `${k.toFixed(2)}`);
+    html += resRow("k·τc",                                 `${kTc.toFixed(5)} N/mm²`);
+    html += resRow("τs &nbsp; (stirrups @ Sv,prov)",       `${ts.toFixed(5)} N/mm²`);
+    html += resRow("k·τc + τs",                            `${(kTc+ts).toFixed(5)} N/mm²`, 'highlight');
+    html += `</div>`;
+
+    // Stirrup Spacing
+    html += `<div class="sec-hdr">Stirrup Spacing</div>`;
+    html += `<div style="border:1px solid #dee2e6;border-top:none;margin-bottom:0;">`;
+    html += resRow("Sv,min &nbsp; (Cl. 26.5.1.5)",        `${svMin.toFixed(1)} mm`);
+    if (svDesign < 1e15)
+      html += resRow("Sv,design &nbsp; (Cl. 40.4)",       `${svDesign.toFixed(1)} mm`);
+    html += resRow("0.75d",                                `${(0.75*d).toFixed(1)} mm`);
+    html += resRow("300 mm &nbsp; (max limit)",            `300 mm`);
+    html += resRow("Sv calc. &nbsp; (recommended)",        `${svCalc.toFixed(0)} mm`);
+    html += resRow("Sv provided &nbsp; (input)",           `${svProv} mm`, 'highlight');
+    html += `</div>`;
+
+    // Development Length
+    html += `<div class="sec-hdr">Development Length</div>`;
+    html += `<div style="border:1px solid #dee2e6;border-top:none;margin-bottom:0;">`;
+    html += resRow("Ld",                                   `${ld.toFixed(1)} mm`);
+    html += `</div>`;
+
+    // Code Checks
+    html += `<div class="sec-hdr">Code Checks &nbsp; (IS 456 : 2000 + IS 13920)</div>`;
+    html += `<div style="border:1px solid #dee2e6;border-top:none;overflow-x:auto;">`;
+    html += `<table class="checks-table"><thead><tr>
+      <th style="width:32px">#</th>
+      <th>Check</th>
+      <th>Computed</th>
+      <th>Limit</th>
+      <th style="width:56px;text-align:center;">✓/✗</th>
+    </tr></thead><tbody>`;
+    checks.forEach(([num, desc, clause, computed, limit, passed]) => {
+      html += `<tr>
+        <td>${num}</td>
+        <td>${desc}<span class="check-clause">${clause}</span></td>
+        <td>${computed}</td>
+        <td>${limit}</td>
+        <td style="text-align:center;"><span class="${passed?'badge-ok':'badge-fail'}">${passed?'✓':'✗'}</span></td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+
+    $('results').innerHTML = html;
+
+    // ── Draw sketch ───────────────────────────────────────────────────────
+    drawSketch({ b, D, Cc, diaBot1, nBot2, diaBot2, diaTop, nTop, diaSv, d, ceff });
   }
-  function aText(col, txt) {
-    ctx.fillStyle = col; ctx.font = '9px Segoe UI,sans-serif';
-    ctx.fillText(txt, annoX, ay + 2);
-    ay += lineH;
+
+  // ══════════════════════════════════════════════════════════════════════════
+  //  CROSS-SECTION SKETCH  (mirrors SectionSketch.kt exactly)
+  // ══════════════════════════════════════════════════════════════════════════
+  function drawSketch({ b, D, Cc, diaBot1, nBot2, diaBot2, diaTop, nTop, diaSv, d, ceff }) {
+    const canvas = $('secSketch');
+    const dpr    = window.devicePixelRatio || 1;
+
+    // ── Logical font / layout constants (CSS px) ──────────────────────────
+    const FS    = 13;       // all text — px, bold
+    const LH    = 20;       // line height
+    const DOT_R = 0;        // unused here (legend in HTML)
+
+    // ── Zone heights (px) ─────────────────────────────────────────────────
+    const zTop  = LH + 6;          // top bar label
+    const zBot  = LH + 6;          // bottom bar label
+    const zBArr = 18;              // b= arrow
+    const zBTxt = LH + 4;         // "b = xxx mm" text
+
+    // ── Margins ───────────────────────────────────────────────────────────
+    const mL = 72;   // left: rotated D= label
+    const mR = 120;  // right: d arrow + labels
+
+    // Canvas logical width from element
+    const W = canvas.parentElement.clientWidth || 400;
+    const availW = W - mL - mR;
+    const sc = Math.min(availW / b, 260 / D);   // cap beam height at 260px
+    const bW = b * sc;
+    const bH = D * sc;
+
+    const logH = zTop + bH + zBot + zBArr + zBTxt + 16;
+
+    canvas.style.width  = W + 'px';
+    canvas.style.height = logH + 'px';
+    canvas.width  = W * dpr;
+    canvas.height = logH * dpr;
+
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, W, logH);
+
+    const ox = mL;
+    const oy = zTop;
+
+    const ccPx   = Cc * sc;
+    const cPx    = ceff * sc;
+    const dPx    = d * sc;
+    const dPrime = D - d;
+
+    const innerL  = ox + cPx;
+    const innerR  = ox + bW - cPx;
+    const topBarY = oy + cPx;
+    const botBarY = oy + bH - cPx;
+
+    ctx.font = `bold ${FS}px sans-serif`;
+
+    // ── Helpers ───────────────────────────────────────────────────────────
+    function dimV(x, y1, y2, color) {
+      if (Math.abs(y2-y1) < 8) return;
+      ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(x,y1); ctx.lineTo(x,y2); ctx.stroke();
+      // arrowheads inward
+      ctx.beginPath(); ctx.moveTo(x,y1); ctx.lineTo(x-4,y1+8); ctx.lineTo(x+4,y1+8); ctx.closePath();
+      ctx.fillStyle = color; ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x,y2); ctx.lineTo(x-4,y2-8); ctx.lineTo(x+4,y2-8); ctx.closePath();
+      ctx.fillStyle = color; ctx.fill();
+    }
+    function dimH(x1, y, x2, color) {
+      if (Math.abs(x2-x1) < 8) return;
+      ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(x2,y); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(x1+8,y-4); ctx.lineTo(x1+8,y+4); ctx.closePath();
+      ctx.fillStyle = color; ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x2,y); ctx.lineTo(x2-8,y-4); ctx.lineTo(x2-8,y+4); ctx.closePath();
+      ctx.fillStyle = color; ctx.fill();
+    }
+    function bars(n, iL, iR) {
+      if (n<=0) return [];
+      if (n===1) return [(iL+iR)/2];
+      return Array.from({length:n}, (_,i) => iL + i*(iR-iL)/(n-1));
+    }
+
+    // ── Concrete body ─────────────────────────────────────────────────────
+    ctx.fillStyle = '#EDF4F4';
+    ctx.fillRect(ox, oy, bW, bH);
+    ctx.strokeStyle = '#343A40'; ctx.lineWidth = 2.5;
+    ctx.strokeRect(ox, oy, bW, bH);
+
+    // ── Stirrup ───────────────────────────────────────────────────────────
+    const svLW = Math.max(diaSv * sc * 0.5, 2);
+    ctx.strokeStyle = '#28A745'; ctx.lineWidth = svLW;
+    ctx.strokeRect(ox+ccPx, oy+ccPx, bW-2*ccPx, bH-2*ccPx);
+
+    // ── Ceff dashed box ───────────────────────────────────────────────────
+    ctx.strokeStyle = '#ADB5BD'; ctx.lineWidth = 1.5;
+    ctx.setLineDash([8,6]);
+    ctx.strokeRect(ox+cPx, oy+cPx, bW-2*cPx, bH-2*cPx);
+    ctx.setLineDash([]);
+
+    // ── Centroid line ─────────────────────────────────────────────────────
+    ctx.strokeStyle = '#6F42C1'; ctx.lineWidth = 2;
+    ctx.setLineDash([10,6]);
+    ctx.beginPath(); ctx.moveTo(ox, oy+dPx); ctx.lineTo(ox+bW, oy+dPx); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // ── Bottom bars ───────────────────────────────────────────────────────
+    const totalBots = 2 + nBot2;
+    const rBot1 = Math.min(Math.max(diaBot1/2*sc, 5), 11);
+    const rBot2 = (nBot2>0&&diaBot2>0) ? Math.min(Math.max(diaBot2/2*sc, 4), 10) : rBot1;
+
+    bars(Math.min(totalBots,8), innerL, innerR).forEach((bx, idx, arr) => {
+      const isCorner = (idx===0 || idx===arr.length-1);
+      const r = isCorner ? rBot1 : rBot2;
+      ctx.beginPath(); ctx.arc(bx, botBarY, r, 0, 2*Math.PI);
+      ctx.fillStyle = isCorner ? '#F0A500' : '#FFCC02'; ctx.fill();
+      ctx.strokeStyle = isCorner ? '#C06000' : '#997700'; ctx.lineWidth = 1.5; ctx.stroke();
+    });
+
+    // ── Top bars ─────────────────────────────────────────────────────────
+    const rTop = Math.min(Math.max(diaTop/2*sc, 4), 11);
+    bars(Math.min(nTop,8), innerL, innerR).forEach(bx => {
+      ctx.beginPath(); ctx.arc(bx, topBarY, rTop, 0, 2*Math.PI);
+      ctx.fillStyle = '#BF360C'; ctx.fill();
+      ctx.strokeStyle = '#7B1A00'; ctx.lineWidth = 1; ctx.stroke();
+    });
+
+    // ── Dimension arrows ─────────────────────────────────────────────────
+    // d arrow — inside, near right face
+    const dArrX  = ox + bW - 10;
+    const dpArrX = dArrX - 20;
+    dimV(dArrX,  oy,            oy+dPx,    '#6F42C1');   // d
+    dimV(dpArrX, oy+bH-cPx,    oy+bH,     '#1565C0');   // d'
+    // Cc arrow — inside, near left face
+    const ccArrX = ox + 10;
+    dimV(ccArrX, oy+bH-ccPx, oy+bH, '#DC3545');
+    // D arrow — outside left
+    dimV(ox-20, oy, oy+bH, '#343A40');
+    // b arrow
+    const bArrY = oy + bH + 10;
+    dimH(ox, bArrY, ox+bW, '#343A40');
+
+    // ── Text labels ───────────────────────────────────────────────────────
+    ctx.font = `bold ${FS}px sans-serif`;
+
+    // Top label
+    ctx.fillStyle = '#7B1A00'; ctx.textAlign = 'center';
+    ctx.fillText(`${nTop}-Ø${diaTop}  (Hanger / Compression)`, ox+bW/2, oy-4);
+
+    // Bottom label
+    const botLbl = (nBot2>0&&diaBot2>0)
+      ? `2-Ø${diaBot1} + ${nBot2}-Ø${diaBot2}  (Tension)` : `2-Ø${diaBot1}  (Tension)`;
+    ctx.fillStyle = '#C06000'; ctx.textAlign = 'center';
+    ctx.fillText(botLbl, ox+bW/2, oy+bH+zBot-2);
+
+    // b = 300 mm
+    ctx.fillStyle = '#343A40'; ctx.textAlign = 'center';
+    ctx.fillText(`b = ${Math.round(b)} mm`, ox+bW/2, oy+bH+zBot+zBArr+4+FS);
+
+    // D = 500 mm (rotated)
+    ctx.save();
+    ctx.translate(ox-44, oy+bH/2);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillStyle = '#343A40'; ctx.textAlign = 'center';
+    ctx.fillText(`D = ${Math.round(D)} mm`, 0, FS/3);
+    ctx.restore();
+
+    // Cc = 25 mm — right-aligned, left of beam left face
+    const ccMidY = oy+bH - ccPx/2 + FS/3;
+    ctx.fillStyle = '#DC3545'; ctx.textAlign = 'right';
+    ctx.fillText(`Cc = ${Math.round(Cc)} mm`, ox-4, ccMidY);
+
+    // d = 459 mm — outside right
+    const dLblY = oy + dPx/2 + FS/3;
+    ctx.fillStyle = '#6F42C1'; ctx.textAlign = 'left';
+    ctx.fillText(`d = ${d.toFixed(0)} mm`, ox+bW+6, dLblY);
+
+    // Ø8 stirrup
+    ctx.fillStyle = '#1B5E20'; ctx.textAlign = 'left';
+    ctx.fillText(`Ø${diaSv} stirrup`, ox+bW+6, dLblY+LH);
+
+    // d' = 41 mm — outside right
+    const dpMidY = oy+bH - cPx/2 + FS/3;
+    ctx.fillStyle = '#1565C0'; ctx.textAlign = 'left';
+    ctx.fillText(`d'= ${dPrime.toFixed(0)} mm`, ox+bW+6, dpMidY);
   }
-  function aGap() { ay += 3; }
 
-  aHead('BARS');
-  aDot('#f0a500', n_bot + '\u2013\u00d8' + d_bot + ' Bot');
-  aDot('#e05c00', n_top + '\u2013\u00d8' + d_top + ' Top');
-  aGap();
-  aHead('COVERS', '#0056b3');
-  aText('#dc3545', 'Cc = ' + Cc + ' mm');
-  aText('#0056b3', 'Ceff = ' + Ceff_val.toFixed(0) + ' mm');
-  aGap();
-  aHead('DEPTH', '#155724');
-  aText('#155724', 'd = ' + d_eff.toFixed(0) + ' mm');
-  aText('#343a40', 'D = ' + D + ' mm');
-  aGap();
-  aHead('STIRRUPS', '#28a745');
-  aText('#28a745', '\u00d8' + d_sv + ', ' + legs + ' legs');
-  aText('#28a745', 'cover=' + Cc + ' mm');
-  aGap();
-  aHead('CENTROID', '#6f42c1');
-  aText('#6f42c1', '- - - at d from top');
-}
-/* ══ MAIN CALC ══ */
-function calculate() {
-  const b      = parseFloat(g('b').value)      || 0;
-  const D      = parseFloat(g('D').value)      || 0;
-  const L      = parseFloat(g('L').value)      || 0;
-  const Cc     = parseFloat(g('Cc').value)     || 25;
-  const fck    = parseFloat(g('fck').value)    || 20;
-  const fy     = parseFloat(g('fy').value)     || 500;
-  const Vu     = (parseFloat(g('Vu').value)    || 0)*1000;
-  const Mu_bot = (parseFloat(g('Mu_bot').value)||0)*1e6;
-  const Mu_top = (parseFloat(g('Mu_top').value)||0)*1e6;
-  const d_bot  = parseFloat(g('dia_bot').value)|| 16;
-  const n_bot  = parseInt(g('n_bot').value)    || 1;
-  const d_top  = parseFloat(g('dia_top').value)|| 12;
-  const n_top  = parseInt(g('n_top').value)    || 2;
-  const d_sv   = parseFloat(g('dia_sv').value) || 8;
-  const legs   = parseInt(g('legs_sv').value)  || 2;
-
-  const Ceff  = Cc + d_sv + d_bot/2;
-  const d     = D - Ceff;
-  const Ast_b = n_bot*Math.PI*d_bot**2/4;
-  const Ast_t = n_top*Math.PI*d_top**2/4;
-  const Asv   = legs*Math.PI*d_sv**2/4;
-
-  setH('bot_desc',`${n_bot}–⌀${d_bot}`);
-  setH('top_desc',`${n_top}–⌀${d_top}`);
-  setH('sv_desc', `${legs}L–⌀${d_sv}`);
-
-  const Mr = 0.133*fck*b*d**2/1e6;
-  const beamType = Mr >= Mu_bot/1e6 ? 'Singly Reinforced Beam ✓' : 'Doubly Reinforced Required ✗';
-
-  const Rn_b=Mu_bot/(b*d**2);
-  const disc_b=1-4*1.1*Rn_b/fck;
-  const Ast_calc_b=disc_b>0?(fck/(2*0.87*fy))*(1-Math.sqrt(disc_b))*b*d:0;
-  const Ast_min   =0.85*b*d/fy;
-  const Ast_req_b =Math.max(Ast_calc_b,Ast_min);
-  const Ast_max   =0.04*b*D;
-  const Ast_min_s =0.0012*b*D;
-  const Rn_t=Mu_top/(b*d**2);
-  const disc_t=1-4*1.1*Rn_t/fck;
-  const Ast_calc_t=disc_t>0?(fck/(2*0.87*fy))*(1-Math.sqrt(disc_t))*b*d:0;
-  const Ast_req_t=Math.max(Ast_calc_t,Ast_min);
-
-  const tv   =Vu/(b*d);
-  const pt   =(Ast_b/(b*d))*100;
-  const beta =(0.8*fck)/(6.89*Math.max(pt,0.001));
-  const tc   =(0.85*Math.sqrt(0.8*fck)*(Math.sqrt(1+5*beta)-1))/(6*beta);
-  const k    =d<150?1.30:d<175?1.25:d<200?1.20:d<225?1.15:d<275?1.10:d<300?1.05:1.00;
-  const k_tc =k*tc;
-  const Sv_f =0.87*fy*Asv/(0.4*b);
-  const Sv_max=Math.min(Sv_f,0.75*d,300);
-  const Sv_prov=Math.max(10,Math.floor(Sv_max/5)*5);
-  const tau_bd=fck<=20?1.2:fck<=25?1.4:fck<=30?1.5:fck<=35?1.7:1.9;
-  const Ld=(0.87*fy*d_bot)/(4*tau_bd*1.6);
-
-  const fs_val  =0.58*fy*(Ast_req_b/Ast_b);
-  const mf1_den =0.225+0.00322*fs_val-0.625*Math.log10((b*d)/(100*Ast_b));
-  const mf1     =Math.min(2.0,Math.max(0.2,1/mf1_den));
-  const pt2     =(Ast_t/(b*d))*100;
-  const mf2     =Math.min(1.5,1+pt2/(3+pt2));
-  const Ld_allow=26*mf1*mf2;
-  const Ld_actual=L/d;
-
-  setV('oCeff', Ceff.toFixed(2)); setV('od', d.toFixed(2));
-  setV('oAst_bot', Ast_b.toFixed(2)); setV('oAst_top', Ast_t.toFixed(2));
-  setV('oAsv', Asv.toFixed(2));
-  setV('oMr', Mr.toFixed(2));
-  setV('oBeamType', beamType);
-  g('oBeamType').style.cssText = Mr>=Mu_bot/1e6
-    ? 'background:#d4edda;color:#155724;font-weight:700;'
-    : 'background:#f8d7da;color:#721c24;font-weight:700;';
-  setV('oAst_min', Ast_min.toFixed(2));
-  setV('oAst_calc', Ast_calc_b.toFixed(2));
-  setV('oAst_req', Ast_req_b.toFixed(2));
-  setV('oAst_top_req', Ast_calc_t.toFixed(2));
-  setV('oAst_max', Ast_max.toFixed(2));
-  setV('otv', tv.toFixed(5)); setV('oPt', pt.toFixed(4));
-  setV('oBeta', beta.toFixed(4)); setV('oTc', tc.toFixed(5));
-  setV('oK', k.toFixed(2)); setV('oKtc', k_tc.toFixed(5));
-  setV('oSvmax', Sv_f.toFixed(2));
-  setV('o075d', `${(0.75*d).toFixed(1)} | 300`);
-  setV('oSv', Sv_prov); setV('oLd', Ld.toFixed(1));
-
-  const checks = [
-    {n:'1', desc:'M<sub>r</sub> ≥ M<sub>u</sub> (Moment Capacity)',     clause:'Cl. 3.4, IS 456',      comp:`M_r=${Mr.toFixed(2)} kNm`,     lim:`M_u=${(Mu_bot/1e6).toFixed(2)} kNm`, ok:Mr>=Mu_bot/1e6},
-    {n:'2', desc:'Ast prov. ≥ Ast req. (Bottom)',                         clause:'Cl. 26.5.1.1',          comp:`${Ast_b.toFixed(2)} mm²`,       lim:`${Ast_req_b.toFixed(2)} mm²`,         ok:Ast_b>=Ast_req_b},
-    {n:'3', desc:'Ast prov. ≥ Ast req. (Top)',                            clause:'Cl. 26.5.1.1',          comp:`${Ast_t.toFixed(2)} mm²`,       lim:`${Ast_req_t.toFixed(2)} mm²`,         ok:Ast_t>=Ast_req_t},
-    {n:'4', desc:'τ<sub>v</sub> < k·τ<sub>c</sub> (Shear)',              clause:'Cl. 40.2.1.1',          comp:`τv=${tv.toFixed(4)} N/mm²`,     lim:`k·τc=${k_tc.toFixed(4)} N/mm²`,      ok:tv<k_tc},
-    {n:'5', desc:'L/d ≤ Allowable (Deflection)',                          clause:'Cl. 23.2.1',            comp:`L/d=${Ld_actual.toFixed(2)}`,   lim:`Allow=${Ld_allow.toFixed(2)}`,        ok:Ld_actual<=Ld_allow},
-    {n:'6', desc:'Min Ast ≥ 0.0012·b·D',                                 clause:'Cl. 26.5.2.1',          comp:`${Ast_b.toFixed(2)} mm²`,       lim:`${Ast_min_s.toFixed(2)} mm²`,         ok:Ast_b>=Ast_min_s},
-    {n:'7', desc:'Max Ast ≤ 0.04·b·D',                                   clause:'Cl. 26.5.1.2',          comp:`${Ast_b.toFixed(2)} mm²`,       lim:`${Ast_max.toFixed(2)} mm²`,           ok:Ast_b<=Ast_max},
-    {n:'8', desc:'d ≤ 750 mm (Side face R/F)',                            clause:'Cl. 26.5.1.3',          comp:`d=${d.toFixed(0)} mm`,          lim:'≤ 750 mm',                            ok:d<=750},
-    {n:'9', desc:'b ≥ 200 mm',                                            clause:'Cl. 6.1.3, IS 13920',   comp:`b=${b} mm`,                     lim:'≥ 200 mm',                            ok:b>=200},
-    {n:'10',desc:'b/D ≥ 0.3',                                             clause:'Cl. 6.1.2, IS 13920',   comp:`b/D=${(b/D).toFixed(3)}`,       lim:'≥ 0.3',                               ok:b/D>=0.3},
-    {n:'11',desc:'L/D ≥ 4',                                               clause:'Cl. 6.1.4, IS 13920',   comp:`L/D=${(L/D).toFixed(3)}`,       lim:'≥ 4',                                 ok:L/D>=4}
-  ];
-  g('checksBody').innerHTML=checks.map(c=>`
-    <tr><td>${c.n}</td><td>${c.desc}</td>
-    <td style="font-size:11px;color:#6c757d;">${c.clause}</td>
-    <td style="font-family:monospace;font-size:12px;">${c.comp}</td>
-    <td style="font-family:monospace;font-size:12px;">${c.lim}</td>
-    <td>${c.ok?'<span class="res-ok">✓ OK</span>':'<span class="res-fail">✗ FAIL</span>'}</td></tr>`).join('');
-
-  drawElevation(b,D,L,n_bot,n_top,d_bot,d_top,d_sv,Sv_prov);
-  drawSection(b,D,Cc,d_bot,n_bot,d_top,n_top,d_sv,legs,d);
-}
-
-function toggleMenu(){document.querySelector('header nav').classList.toggle('show');}
-window.onload=function(){
-  calculate();
-  document.querySelectorAll('.in').forEach(el=>el.addEventListener('input',calculate));
-  window.addEventListener('resize',calculate);
-};
-</script>
+  // ── Init ─────────────────────────────────────────────────────────────────
+  window.addEventListener('load', calc);
+  window.addEventListener('resize', calc);
+  </script>
 </body>
 </html>
