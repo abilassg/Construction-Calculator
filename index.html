@@ -3,303 +3,284 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Construction-Calculator</title>
+  <title>Construction-Calculator | Civil Engineering Proof-Checking Tool</title>
+  <meta name="description" content="A free proof-checking tool for civil engineers. Verify RCC beam design, structural analysis and section properties against IS 456, IS 13920 and IS 1893 — instantly." />
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg,#004d4d 0%,#008080 55%,#00a89d 100%);
+      color:#fff; padding:64px 24px 52px; text-align:center;
+    }
+    .hero h1 { font-size:36px; font-weight:800; margin-bottom:14px; letter-spacing:.5px; }
+    .hero p  { font-size:18px; color:rgba(255,255,255,.90); max-width:640px; margin:0 auto 28px; line-height:1.7; }
+    .hero-btn {
+      display:inline-block; background:#fff; color:#008080;
+      font-weight:700; font-size:15px; padding:12px 32px;
+      border-radius:4px; text-decoration:none; transition:background .2s;
+    }
+    .hero-btn:hover { background:#e0f7f7; color:#004d4d; text-decoration:none; }
+    @media(max-width:580px){ .hero h1{font-size:22px;} .hero p{font-size:14px;} }
 
+    /* ── Stats ── */
+    .stats-bar {
+      background:#005f5f; color:#fff;
+      display:flex; justify-content:center; flex-wrap:wrap;
+    }
+    .stat-item {
+      padding:14px 32px; text-align:center;
+      border-right:1px solid rgba(255,255,255,.2);
+    }
+    .stat-item:last-child { border-right:none; }
+    .stat-num { font-size:24px; font-weight:800; display:block; }
+    .stat-lbl { font-size:14px; color:rgba(255,255,255,.75); }
+    @media(max-width:580px){ .stat-item{padding:10px 16px;} .stat-num{font-size:18px;} }
+
+    /* ── Page wrapper ── */
+    .home-wrap { max-width:1100px; margin:0 auto; padding:40px 20px; }
+
+    /* ── Section heading ── */
+    .sec-hd   { font-size:22px; font-weight:800; color:#005f5f; margin-bottom:4px; text-align:center; }
+    .sec-sub  { font-size:15px; color:#6c757d; margin-bottom:24px; text-align:center; }
+
+    /* ── Feature cards ── */
+    .feat-grid {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-bottom:44px;
+    }
+    @media(max-width:768px){ .feat-grid{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:480px){ .feat-grid{grid-template-columns:1fr;} }
+    .feat-card {
+      border:1px solid #b2dfdb; border-radius:8px; padding:20px 18px;
+      background:#fff; transition:box-shadow .2s;
+    }
+    .feat-card:hover { box-shadow:0 4px 16px rgba(0,128,128,.12); }
+    .feat-card h4 { font-size:16px; font-weight:700; color:#005f5f; margin-bottom:6px; }
+    .feat-card p  { font-size:14px; color:#6c757d; line-height:1.6; margin:0; }
+
+    /* ── Quick links ── */
+    .quick-grid {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:44px;
+    }
+    @media(max-width:900px){ .quick-grid{grid-template-columns:repeat(3,1fr);} }
+    @media(max-width:580px){ .quick-grid{grid-template-columns:repeat(2,1fr);} }
+    .quick-card {
+      display:block; background:#e3f6f5; border:1px solid #b2dfdb;
+      border-radius:6px; padding:14px 10px; text-align:center;
+      font-size:15px; font-weight:700; color:#005f5f; text-decoration:none;
+      transition:background .15s;
+    }
+    .quick-card:hover { background:#008080; color:#fff; text-decoration:none; }
+    .quick-card.soon  { background:#f8f9fa; color:#adb5bd; border-style:dashed; pointer-events:none; }
+
+    /* ── Why items ── */
+    .why-grid {
+      display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-bottom:44px;
+    }
+    @media(max-width:580px){ .why-grid{grid-template-columns:1fr;} }
+    .why-item {
+      display:flex; gap:14px; align-items:flex-start;
+      background:#fff; border:1px solid #dee2e6; border-radius:6px; padding:16px;
+    }
+    .why-dot { width:10px; height:10px; background:#008080; border-radius:50%; flex-shrink:0; margin-top:5px; }
+    .why-item h5 { font-size:15px; font-weight:700; color:#343a40; margin-bottom:4px; }
+    .why-item p  { font-size:14px; color:#6c757d; margin:0; line-height:1.5; }
+
+    /* ── App banner ── */
+    .app-banner {
+      background:linear-gradient(135deg,#004d4d,#008080);
+      border-radius:8px; padding:28px 24px; color:#fff;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:20px; margin-bottom:16px; flex-wrap:wrap;
+    }
+    .app-banner h3 { font-size:18px; font-weight:800; margin-bottom:6px; }
+    .app-banner p  { font-size:13px; color:rgba(255,255,255,.85); margin:0; }
+    .app-btn {
+      display:inline-block; background:#fff; color:#008080;
+      font-weight:700; font-size:14px; padding:10px 24px;
+      border-radius:4px; text-decoration:none; white-space:nowrap;
+    }
+    .app-btn:hover { background:#e0f7f7; color:#004d4d; text-decoration:none; }
+  </style>
 </head>
-<body style="background-color: teal;">
-
+<body style="background-color:teal;">
 
   <header>
     <div class="hamburger" onclick="toggleMenu()">☰</div>
-
     <div class="logo-container">
       <img src="assets/svg/logo.png" alt="Logo">
-      <span href="https://abilassg.github.io/Construction-Calculator/">Construction-Calculator</span>
+      <span>Construction-Calculator</span>
     </div>
     <nav>
-      <a href="https://abilassg.github.io/Construction-Calculator/">Home</a>
+      <a href="https://abilassg.github.io/Construction-Calculator/" class="active">Home</a>
       <a href="https://abilassg.github.io/Construction-Calculator/Blogs">Blogs</a>
-      <a href="https://abilassg.github.io/Construction-Calculator/Calculators" class="active">Calculator</a>
+      <a href="https://abilassg.github.io/Construction-Calculator/Calculators">Calculator</a>
       <a href="https://abilassg.github.io/Construction-Calculator/About_us">About us</a>
       <a href="https://abilassg.github.io/Construction-Calculator/Contact_us">Contact us</a>
     </nav>
   </header>
 
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Civil Engineering Proof-Checking Tool</h1>
+    <p>Verify your beam designs, check IS code compliance and cross-check structural calculations — quickly and transparently. Built by a proof-checking engineer, for proof-checking engineers.</p>
+    <a href="https://abilassg.github.io/Construction-Calculator/Calculators" class="hero-btn">Browse All Calculators →</a>
+  </div>
 
-<div class="ad-block ad-top">
-  <p>Advertisement - Top Banner</p>
-</div>
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-item"><span class="stat-num">25+</span><span class="stat-lbl">Calculators</span></div>
+    <div class="stat-item"><span class="stat-num">IS 456</span><span class="stat-lbl">Code Compliant</span></div>
+    <div class="stat-item"><span class="stat-num">100%</span><span class="stat-lbl">Free to Use</span></div>
+    <div class="stat-item"><span class="stat-num">0</span><span class="stat-lbl">Login Required</span></div>
+  </div>
 
-<div class="content-block">
+  <div class="ad-block ad-top"><p>Advertisement</p></div>
 
-  
-<div>
-  <div class="section">
-          <h3 class="subfooter-title">Section Properties Calculators</h3>
+  <div class="content-block">
+    <div class="home-wrap">
 
-        <div class="calculator-container">
-              <div class="calculator-button">
-        <span>I Section Properties</span>
-        <a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">  <button>Open Calculator</button> </a>
+      <!-- Features -->
+      <div class="sec-hd">Why Construction-Calculator?</div>
+      <div class="sec-sub">Everything a civil engineer needs, completely free</div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <h4>✅ Quick Verification</h4>
+          <p>Cross-check any beam design against IS 456 : 2000 and IS 13920 : 2018 in seconds. IS clause references shown for every result.</p>
         </div>
-          <div class="calculator-button">
-              <span>T Section Properties</span>
-              <a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">  <button>Open Calculator</button> </a>
-
-          </div>
-          <div class="calculator-button">
-              <span>Rectangular Section Properties</span>
-              <a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">  <button>Open Calculator</button> </a>
-          </div>
-          <div class="calculator-button">
-              <span>Circular Section Properties</span>
-              <a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">  <button>Open Calculator</button> </a>
-          </div>
-          <div class="calculator-button">
-              <span>Box Section Properties</span>
-              <a href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">  <button>Open Calculator</button> </a>
-          </div>
-          <div class="calculator-button">
-              <span>Pipe Section Properties</span>
-              <a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">  <button>Open Calculator</button> </a>
-          </div>    
-          <div class="calculator-button">
-              <span>Angle Section Properties</span>
-              <a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">  <button>Open Calculator</button> </a>
-          </div>  
+        <div class="feat-card">
+          <h4>📋 Automatic Code Checks</h4>
+          <p>Every calculator runs automatic pass/fail checks against codal limits — know instantly if your design is safe.</p>
         </div>
-    </div>
-</div>
-
-<!--
-<div>
-  <div class="section">
-          <h3 class="subfooter-title">Structural Analysis Calculators</h3>
-        <div class="calculator-container">
-        <div class="calculator-button">
-        <span>Simply Supported Beam</span>
-        <button>Open Calculator</button>
+        <div class="feat-card">
+          <h4>📐 Live Sketches</h4>
+          <p>Cross-section sketches with dimension arrows update live as you change inputs — no separate drawing needed.</p>
         </div>
-          <div class="calculator-button">
-              <span>Fixed Beam</span>
-              <button>Open Calculator</button>
-          </div>
-          <div class="calculator-button">
-              <span>Cantilever Beam</span>
-              <button>Open Calculator</button>
-          </div>
-          <div class="calculator-button">
-              <span>Column Buckling load</span>
-              <button>Open Calculator</button>
-          </div>
+        <div class="feat-card">
+          <h4>📱 Mobile Friendly</h4>
+          <p>Works on phones, tablets and desktops. Use it on site, in class or at the office — no installation needed.</p>
+        </div>
+        <div class="feat-card">
+          <h4>🆓 Always Free</h4>
+          <p>No subscription, no login, no paywall. All calculators are free forever for students and professionals.</p>
+        </div>
+        <div class="feat-card">
+          <h4>🔄 Regularly Updated</h4>
+          <p>New calculators added regularly. IS 456 : 2025 updates will be incorporated as they are published.</p>
         </div>
       </div>
-</div>
 
-<div>
-  <div class="section">
-    <h3 class="subfooter-title">Estimation Calculators</h3>
-    <div class="calculator-container">
-    <div class="calculator-button">
-        <span>Foundation Quantity Estimation</span>
-        <button>Open Calculator</button>
-    </div>
-    <div class="calculator-button">
-        <span>Column Quantity Estimation</span>
-        <button>Open Calculator</button>
-    </div>
-    <div class="calculator-button">
-        <span>Beam Quantity Estimation</span>
-        <button>Open Calculator</button>
-    </div>
-    <div class="calculator-button">
-        <span>Slab Quantity Estimation</span>
-        <button>Open Calculator</button>
-    </div>
-    <div class="calculator-button">
-        <span>Brick Quantity Estimation</span>
-        <button>Open Calculator</button>
-    </div>
-    <div class="calculator-button">
-        <span>RCC Quantity Estimation</span>
-        <button>Open Calculator</button>
-    </div>
-    <div class="calculator-button">
-        <span>Plate Girder Quantity Estimation</span>
-        <button>Open Calculator</button>
-    </div>
-    <div class="calculator-button">
-        <span>Overall Building Quantity Estimation</span>
-        <button>Open Calculator</button>
-    </div>
-  </div>
-  </div>
-</div>
+      <!-- Quick links -->
+      <div class="sec-hd">Popular Calculators</div>
+      <div class="sec-sub">Jump directly to the most used tools</div>
+      <div class="quick-grid">
+        <a class="quick-card" href="https://abilassg.github.io/Construction-Calculator/Calculators/SSB_Calculator">Simply Supported Beam</a>
+        <a class="quick-card" href="https://abilassg.github.io/Construction-Calculator/Calculators/Cantilever_Calculator">Cantilever Beam</a>
+        <a class="quick-card" href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Singly_Reinforced_Beam">Singly Reinforced Beam</a>
+        <a class="quick-card" href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam">Doubly Reinforced Beam</a>
+        <a class="quick-card" href="https://abilassg.github.io/Construction-Calculator/Calculators/Seismic_Parameter_IS1893_2016">Seismic IS 1893 : 2016</a>
+        <a class="quick-card" href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section Properties</a>
+        <a class="quick-card" href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">Circular Section</a>
+        <a class="quick-card soon">RCC Column — Soon</a>
+      </div>
 
-<div>
-  <div class="section">
-          <h3 class="subfooter-title">RCC Design Calculators</h3>
+      <!-- Why -->
+      <div class="sec-hd">Built for Civil Engineers</div>
+      <div class="sec-sub">Designed keeping real engineering workflows in mind</div>
+      <div class="why-grid">
+        <div class="why-item">
+          <div class="why-dot"></div>
+          <div><h5>For Students & Engineers</h5>
+          <p>Understand how IS code formulas work with live intermediate results. Great for B.Tech / M.Tech assignments and practical design learning.</p></div>
+        </div>
+        <div class="why-item">
+          <div class="why-dot"></div>
+          <div><h5>For Proof-Checkers</h5>
+          <p>Instantly verify submitted designs against IS code requirements — the same kind of cross-checking done in design review departments.</p></div>
+        </div>
+        <div class="why-item">
+          <div class="why-dot"></div>
+          <div><h5>Transparent Formulas</h5>
+          <p>Every result shows the clause reference so you always know which IS code provision was applied.</p></div>
+        </div>
+        <div class="why-item">
+          <div class="why-dot"></div>
+          <div><h5>No Black Box</h5>
+          <p>All intermediate values (Ast, τv, τc, k factor etc.) are shown — not just the final answer.</p></div>
+        </div>
+      </div>
 
-      <div class="calculator-container">
-        <div class="calculator-button">
-            <span>RCC Singly Reinforced Beam Design</span>
-            <button>Open Calculator</button>
+      <!-- App banner -->
+      <div class="app-banner">
+        <div>
+          <h3>📱 Also Available as Android App</h3>
+          <p>RCC Design Calculator (IS456) — available on Google Play Store. Singly Reinforced Beam live. More modules coming soon.</p>
         </div>
-        <div class="calculator-button">
-            <span>RCC Doubly Reinforced Beam Design</span>
-            <button>Open Calculator</button>
-        </div>
-        <div class="calculator-button">
-            <span>RCC Column Design</span>
-            <button>Open Calculator</button>
-        </div>
-        <div class="calculator-button">
-            <span>RCC one Way Slab Design</span>
-            <button>Open Calculator</button>
-        </div>
-        <div class="calculator-button">
-            <span>RCC Two Way Slab Design</span>
-            <button>Open Calculator</button>
-        </div>
-        <div class="calculator-button">
-            <span>Isolated Footing Design</span>
-            <button>Open Calculator</button>
-        </div>
-        <div class="calculator-button">
-            <span>Combined Footing Design</span>
-            <button>Open Calculator</button>
-        </div>
-        <div class="calculator-button">
-            <span>Trapedoidal Footing Design</span>
-            <button>Open Calculator</button>
-        </div>
+        <a class="app-btn" href="https://play.google.com/store" target="_blank">Get on Play Store →</a>
+      </div>
 
     </div>
   </div>
-</div>
 
-
-<div>
-      <div class="section">
-              <h3 class="subfooter-title">Geotechnical Engineering Calculators</h3>
-
-            <div class="calculator-container">
-            <div class="calculator-button">
-            <span>Important Basic Formulae</span>
-            <button>Open Calculator</button>
-        </div>
-        <div class="calculator-button">
-            <span>Sieve Size Analysis</span>
-            <button>Open Calculator</button>
-        </div>
-        <div class="calculator-button">
-            <span>Active Earth Pressure</span>
-            <button>Open Calculator</button>
-        </div>
-        <div class="calculator-button">
-            <span>Passive Earth Pressure</span>
-            <button>Open Calculator</button>
-        </div>
-        <div class="calculator-button">
-            <span>Soil Bearing Capacity</span>
-            <button>Open Calculator</button>
-        </div>
-        <div class="calculator-button">
-            <span>Pile Capacity</span>
-            <button>Open Calculator</button>
-        </div>
-
+  <!-- Subfooter -->
+  <div class="subfooter-container">
+    <h3 class="subfooter-title">CALCULATORS</h3>
+    <div class="subfooter">
+      <div class="calculator-category">
+        <h3>Structural Analysis</h3>
+        <ul>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/SSB_Calculator">Simply Supported Beam</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Cantilever_Calculator">Cantilever Beam</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Fixed_Beam_Calculator">Fixed Beam</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Propped_Cantilever_Calculator">Propped Cantilever</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Seismic_Parameter_IS1893_2016">Seismic IS 1893 : 2016</a></li>
+        </ul>
+      </div>
+      <div class="calculator-category">
+        <h3>RCC Design</h3>
+        <ul>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Singly_Reinforced_Beam">Singly Reinforced Beam</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam">Doubly Reinforced Beam</a></li>
+          <li>RCC Column <em>(Soon)</em></li>
+          <li>One Way Slab <em>(Soon)</em></li>
+        </ul>
+      </div>
+      <div class="calculator-category">
+        <h3>Section Properties</h3>
+        <ul>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">T Section</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">Rectangular Section</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">Circular Section</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section</a></li>
+        </ul>
+      </div>
+      <div class="calculator-category">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/">Home</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Blogs">Blogs</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators">All Calculators</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/About_us">About Us</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Contact_us">Contact Us</a></li>
+        </ul>
       </div>
     </div>
   </div>
 
--->
-
-
-</div>
-
-
-<div class="subfooter-container">
-  <h3 class="subfooter-title">CALCULATORS</h3>
-  <div class="subfooter">
-    <div class="calculator-category">
-      <h3>Estimation Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Foundation_Quantity_Estimation">Foundation Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Column_Quantity_Estimation">Column Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Beam_Quantity_Estimation">Beam Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Slab_Quantity_Estimation">Slab Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Brick_Quantity_Estimation">Brick Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Quantity_Estimation">RCC Quantity Estimation</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Plate_Girder_Quantity_Estimation">Plate Girder Quantity Estimation</a></li>
-      </ul>
-
-    </div>
-    <div class="calculator-category">
-      <h3>Section Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">I Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">T Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">Circular Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">Pipe Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">Rectangular Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Channel_Section_Properties">Channel Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">Box Section Properties</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Composite_Section_Properties">Composite Section Properties</a></li>
-      </ul>
-
-    </div>
-    <div class="calculator-category">
-      <h3>RCC Design Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Singly Reinforced Beam Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam_Design">RCC Doubly Reinforced Beam Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Column_Design">RCC Column Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_One_Way_Slab_Design">RCC 1 Way Slab Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Two_Way_Slab_Design">RCC 2 Way Slab Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Isolated_Footing_Design">Isolated Footing Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Combined_Footing_Design">Combined Footing Design</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Trapezoidal_Footing_Design">Trapezoidal Footing Design</a></li>
-      </ul>
-
-    </div>
-    <div class="calculator-category">
-      <h3>Geotechnical Engineering Calculators</h3>
-      <ul>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Important_Basic_Formulae">Important Basic Formulae</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Seive_Size_Analysis">Sieve Size Analysis</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Active_Earth_Pressure">Active Earth Pressure</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Passive_Earth_Pressure">Passive Earth Pressure</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Soil_Bearing_Capacity">Soil Bearing Capacity</a></li>
-        <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Pile_Capacity">Pile Capacity</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<footer>
+  <div class="ad-block ad-bottom"><p>Advertisement</p></div>
+  <footer>
     <div class="footer-container">
-        <div class="footer-icons">
-            <a href="#"><img src="assets/svg/telegram-favicon.png" alt="Telegram"></a>
-            <a href="#"><img src="assets/svg/youtube-favicon.png" alt="YouTube"></a>
-            <a href="#"><img src="assets/svg/instagram-favicon.png" alt="Instagram"></a>
-            <a href="#"><img src="assets/svg/x-favicon.png" alt="X"></a>
-        </div>
-        <p>&copy; 2025 Your Website Name. All rights reserved.</p>
+      <div class="footer-icons">
+        <a href="#"><img src="assets/svg/telegram-favicon.png" alt="Telegram"></a>
+        <a href="#"><img src="assets/svg/youtube-favicon.png" alt="YouTube"></a>
+        <a href="#"><img src="assets/svg/instagram-favicon.png" alt="Instagram"></a>
+        <a href="#"><img src="assets/svg/x-favicon.png" alt="X"></a>
+      </div>
+      <p>&copy; 2025 Construction-Calculator. All rights reserved.</p>
     </div>
-</footer>
-
-<script>
-  function toggleMenu() {
-    const nav = document.querySelector("header nav");
-    nav.classList.toggle("show");
-  }
-</script>
-
+  </footer>
+  <script src="assets/js/main.js"></script>
+  <script>function toggleMenu(){document.querySelector("header nav").classList.toggle("show");}</script>
 </body>
 </html>
-
-
