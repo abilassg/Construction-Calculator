@@ -210,7 +210,7 @@
                     <div class="row align-items-end inp-group">
                       <div class="col-8">
                         <label>Corner Bar &nbsp;Ø &nbsp;(2 nos, at stirrup corners)</label>
-                        <select class="form-control" id="diaBot1" onchange="calc()">
+                        <select class="form-control" id="diaBot1" onchange="filterBot2();calc()">
                           <option value="6">6 mm</option><option value="8">8 mm</option>
                           <option value="10">10 mm</option><option value="12">12 mm</option>
                           <option value="16" selected>16 mm</option><option value="20">20 mm</option>
@@ -232,14 +232,7 @@
                       <div class="row align-items-end inp-group">
                         <div class="col-8">
                           <label>Intermediate Bar &nbsp;Ø</label>
-                          <select class="form-control" id="diaBot2" onchange="calc()">
-                            <option value="6">6 mm</option><option value="8">8 mm</option>
-                            <option value="10">10 mm</option><option value="12" selected>12 mm</option>
-                            <option value="16">16 mm</option><option value="20">20 mm</option>
-                            <option value="25">25 mm</option><option value="28">28 mm</option>
-                            <option value="32">32 mm</option><option value="36">36 mm</option>
-                            <option value="40">40 mm</option>
-                          </select>
+                          <select class="form-control" id="diaBot2" onchange="calc()"></select>
                         </div>
                         <div class="col-4 inp-unit">mm</div>
                       </div>
@@ -352,7 +345,26 @@
   const v  = id => parseFloat($(id).value) || 0;
   const vi = id => parseInt($(id).value)   || 0;
 
-  function toggleBot2() {
+  const ALL_DIAS = [6, 8, 10, 12, 16, 20, 25, 28, 32, 36, 40];
+
+  function populateIntermediateDia(selectId, cornerDia, defaultDia) {
+    const sel = document.getElementById(selectId);
+    const prev = parseInt(sel.value) || defaultDia;
+    sel.innerHTML = '';
+    ALL_DIAS.filter(d => d <= cornerDia).forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d; opt.text = d + ' mm';
+      if (d === prev || (prev > cornerDia && d === cornerDia)) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  function filterBot2() {
+    const cornerDia = parseInt(document.getElementById('diaBot1').value) || 16;
+    populateIntermediateDia('diaBot2', cornerDia, cornerDia);
+  }
+
+    function toggleBot2() {
     $('bot2Fields').style.display = $('hasBot2').checked ? '' : 'none';
     calc();
   }
@@ -731,7 +743,7 @@
   }
 
   // ── Init ─────────────────────────────────────────────────────────────────
-  window.addEventListener('load', calc);
+  window.addEventListener('load', () => { filterBot2(); calc(); });
   window.addEventListener('resize', calc);
   </script>
 </body>
