@@ -71,19 +71,21 @@
       border-right: 1px solid #e0f2f1;
       border-bottom: 1px solid #e0f2f1;
       text-decoration: none;
-      background: #fff;
+      background: #ffffff;
+      border: none;
+      box-shadow: inset 0 0 0 1px #c8e6e6;
       transition: background 0.15s, transform 0.15s;
-      min-height: 72px;
+      min-height: 80px;
     }
     .ic:hover {
-      background: #e0f7f7;
+      background: #b2dfdb;
       transform: scale(1.04);
       z-index: 2;
       position: relative;
       text-decoration: none;
     }
     .ic.soon {
-      background: #fafafa;
+      background: #f0f0f0;
       cursor: default;
       pointer-events: none;
     }
@@ -98,25 +100,26 @@
       .icon-grid .ic:nth-child(3n),
       .icon-grid .ic:nth-child(4n) { border-right: 1px solid #e0f2f1; }
       .icon-grid .ic:nth-child(2n) { border-right: none; }
-      .ic { padding: 14px 6px 10px; min-height: 62px; }
+      .ic { padding: 14px 8px 12px; min-height: 72px; }
+      .ic-lbl { font-size: 13px; }
     }
 
         
     .ic-lbl {
-      font-size: 12px;
+      font-size: 14px;
       font-weight: 700;
-      color: #343a40;
+      color: #1a1a1a;
       text-align: center;
-      line-height: 1.3;
+      line-height: 1.4;
     }
-    .ic.soon .ic-lbl { color: #adb5bd; }
+    .ic.soon .ic-lbl { color: #888; }
 
     .ic-badge {
-      font-size: 9px;
+      font-size: 11px;
       font-weight: 700;
       border-radius: 3px;
-      padding: 1px 6px;
-      margin-top: 5px;
+      padding: 2px 8px;
+      margin-top: 6px;
     }
     .ic-badge.live { background: #008080; color: #fff; }
     .ic-badge.soon { background: #dee2e6; color: #6c757d; }
