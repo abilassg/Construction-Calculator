@@ -7,49 +7,120 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/css/main.css">
   <style>
-    .calc-section { margin-bottom: 32px; }
-    .calc-section h3 {
-      font-size: 16px; font-weight: 700; color: #fff;
-      background: #008080; padding: 8px 16px;
-      border-radius: 4px 4px 0 0; margin-bottom: 0;
+
+    .calc-page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
     }
-    .calc-grid {
-      display: flex; flex-wrap: wrap; gap: 10px;
-      padding: 14px; border: 1px solid #dee2e6;
-      border-top: none; border-radius: 0 0 4px 4px;
+
+    .calc-page-title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 2px;
+      margin-bottom: 28px;
+      text-transform: uppercase;
+    }
+
+    /* ── Category section ── */
+    .cat-section { margin-bottom: 28px; }
+
+    .cat-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #008080;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 9px 16px;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .cat-icon { font-size: 18px; }
+
+    /* ── Icon grid — 4 columns desktop ── */
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid #b2dfdb;
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      overflow: hidden;
       background: #fff;
     }
-    .calc-btn {
-      display: flex; align-items: center; justify-content: space-between;
-      min-width: 220px; flex: 1 1 220px;
-      border: 1px solid #dee2e6; border-radius: 4px;
-      padding: 10px 14px; background: #f8f9fa;
-      font-size: 13px; font-weight: 600; color: #343a40;
-      text-decoration: none; transition: background .2s;
+
+    @media (max-width: 900px) {
+      .icon-grid { grid-template-columns: repeat(3, 1fr); }
     }
-    .calc-btn:hover { background: #e3f6f5; color: #008080; text-decoration: none; }
-    .calc-btn.soon {
-      background: #f8f9fa; color: #adb5bd;
-      pointer-events: none; cursor: default;
-      border-style: dashed;
+    @media (max-width: 580px) {
+      .icon-grid { grid-template-columns: repeat(2, 1fr); }
+      .calc-page-title { font-size: 17px; }
+      .cat-header { font-size: 13px; padding: 8px 12px; }
     }
-    .badge-soon {
-      font-size: 10px; font-weight: 700; background: #6c757d;
-      color: #fff; border-radius: 3px; padding: 1px 6px;
-      margin-left: 8px; white-space: nowrap; flex-shrink: 0;
+
+    /* ── Icon card ── */
+    .ic {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 10px 14px;
+      border-right: 1px solid #e0f2f1;
+      border-bottom: 1px solid #e0f2f1;
+      text-decoration: none;
+      background: #fff;
+      transition: background 0.15s, transform 0.15s;
+      min-height: 72px;
     }
-    .badge-new {
-      font-size: 10px; font-weight: 700; background: #28a745;
-      color: #fff; border-radius: 3px; padding: 1px 6px;
-      margin-left: 8px; white-space: nowrap; flex-shrink: 0;
+    .ic:hover {
+      background: #e0f7f7;
+      transform: scale(1.04);
+      z-index: 2;
+      position: relative;
+      text-decoration: none;
     }
-    .btn-open {
-      font-size: 11px; font-weight: 700; background: #008080;
-      color: #fff; border: none; border-radius: 3px;
-      padding: 3px 10px; white-space: nowrap; flex-shrink: 0;
-      margin-left: 8px;
+    .ic.soon {
+      background: #fafafa;
+      cursor: default;
+      pointer-events: none;
     }
-    .calc-btn:hover .btn-open { background: #005f5f; }
+
+    /* Remove right border on last column */
+    .icon-grid .ic:nth-child(4n)   { border-right: none; }
+    @media (max-width: 900px) {
+      .icon-grid .ic:nth-child(4n) { border-right: 1px solid #e0f2f1; }
+      .icon-grid .ic:nth-child(3n) { border-right: none; }
+    }
+    @media (max-width: 580px) {
+      .icon-grid .ic:nth-child(3n),
+      .icon-grid .ic:nth-child(4n) { border-right: 1px solid #e0f2f1; }
+      .icon-grid .ic:nth-child(2n) { border-right: none; }
+      .ic { padding: 14px 6px 10px; min-height: 62px; }
+    }
+
+        
+    .ic-lbl {
+      font-size: 12px;
+      font-weight: 700;
+      color: #343a40;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .ic.soon .ic-lbl { color: #adb5bd; }
+
+    .ic-badge {
+      font-size: 9px;
+      font-weight: 700;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-top: 5px;
+    }
+    .ic-badge.live { background: #008080; color: #fff; }
+    .ic-badge.soon { background: #dee2e6; color: #6c757d; }
+
   </style>
 </head>
 <body style="background-color:teal;">
@@ -72,214 +143,239 @@
   <div class="ad-block ad-top"><p>Advertisement - Top Banner</p></div>
 
   <div class="content-block">
-    <div class="wrapper">
+    <div class="calc-page">
 
-      <!-- ══ STRUCTURAL ANALYSIS ══ -->
-      <div class="calc-section">
-        <h3>Structural Analysis Calculators</h3>
-        <div class="calc-grid">
+      <div class="calc-page-title">Calculators</div>
 
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/SSB_Calculator">
-            Simply Supported Beam <span class="btn-open">Open</span>
+      <!-- ══════════════════════════════════
+           1. STRUCTURAL ANALYSIS
+      ══════════════════════════════════ -->
+      <div class="cat-section">
+        <div class="cat-header"><span class="cat-icon">🏗️</span>Structural Analysis Calculators</div>
+        <div class="icon-grid">
+
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/SSB_Calculator">
+            <div class="ic-lbl">Simply Supported Beam</div>
+            <span class="ic-badge live">Open</span>
           </a>
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/Cantilever_Calculator">
-            Cantilever Beam <span class="btn-open">Open</span>
+
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/Cantilever_Calculator">
+            <div class="ic-lbl">Cantilever Beam</div>
+            <span class="ic-badge live">Open</span>
           </a>
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/Fixed_Beam_Calculator">
-            Fixed Beam <span class="btn-open">Open</span>
+
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/Fixed_Beam_Calculator">
+            <div class="ic-lbl">Fixed Beam</div>
+            <span class="ic-badge live">Open</span>
           </a>
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/Propped_Cantilever_Calculator">
-            Propped Cantilever Beam <span class="btn-open">Open</span>
+
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/Propped_Cantilever_Calculator">
+            <div class="ic-lbl">Propped Cantilever</div>
+            <span class="ic-badge live">Open</span>
           </a>
-          <span class="calc-btn soon">
-            Column Buckling Load <span class="badge-soon">Soon</span>
+
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/Seismic_Parameter_IS1893_2016">
+            <div class="ic-lbl">Seismic Parameters IS 1893 : 2016</div>
+            <span class="ic-badge live">Open</span>
+          </a>
+
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/Seismic_Parameter_IS1893_2025">
+            <div class="ic-lbl">Seismic Parameters IS 1893 : 2025</div>
+            <span class="ic-badge live">Open</span>
+          </a>
+
+          <span class="ic soon">
+            <div class="ic-lbl">Column Buckling Load</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
 
         </div>
       </div>
 
-      <!-- ══ RCC DESIGN ══ -->
-      <div class="calc-section">
-        <h3>RCC Design Calculators</h3>
-        <div class="calc-grid">
+      <!-- ══════════════════════════════════
+           2. RCC DESIGN
+      ══════════════════════════════════ -->
+      <div class="cat-section">
+        <div class="cat-header"><span class="cat-icon">🏢</span>RCC Design Calculators</div>
+        <div class="icon-grid">
 
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Singly_Reinforced_Beam">
-            RCC Singly Reinforced Beam Design <span class="btn-open">Open</span>
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Singly_Reinforced_Beam">
+            <div class="ic-lbl">Singly Reinforced Beam</div>
+            <span class="ic-badge live">Open</span>
           </a>
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam">
-            RCC Doubly Reinforced Beam Design <span class="btn-open">Open</span>
+
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam">
+            <div class="ic-lbl">Doubly Reinforced Beam</div>
+            <span class="ic-badge live">Open</span>
           </a>
-          <span class="calc-btn soon">
-            RCC Column Design <span class="badge-soon">Soon</span>
+
+          <span class="ic soon">
+            <div class="ic-lbl">RCC Column Design</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
-          <span class="calc-btn soon">
-            RCC One Way Slab Design <span class="badge-soon">Soon</span>
+
+          <span class="ic soon">
+            <div class="ic-lbl">One Way Slab</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
-          <span class="calc-btn soon">
-            RCC Two Way Slab Design <span class="badge-soon">Soon</span>
+
+          <span class="ic soon">
+            <div class="ic-lbl">Two Way Slab</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
-          <span class="calc-btn soon">
-            Isolated Footing Design <span class="badge-soon">Soon</span>
+
+          <span class="ic soon">
+            <div class="ic-lbl">Isolated Footing</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
-          <span class="calc-btn soon">
-            Combined Footing Design <span class="badge-soon">Soon</span>
+
+          <span class="ic soon">
+            <div class="ic-lbl">Combined Footing</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
-          <span class="calc-btn soon">
-            Trapezoidal Footing Design <span class="badge-soon">Soon</span>
+
+          <span class="ic soon">
+            <div class="ic-lbl">Trapezoidal Footing</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
 
         </div>
       </div>
 
-      <!-- ══ SEISMIC ══ -->
-      <div class="calc-section">
-        <h3>Seismic Design Calculators</h3>
-        <div class="calc-grid">
+      <!-- ══════════════════════════════════
+           3. SECTION PROPERTIES
+      ══════════════════════════════════ -->
+      <div class="cat-section">
+        <div class="cat-header"><span class="cat-icon">📐</span>Section Properties Calculators</div>
+        <div class="icon-grid">
 
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/Seismic_Parameter_IS1893_2016">
-            Seismic Parameters &nbsp; IS 1893 : 2016 <span class="btn-open">Open</span>
-          </a>
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/Seismic_Parameter_IS1893_2025">
-            Seismic Parameters &nbsp; IS 1893 : 2025 <span class="btn-open">Open</span>
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">
+            <div class="ic-lbl">I Section</div>
+            <span class="ic-badge live">Open</span>
           </a>
 
-        </div>
-      </div>
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">
+            <div class="ic-lbl">T Section</div>
+            <span class="ic-badge live">Open</span>
+          </a>
 
-      <!-- ══ SECTION PROPERTIES ══ -->
-      <div class="calc-section">
-        <h3>Section Properties Calculators</h3>
-        <div class="calc-grid">
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">
+            <div class="ic-lbl">Rectangular Section</div>
+            <span class="ic-badge live">Open</span>
+          </a>
 
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/I_Section_Properties">
-            I Section Properties <span class="btn-open">Open</span>
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">
+            <div class="ic-lbl">Circular Section</div>
+            <span class="ic-badge live">Open</span>
           </a>
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/T_Section_Properties">
-            T Section Properties <span class="btn-open">Open</span>
+
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">
+            <div class="ic-lbl">Box Section</div>
+            <span class="ic-badge live">Open</span>
           </a>
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/Rectangular_Section_Properties">
-            Rectangular Section Properties <span class="btn-open">Open</span>
+
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">
+            <div class="ic-lbl">Pipe Section</div>
+            <span class="ic-badge live">Open</span>
           </a>
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/Circular_Section_Properties">
-            Circular Section Properties <span class="btn-open">Open</span>
+
+          <a class="ic" href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">
+            <div class="ic-lbl">Angle Section</div>
+            <span class="ic-badge live">Open</span>
           </a>
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/Box_Section_Properties">
-            Box Section Properties <span class="btn-open">Open</span>
-          </a>
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/Pipe_Section_Properties">
-            Pipe Section Properties <span class="btn-open">Open</span>
-          </a>
-          <a class="calc-btn" href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">
-            Angle Section Properties <span class="btn-open">Open</span>
-          </a>
-          <span class="calc-btn soon">
-            Channel Section Properties <span class="badge-soon">Soon</span>
-          </span>
-          <span class="calc-btn soon">
-            Composite Section Properties <span class="badge-soon">Soon</span>
+
+          <span class="ic soon">
+            <div class="ic-lbl">Channel Section</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
 
-        </div>
-      </div>
-
-      <!-- ══ ESTIMATION ══ -->
-      <div class="calc-section">
-        <h3>Estimation Calculators</h3>
-        <div class="calc-grid">
-
-          <span class="calc-btn soon">
-            Foundation Quantity Estimation <span class="badge-soon">Soon</span>
-          </span>
-          <span class="calc-btn soon">
-            Column Quantity Estimation <span class="badge-soon">Soon</span>
-          </span>
-          <span class="calc-btn soon">
-            Beam Quantity Estimation <span class="badge-soon">Soon</span>
-          </span>
-          <span class="calc-btn soon">
-            Slab Quantity Estimation <span class="badge-soon">Soon</span>
-          </span>
-          <span class="calc-btn soon">
-            Brick Quantity Estimation <span class="badge-soon">Soon</span>
-          </span>
-          <span class="calc-btn soon">
-            RCC Quantity Estimation <span class="badge-soon">Soon</span>
-          </span>
-          <span class="calc-btn soon">
-            Plate Girder Quantity Estimation <span class="badge-soon">Soon</span>
-          </span>
-          <span class="calc-btn soon">
-            Overall Building Quantity Estimation <span class="badge-soon">Soon</span>
+          <span class="ic soon">
+            <div class="ic-lbl">Composite Section</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
 
         </div>
       </div>
 
-      <!-- ══ GEOTECHNICAL ══ -->
-      <div class="calc-section">
-        <h3>Geotechnical Engineering Calculators</h3>
-        <div class="calc-grid">
+      <!-- ══════════════════════════════════
+           4. ESTIMATION
+      ══════════════════════════════════ -->
+      <div class="cat-section">
+        <div class="cat-header"><span class="cat-icon">📊</span>Estimation Calculators</div>
+        <div class="icon-grid">
 
-          <span class="calc-btn soon">
-            Important Basic Formulae <span class="badge-soon">Soon</span>
+          <span class="ic soon">
+            <div class="ic-lbl">Foundation Quantity</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
-          <span class="calc-btn soon">
-            Sieve Size Analysis <span class="badge-soon">Soon</span>
+
+          <span class="ic soon">
+            <div class="ic-lbl">Column Quantity</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
-          <span class="calc-btn soon">
-            Active Earth Pressure <span class="badge-soon">Soon</span>
+
+          <span class="ic soon">
+            <div class="ic-lbl">Beam Quantity</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
-          <span class="calc-btn soon">
-            Passive Earth Pressure <span class="badge-soon">Soon</span>
+
+          <span class="ic soon">
+            <div class="ic-lbl">Slab Quantity</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
-          <span class="calc-btn soon">
-            Soil Bearing Capacity <span class="badge-soon">Soon</span>
+
+          <span class="ic soon">
+            <div class="ic-lbl">Brick Quantity</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
-          <span class="calc-btn soon">
-            Pile Capacity <span class="badge-soon">Soon</span>
+
+          <span class="ic soon">
+            <div class="ic-lbl">RCC Quantity</div>
+            <span class="ic-badge soon">Soon</span>
+          </span>
+
+          <span class="ic soon">
+            <div class="ic-lbl">Plate Girder Quantity</div>
+            <span class="ic-badge soon">Soon</span>
+          </span>
+
+          <span class="ic soon">
+            <div class="ic-lbl">Overall Building Quantity</div>
+            <span class="ic-badge soon">Soon</span>
           </span>
 
         </div>
       </div>
 
-    </div><!-- /wrapper -->
-  </div><!-- /content-block -->
+    </div>
+  </div>
 
   <!-- ══ SUBFOOTER ══ -->
   <div class="subfooter-container">
     <h3 class="subfooter-title">CALCULATORS</h3>
     <div class="subfooter">
-
       <div class="calculator-category">
         <h3>Structural Analysis</h3>
         <ul>
           <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/SSB_Calculator">Simply Supported Beam</a></li>
           <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Cantilever_Calculator">Cantilever Beam</a></li>
           <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Fixed_Beam_Calculator">Fixed Beam</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Propped_Cantilever_Calculator">Propped Cantilever Beam</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Propped_Cantilever_Calculator">Propped Cantilever</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Seismic_Parameter_IS1893_2016">Seismic IS 1893 : 2016</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Seismic_Parameter_IS1893_2025">Seismic IS 1893 : 2025</a></li>
         </ul>
       </div>
-
       <div class="calculator-category">
         <h3>RCC Design</h3>
         <ul>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Singly_Reinforced_Beam">RCC Singly Reinforced Beam</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam">RCC Doubly Reinforced Beam</a></li>
-          <li>RCC Column Design <em>(Soon)</em></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Singly_Reinforced_Beam">Singly Reinforced Beam</a></li>
+          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/RCC_Doubly_Reinforced_Beam">Doubly Reinforced Beam</a></li>
+          <li>RCC Column <em>(Soon)</em></li>
           <li>One Way Slab <em>(Soon)</em></li>
           <li>Two Way Slab <em>(Soon)</em></li>
           <li>Isolated Footing <em>(Soon)</em></li>
         </ul>
       </div>
-
-      <div class="calculator-category">
-        <h3>Seismic Design</h3>
-        <ul>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Seismic_Parameter_IS1893_2016">IS 1893 : 2016</a></li>
-          <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Seismic_Parameter_IS1893_2025">IS 1893 : 2025</a></li>
-        </ul>
-      </div>
-
       <div class="calculator-category">
         <h3>Section Properties</h3>
         <ul>
@@ -292,19 +388,6 @@
           <li><a href="https://abilassg.github.io/Construction-Calculator/Calculators/Angle_Section_Properties">Angle Section</a></li>
         </ul>
       </div>
-
-      <div class="calculator-category">
-        <h3>Geotechnical</h3>
-        <ul>
-          <li>Important Basic Formulae <em>(Soon)</em></li>
-          <li>Sieve Size Analysis <em>(Soon)</em></li>
-          <li>Active Earth Pressure <em>(Soon)</em></li>
-          <li>Passive Earth Pressure <em>(Soon)</em></li>
-          <li>Soil Bearing Capacity <em>(Soon)</em></li>
-          <li>Pile Capacity <em>(Soon)</em></li>
-        </ul>
-      </div>
-
       <div class="calculator-category">
         <h3>Estimation</h3>
         <ul>
@@ -314,10 +397,9 @@
           <li>Slab Quantity <em>(Soon)</em></li>
           <li>Brick Quantity <em>(Soon)</em></li>
           <li>RCC Quantity <em>(Soon)</em></li>
-          <li>Plate Girder Quantity <em>(Soon)</em></li>
+          <li>Plate Girder <em>(Soon)</em></li>
         </ul>
       </div>
-
     </div>
   </div>
 
