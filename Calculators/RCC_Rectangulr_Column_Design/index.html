@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RCC Rectangular Column Design | Construction-Calculator</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>
+    .res-row { display:flex; justify-content:space-between; align-items:center; padding:7px 14px; border-bottom:1px solid #dee2e6; font-size:14px; }
+    .res-row:nth-child(even) { background:#f8f9fa; }
+    .res-row .res-lbl { color:#343a40; flex:1; }
+    .res-row .res-val { font-weight:700; color:#343a40; white-space:nowrap; margin-left:12px; }
+    .res-row.highlight { background:#d4edda; }
+    .res-row.highlight .res-lbl, .res-row.highlight .res-val { color:#155724; }
+    .res-row.fail-row { background:#f8d7da; }
+    .res-row.fail-row .res-lbl, .res-row.fail-row .res-val { color:#721c24; }
+    .sec-hdr { background:#008080; color:#fff; font-weight:700; font-size:14px; padding:7px 14px; margin-top:18px; margin-bottom:0; border-radius:3px 3px 0 0; }
+    .sec-hdr:first-child { margin-top:0; }
+    .inp-group { padding:8px 0 2px; }
+    .inp-group label { font-size:14px; font-weight:700; color:#343a40; margin-bottom:3px; display:block; }
+    .inp-group .form-control { background:#e3f6f5; border:1px solid #b2dfdb; font-size:14px; font-weight:700; }
+    .inp-group .form-control:focus { background:#c8eeec; border-color:#008080; box-shadow:none; }
+    .inp-unit { font-size:13px; color:#6c757d; align-self:center; padding-left:6px; }
+    .col-type-row { display:flex; gap:20px; padding:8px 0 4px; flex-wrap:wrap; }
+    .col-type-row label { display:flex; align-items:center; gap:6px; font-size:14px; font-weight:700; color:#343a40; cursor:pointer; }
+    .col-type-row input[type=radio] { accent-color:#008080; width:16px; height:16px; }
+    .checks-table { width:100%; border-collapse:collapse; font-size:13px; }
+    .checks-table th { background:#343a40; color:#fff; padding:8px 10px; text-align:left; font-size:13px; font-weight:700; }
+    .checks-table td { padding:7px 10px; border-bottom:1px solid #dee2e6; vertical-align:middle; font-size:13px; }
+    .checks-table tr:nth-child(even) td { background:#f8f9fa; }
+    .check-clause { font-size:11px; color:#6c757d; display:block; }
+    .badge-ok   { display:inline-block; background:#28a745; color:#fff; font-size:12px; font-weight:700; border-radius:3px; padding:2px 8px; }
+    .badge-fail { display:inline-block; background:#dc3545; color:#fff; font-size:12px; font-weight:700; border-radius:3px; padding:2px 8px; }
+    #colSketch { width:100%; max-width:420px; display:block; margin:0 auto; border:1px solid #dee2e6; border-radius:4px; background:#fff; }
+    .legend-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px 16px; padding:10px 14px; background:#f8f9fa; border:1px solid #dee2e6; border-radius:0 0 4px 4px; font-size:13px; font-weight:700; }
+    .legend-item { display:flex; align-items:center; gap:8px; }
+    .leg-dot  { width:14px; height:14px; border-radius:50%; flex-shrink:0; border:2px solid rgba(0,0,0,.25); }
+    .leg-rect { width:16px; height:11px; border:2.5px solid #28a745; flex-shrink:0; }
+    .formula-note { font-size:11px; color:#6c757d; font-family:monospace; background:#f8f9fa; border:1px solid #dee2e6; border-radius:3px; padding:3px 8px; margin:4px 0 8px; }
+  </style>
+</head>
+<body style="background-color:teal;">
+  <header>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <div class="logo-container">
+      <img src="../../assets/svg/logo.png" alt="Logo">
+      <span>Construction-Calculator</span>
+    </div>
+    <nav>
+      <a href="https://abilassg.github.io/Construction-Calculator/">Home</a>
+      <a href="https://abilassg.github.io/Construction-Calculator/Blogs">Blogs</a>
+      <a href="https://abilassg.github.io/Construction-Calculator/Calculators" class="active">Calculator</a>
+      <a href="https://abilassg.github.io/Construction-Calculator/About_us">About us</a>
+      <a href="https://abilassg.github.io/Construction-Calculator/Contact_us">Contact us</a>
+    </nav>
+  </header>
+
+  <div class="ad-block ad-top"><p>Advertisement - Top Banner</p></div>
+
+  <div class="e-con-inner">
+    <div class="ad-side ad-block" aria-label="RCC Design Calculators">
+      <h3>RCC Design</h3>
+      <ul>
+        <li><a href="../RCC_Singly_Reinforced_Beam/">Singly R. Beam</a></li>
+        <li><a href="../RCC_Doubly_Reinforced_Beam/">Doubly R. Beam</a></li>
+        <li><a href="#" class="active">RCC Rect. Column</a></li>
+        <li><a href="#">One Way Slab</a></li>
+        <li><a href="#">Two Way Slab</a></li>
+        <li><a href="#">Isolated Footing</a></li>
+      </ul>
+      <h3 style="margin-top:16px;">Beam Analysis</h3>
+      <ul>
+        <li><a href="#">Simply Supported</a></li>
+        <li><a href="#">Cantilever Beam</a></li>
+        <li><a href="#">Fixed-Fixed Beam</a></li>
+        <li><a href="#">Propped Cantilever</a></li>
+      </ul>
+    </div>
+
+    <div class="content">
+      <main id="main">
+        <section id="Calculation">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="page-container p-4 my-2 border">
+
+                  <h3><strong>RCC Rectangular Column Design</strong></h3>
+                  <p class="text-muted mb-4" style="font-size:13px;">
+                    Limit State Design &nbsp;·&nbsp; IS 456 : 2000 &nbsp;·&nbsp; IS 13920 : 2018 &nbsp;·&nbsp; SP 16 : 1980
+                  </p>
+
+                  <!-- SKETCH -->
+                  <canvas id="colSketch"></canvas>
+                  <div class="legend-grid">
+                    <div class="legend-item"><span class="leg-dot" style="background:#F0A500;border-color:#C06000;"></span>Corner bar (orange)</div>
+                    <div class="legend-item"><span class="leg-dot" style="background:#FFCC02;border-color:#997700;"></span>Intermediate bar — top/bot (yellow)</div>
+                    <div class="legend-item"><span class="leg-dot" style="background:#BF360C;border-color:#7B1A00;"></span>Side bar — left/right (brown)</div>
+                    <div class="legend-item"><span class="leg-rect"></span>Lateral tie / Spiral (green)</div>
+                  </div>
+
+                  <hr class="my-4"/>
+
+                  <!-- Note: Rectangular columns use lateral ties only -->
+
+                  <!-- Column Geometry -->
+                  <div class="sec-hdr">Column Geometry</div>
+                  <div style="border:1px solid #dee2e6;border-top:none;padding:12px 14px 6px;">
+                    <div class="row align-items-end inp-group">
+                        <div class="col-8"><label>Width &nbsp;b &nbsp;(mm)</label>
+                          <input class="form-control" type="number" id="b" value="300" min="1" oninput="updateMinBarsNote();calc()"></div>
+                        <div class="col-4 inp-unit">mm</div>
+                      </div>
+                      <div class="row align-items-end inp-group">
+                        <div class="col-8"><label>Depth &nbsp;D &nbsp;(mm)</label>
+                          <input class="form-control" type="number" id="bigD" value="400" min="1" oninput="updateMinBarsNote();calc()"></div>
+                        <div class="col-4 inp-unit">mm</div>
+                      </div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Effective Length &nbsp;leff &nbsp;(mm)</label>
+                        <input class="form-control" type="number" id="lEff" value="3000" min="1" oninput="calc()"></div>
+                      <div class="col-4 inp-unit">mm</div>
+                    </div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Clear Cover &nbsp;Cc &nbsp;(mm)</label>
+                        <input class="form-control" type="number" id="Cc" value="40" min="1" oninput="updateMinBarsNote();calc()"></div>
+                      <div class="col-4 inp-unit">mm</div>
+                    </div>
+                  </div>
+
+                  <!-- Material Properties -->
+                  <div class="sec-hdr">Material Properties</div>
+                  <div style="border:1px solid #dee2e6;border-top:none;padding:12px 14px 6px;">
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Concrete Grade &nbsp;fck</label>
+                        <select class="form-control" id="fck" onchange="calc()">
+                          <option value="15">M15</option><option value="20" selected>M20</option>
+                          <option value="25">M25</option><option value="30">M30</option>
+                          <option value="35">M35</option><option value="40">M40</option>
+                        </select></div>
+                      <div class="col-4 inp-unit">MPa</div>
+                    </div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Steel Grade &nbsp;fy</label>
+                        <select class="form-control" id="fy" onchange="calc()">
+                          <option value="250">Fe 250</option><option value="415">Fe 415</option>
+                          <option value="500" selected>Fe 500</option><option value="550">Fe 550</option>
+                        </select></div>
+                      <div class="col-4 inp-unit">MPa</div>
+                    </div>
+                  </div>
+
+                  <!-- Longitudinal Reinforcement -->
+                  <div class="sec-hdr">Longitudinal Reinforcement &nbsp;(Symmetric Section)</div>
+                  <div style="border:1px solid #dee2e6;border-top:none;padding:12px 14px 6px;">
+                    <p class="formula-note">Symmetric section · Top=Bottom · Left=Right · Intermediate bars apply to all 4 faces equally</p>
+
+                    <div class="row my-1"><div class="col-12"><strong style="color:#008080;">— Top / Bottom Faces &nbsp;(same bar layout on all 4 faces) —</strong></div></div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8">
+                        <label>Corner Bar &nbsp;Ø &nbsp;(2 nos per face)</label>
+                        <select class="form-control" id="diaCorner" onchange="filterInter();updateMinBarsNote();calc()">
+                          <option value="12" selected>12 mm</option><option value="16">16 mm</option>
+                          <option value="20">20 mm</option><option value="25">25 mm</option>
+                          <option value="28">28 mm</option><option value="32">32 mm</option>
+                        </select>
+                      </div>
+                      <div class="col-4 inp-unit">mm</div>
+                    </div>
+                    <div class="toggle-row">
+                      <label>Add intermediate bars? &nbsp;<small style="color:#6c757d;">(all 4 faces)</small></label>
+                      <label class="switch">
+                        <input type="checkbox" id="hasInter" checked onchange="toggleInter()">
+                        <span class="slider-sw"></span>
+                      </label>
+                    </div>
+                    <div id="interFields">
+                      <div class="row align-items-end inp-group">
+                        <div class="col-8">
+                          <label>Intermediate Bar &nbsp;Ø &nbsp;(≤ corner dia)</label>
+                          <select class="form-control" id="diaInter" onchange="calc()"></select>
+                        </div>
+                        <div class="col-4 inp-unit">mm</div>
+                      </div>
+                      <div class="row align-items-end inp-group">
+                        <div class="col-8"><label>No. of intermediate bars per face <span id="nInterNote" style="color:#dc3545;font-size:11px;"></span></label>
+                          <input class="form-control" type="number" id="nInter" value="1" min="1" oninput="calc()"></div>
+                        <div class="col-4 inp-unit">—</div>
+                      </div>
+                    </div>
+
+                    <div class="row my-1 mt-2"><div class="col-12"><strong style="color:#008080;">— Left / Right Faces (Side Bars) —</strong></div></div>
+                    <div class="toggle-row">
+                      <label>Add bars on left/right faces?</label>
+                      <label class="switch">
+                        <input type="checkbox" id="hasSide" checked onchange="toggleSide()">
+                        <span class="slider-sw"></span>
+                      </label>
+                    </div>
+                    <div id="sideFields">
+                      <div class="row align-items-end inp-group">
+                        <div class="col-8">
+                          <label>Side Bar &nbsp;Ø</label>
+                          <select class="form-control" id="diaSide" onchange="calc()">
+                            <option value="10">10 mm</option><option value="12" selected>12 mm</option>
+                            <option value="16">16 mm</option><option value="20">20 mm</option>
+                          </select>
+                        </div>
+                        <div class="col-4 inp-unit">mm</div>
+                      </div>
+                      <div class="row align-items-end inp-group">
+                        <div class="col-8"><label>No. of side bars per face <span id="nSideNote" style="color:#dc3545;font-size:11px;"></span></label>
+                          <input class="form-control" type="number" id="nSide" value="1" min="1" oninput="calc()"></div>
+                        <div class="col-4 inp-unit">—</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Lateral Reinforcement -->
+                  <div class="sec-hdr">Lateral Reinforcement &nbsp;(Ties / Spiral)</div>
+                  <div style="border:1px solid #dee2e6;border-top:none;padding:12px 14px 6px;">
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Tie / Spiral Bar &nbsp;Ø</label>
+                        <select class="form-control" id="diaTie" onchange="updateMinBarsNote();calc()">
+                          <option value="6">6 mm</option><option value="8" selected>8 mm</option>
+                          <option value="10">10 mm</option><option value="12">12 mm</option>
+                        </select></div>
+                      <div class="col-4 inp-unit">mm</div>
+                    </div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Spacing &nbsp;Sv &nbsp;(mm) — provided</label>
+                        <input class="form-control" type="number" id="svProv" value="180" min="1" oninput="calc()"></div>
+                      <div class="col-4 inp-unit">mm</div>
+                    </div>
+                  </div>
+
+                  <!-- Applied Loads -->
+                  <div class="sec-hdr">Applied Loads &nbsp;(Factored)</div>
+                  <div style="border:1px solid #dee2e6;border-top:none;padding:12px 14px 6px;">
+                    <p class="formula-note">Enter factored loads — already multiplied by load factor 1.5</p>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Axial Load &nbsp;Pu &nbsp;(kN)</label>
+                        <input class="form-control" type="number" id="Pu" value="800" min="0" oninput="calc()"></div>
+                      <div class="col-4 inp-unit">kN</div>
+                    </div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Moment about X-axis &nbsp;Mux &nbsp;(kNm)</label>
+                        <input class="form-control" type="number" id="Mux" value="50" min="0" oninput="calc()"></div>
+                      <div class="col-4 inp-unit">kNm</div>
+                    </div>
+                    <div class="row align-items-end inp-group">
+                      <div class="col-8"><label>Moment about Y-axis &nbsp;Muy &nbsp;(kNm)</label>
+                        <input class="form-control" type="number" id="Muy" value="35" min="0" oninput="calc()"></div>
+                      <div class="col-4 inp-unit">kNm</div>
+                    </div>
+                  </div>
+
+                  <hr class="my-4"/>
+
+                  <!-- RESULTS — populated by JS -->
+                  <div id="results"></div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="ad-block ad-bottom"><p>Advertisement - Bottom Banner</p></div>
+  <footer><div class="footer-container"><p>© 2024 Construction-Calculator. All rights reserved.</p></div></footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script>
+  const $  = id => document.getElementById(id);
+  const v  = id => parseFloat($(id).value) || 0;
+  const vi = id => parseInt($(id).value)   || 0;
+  const PI = Math.PI;
+  const Es = 2e5;
+
+  const ALL_DIAS = [10,12,16,20,25,28,32];
+  const MAX_BAR_SPACING = 300; // IS 456 Cl. 26.5.3.2 — max spacing between bars
+
+  function filterInter() {
+    const cornerDia = parseInt($('diaCorner').value) || 12;
+    const sel = $('diaInter');
+    const prev = parseInt(sel.value) || 10;
+    sel.innerHTML = '';
+    // Only show diameters strictly less than corner dia (intermediate < corner)
+    ALL_DIAS.filter(d => d <= cornerDia).forEach(d => {
+      const o = document.createElement('option');
+      o.value = d; o.text = d + ' mm';
+      if (d === prev) o.selected = true;
+      sel.appendChild(o);
+    });
+
+  }
+
+  // Min intermediate bars required per IS 456 Cl. 26.5.3.2
+  // Max spacing between longitudinal bars = 300 mm
+  // For a face of length (b or D):
+  //   clear spacing between corner bars = face - 2×cover - 2×dia_corner
+  //   if > 300mm → need at least 1 intermediate bar
+  //   if > 600mm → need at least 2, etc.
+  function minIntermediateBars(faceLength, Cc, diaTie, diaCorner) {
+    const clearFace = faceLength - 2*Cc - 2*diaTie - 2*diaCorner;
+    return Math.max(0, Math.ceil(clearFace / MAX_BAR_SPACING) - 1);
+  }
+
+  function updateMinBarsNote() {
+    const b  = v('b'),  D = v('bigD');
+    const Cc = v('Cc'), dt = vi('diaTie'), dc = vi('diaCorner');
+    if (!b || !D || !Cc) return;
+
+    // Intermediate bars (top/bottom faces, length = b)
+    const minI = minIntermediateBars(b, Cc, dt, dc);
+    const noteI = $('nInterNote');
+    if (noteI) {
+      if (minI > 0) {
+        noteI.textContent = `(min ${minI} req. — IS 456 Cl. 26.5.3.2)`;
+        if (vi('nInter') < minI) $('nInter').value = minI;
+        if (!$('hasInter').checked) {
+          $('hasInter').checked = true;
+          $('interFields').style.display = '';
+        }
+      } else {
+        noteI.textContent = '';
+      }
+    }
+
+    // Side bars (left/right faces, length = D)
+    const minS = minIntermediateBars(D, Cc, dt, dc);
+    const noteS = $('nSideNote');
+    if (noteS) {
+      if (minS > 0) {
+        noteS.textContent = `(min ${minS} req. — IS 456 Cl. 26.5.3.2)`;
+        if (vi('nSide') < minS) $('nSide').value = minS;
+        if (!$('hasSide').checked) {
+          $('hasSide').checked = true;
+          $('sideFields').style.display = '';
+        }
+      } else {
+        noteS.textContent = '';
+      }
+    }
+  }
+
+  function toggleInter() {
+    $('interFields').style.display = $('hasInter').checked ? '' : 'none';
+    calc();
+  }
+
+  function toggleSide() {
+    $('sideFields').style.display = $('hasSide').checked ? '' : 'none';
+    calc();
+  }
+
+  function resRow(lbl, val, cls='') {
+    return `<div class="res-row ${cls}"><span class="res-lbl">${lbl}</span><span class="res-val">${val}</span></div>`;
+  }
+
+  // ── Bar stress from strain compatibility ───────────────────────────────────
+  function fBar(xu, yi, fy) {
+    if (xu <= 0) return -0.87 * fy;
+    const ey = 0.87 * fy / Es;
+    const ei = 0.0035 * (xu - yi) / xu;
+    return ei >= ey ? 0.87*fy : ei <= -ey ? -0.87*fy : Es*ei;
+  }
+
+  // ── Exact parametric Mu1 — SP16 background formula ────────────────────────
+  function calcMu1(fck, fy, b, D, bars, Pu) {
+    let xu = D / 2;
+    for (let i = 0; i < 400; i++) {
+      const Cc = 0.36 * fck * b * xu;
+      const Cs = bars.reduce((s, br) => s + fBar(xu, br.yi, fy) * br.Asi, 0);
+      const xu2 = Math.max(1, Math.min(xu * Pu / Math.max(Cc + Cs, 0.1), 4*D));
+      if (Math.abs(xu2 - xu) < 0.005) { xu = xu2; break; }
+      xu = 0.5*xu + 0.5*xu2;
+    }
+    const Mu1 = 0.36*fck*b*xu*(D/2 - 0.42*xu)
+      + bars.reduce((s, br) => s + fBar(xu, br.yi, fy)*br.Asi*(D/2 - br.yi), 0);
+    return { Mu1: Math.max(Mu1, 1), xu };
+  }
+
+  // ── Build bar positions ───────────────────────────────────────────────────
+  // makeBarsX — X-axis bending (bending in D direction)
+  // Intermediate bars apply to ALL 4 faces equally
+  function makeBarsX(b, D, dEff, diaCorner, diaInter, nInter, diaSide, nSide, hasInter, hasSide) {
+    const bars = [];
+    const AbarC = PI * diaCorner**2 / 4;
+    const AbarI = hasInter && diaInter>0 ? PI * diaInter**2 / 4 : 0;
+    const AbarS = hasSide  && diaSide>0  ? PI * diaSide**2  / 4 : 0;
+    // Top face: 2 corners + nInter intermediate
+    bars.push({ yi: dEff, Asi: AbarC }, { yi: dEff, Asi: AbarC });
+    if (hasInter) for (let i=0;i<nInter;i++) bars.push({ yi: dEff, Asi: AbarI });
+    // Bottom face: 2 corners + nInter intermediate
+    bars.push({ yi: D-dEff, Asi: AbarC }, { yi: D-dEff, Asi: AbarC });
+    if (hasInter) for (let i=0;i<nInter;i++) bars.push({ yi: D-dEff, Asi: AbarI });
+    // Left+Right faces: nInter intermediate at D/2 + nSide side bars at D/2
+    const nAtMid = (hasInter ? 2*nInter : 0) + (hasSide ? 2*nSide : 0);
+    for (let i=0; i<nAtMid; i++) {
+      const isSide = hasSide && i >= (hasInter ? 2*nInter : 0);
+      bars.push({ yi: D/2, Asi: isSide ? AbarS : AbarI });
+    }
+    return bars;
+  }
+
+  // makeBarsY — Y-axis bending (bending in b direction) — swap b and D
+  function makeBarsY(b, D, dEffY, diaCorner, diaInter, nInter, diaSide, nSide, hasInter, hasSide) {
+    const bars = [];
+    const AbarC = PI * diaCorner**2 / 4;
+    const AbarI = hasInter && diaInter>0 ? PI * diaInter**2 / 4 : 0;
+    const AbarS = hasSide  && diaSide>0  ? PI * diaSide**2  / 4 : 0;
+    // Left face: 2 corners + nInter intermediate (in b-direction, left face is compression)
+    bars.push({ yi: dEffY, Asi: AbarC }, { yi: dEffY, Asi: AbarC });
+    if (hasInter) for (let i=0;i<nInter;i++) bars.push({ yi: dEffY, Asi: AbarI });
+    if (hasSide)  for (let i=0;i<nSide; i++) bars.push({ yi: dEffY, Asi: AbarS });
+    // Right face: 2 corners + nInter + nSide
+    bars.push({ yi: b-dEffY, Asi: AbarC }, { yi: b-dEffY, Asi: AbarC });
+    if (hasInter) for (let i=0;i<nInter;i++) bars.push({ yi: b-dEffY, Asi: AbarI });
+    if (hasSide)  for (let i=0;i<nSide; i++) bars.push({ yi: b-dEffY, Asi: AbarS });
+    // Top+Bottom faces: nInter intermediate at b/2
+    const nAtMid = hasInter ? 2*nInter : 0;
+    for (let i=0; i<nAtMid; i++) bars.push({ yi: b/2, Asi: AbarI });
+    return bars;
+  }
+
+
+
+  // ══════════════════════════════════════════════════════════════════════════
+  function calc() {
+    const fck = vi('fck'), fy = vi('fy');
+    const Cc  = v('Cc'),   lEff = v('lEff');
+    // Bar layout — face-wise symmetric
+    const diaCorner = vi('diaCorner');
+    const hasInter  = $('hasInter').checked;
+    const diaInter  = hasInter ? vi('diaInter') : 0;
+    const nInter    = hasInter ? vi('nInter')   : 0;
+    const hasSide   = $('hasSide').checked;
+    const diaSide   = hasSide ? vi('diaSide') : 0;
+    const nSide     = hasSide ? vi('nSide')   : 0;
+    const diaTie  = vi('diaTie'),  svProv = v('svProv');
+    // For backward compat in makeBars / sketch
+    const diaMain = diaCorner;
+    const PuKN = v('Pu'), MuxKNm = v('Mux'), MuyKNm = v('Muy');
+    const Pu = PuKN*1000, Mux = MuxKNm*1e6, Muy = MuyKNm*1e6;
+
+    const b = v('b'), D = v('bigD');
+    const Ag = b * D;
+
+    if (!b || !D || !lEff || !Cc || !svProv) return;
+
+    // Steel areas — symmetric section, all faces same intermediate bar
+    // 4 corner bars (one at each corner)
+    // Intermediate: nInter per face × 4 faces (top, bottom, left, right)
+    // Side bars: nSide per face × 2 faces (left, right) — separate from intermediate
+    const AscCorner = 4 * PI * diaCorner**2 / 4;
+    const AscInter  = hasInter ? (4 * nInter * PI * diaInter**2 / 4) : 0;
+    const AscSide   = hasSide  ? (2 * nSide  * PI * diaSide**2  / 4) : 0;
+    const Asc = AscCorner + AscInter + AscSide;
+    const Ac  = Ag - Asc;
+    const p   = (Asc/Ag)*100;
+    const nBarsTotal = 4 + (hasInter?4*nInter:0) + (hasSide?2*nSide:0);
+    const dEff= Cc + diaTie + diaCorner/2;
+
+    // Slenderness
+    const leffb = lEff/b, leffD = lEff/D;
+    const isShort = leffb<=12 && leffD<=12;
+
+    // Axial capacity — IS 456 Cl. 39.3
+    const sf    = 1.0;  // Lateral ties — rectangular column
+    const PuCap = sf * (0.4*fck*Ac + 0.67*fy*Asc);
+
+    // Eccentricity — IS 456 Cl. 25.4
+    const eMinX = Math.max(lEff/500 + D/30, 20);
+    const eMinY = Math.max(lEff/500 + b/30, 20);
+    const eX    = Pu>0 ? Mux/Pu : 0;
+    const eY    = Pu>0 ? Muy/Pu : 0;
+    const exEff = Math.max(eX, eMinX);
+    const eyEff = Math.max(eY, eMinY);
+    const MuxEff = Pu*exEff, MuyEff = Pu*eyEff;
+
+    // Uniaxial capacities — exact parametric (SP16 theory)
+    // dEffY = cover to side bar centroid (for Y-bending)
+    const dEffY = Cc + diaTie + (hasSide ? diaSide/2 : diaCorner/2);
+
+    const barsX = makeBarsX(b, D, dEff, diaCorner, diaInter, nInter, diaSide, nSide, hasInter, hasSide);
+    const { Mu1: Mu1x, xu: xuX } = calcMu1(fck, fy, b, D, barsX, Pu);
+
+    const barsY = makeBarsY(b, D, dEffY, diaCorner, diaInter, nInter, diaSide, nSide, hasInter, hasSide);
+    const { Mu1: Mu1y, xu: xuY } = calcMu1(fck, fy, D, b, barsY, Pu);
+
+    // Biaxial — IS 456 Cl. 39.6
+    const puPuz = Pu/PuCap;
+    const alphaN = puPuz<=0.2 ? 1.0 : puPuz>=0.8 ? 2.0 : 1.0+(puPuz-0.2)/0.6;
+    const termX  = Math.pow(MuxEff/Math.max(Mu1x,1), alphaN);
+    const termY  = Math.pow(MuyEff/Math.max(Mu1y,1), alphaN);
+    const biaxial = termX + termY;
+
+    // Tie spacing — IS 456 Cl. 26.5.3.2
+    const svCalc    = Math.min(Math.min(b,D), 16*diaCorner, 300);
+    const svConf    = Math.max(75, Math.min(Math.min(b,D)/4, 6*diaCorner, 100));
+
+    // Steel limits
+    const AscMin = 0.008*Ag, AscMax = 0.060*Ag;
+    const minBars = 4;
+    const nBars = nBarsTotal;  // alias for checks and sketch
+
+    // Development length
+    const tauBd = fck===20?1.2:fck===25?1.4:fck===30?1.5:fck===35?1.7:fck===40?1.9:1.2;
+    const ld = (0.87*fy*diaCorner)/(4*tauBd*1.6);
+
+    // Code checks
+    const checks = [
+      [1,  "Pu ≤ Pu,cap &nbsp; (Axial Capacity)",    "Cl. 39.3, IS 456",     `Pu = ${PuKN.toFixed(1)} kN`,              `Pu,cap = ${(PuCap/1000).toFixed(1)} kN`,    Pu<=PuCap],
+      [2,  "Biaxial Bending Check",                   "Cl. 39.6, IS 456",     `Ratio = ${biaxial.toFixed(4)}`,           `≤ 1.0`,                                     biaxial<=1.0],
+      [3,  "Short Column &nbsp; leff/b ≤ 12",         "Cl. 25.1.2, IS 456",   `leff/b = ${leffb.toFixed(2)}`,            `≤ 12`,                                      leffb<=12],
+      [4,  "Short Column &nbsp; leff/D ≤ 12",         "Cl. 25.1.2, IS 456",   `leff/D = ${leffD.toFixed(2)}`,            `≤ 12`,                                      leffD<=12],
+      [5,  "Min Steel &nbsp; Asc ≥ 0.8% Ag",         "Cl. 26.5.3.1, IS 456", `${Asc.toFixed(0)} mm²`,                   `${AscMin.toFixed(0)} mm²`,                  Asc>=AscMin],
+      [6,  "Max Steel &nbsp; Asc ≤ 6% Ag",           "Cl. 26.5.3.1, IS 456", `${Asc.toFixed(0)} mm²`,                   `${AscMax.toFixed(0)} mm²`,                  Asc<=AscMax],
+      [7,  `Min Bars ≥ ${minBars}`,                   "Cl. 26.5.3.1, IS 456", `${nBars} bars`,                           `≥ ${minBars}`,                              nBars>=minBars],
+      [8,  "Sv prov. ≤ Sv calc. &nbsp; (Ties)",      "Cl. 26.5.3.2, IS 456", `Sv = ${svProv} mm`,                       `Sv,calc = ${svCalc} mm`,                    svProv<=svCalc],
+      [9,  "b ≥ 300 mm",                               "Cl. 7.1.2, IS 13920",  `b = ${b} mm`,                             `≥ 300 mm`,                                  b>=300],
+      [10, "b/D ≥ 0.4",                               "Cl. 7.1.3, IS 13920",  `b/D = ${(Math.min(b,D)/Math.max(b,D)).toFixed(3)}`, `≥ 0.4`,                          Math.min(b,D)/Math.max(b,D)>=0.4],
+    ];
+
+    // Build HTML
+    let html = '';
+
+    html += `<div class="sec-hdr">Section Properties</div>`;
+    html += `<div style="border:1px solid #dee2e6;border-top:none;margin-bottom:0;">`;
+    html += resRow("Column Shape",              `Rectangular &nbsp; ${b}×${D} mm`);
+    html += resRow("Gross Area &nbsp; Ag",      `${Ag.toFixed(0)} mm²`);
+    // Bar count description — clear breakdown
+    const nCornerTotal = 4;
+    const nInterTotal  = hasInter ? 2*2*nInter : 0;   // top+bot × 2 faces
+    const nSideTotal   = hasSide  ? 2*nSide    : 0;   // L+R faces
+    let barDesc = `4-Ø${diaCorner} (corner)`;
+    if (hasInter && nInter>0) barDesc += ` + ${nInterTotal}-Ø${diaInter} (top/bot)`;
+    if (hasSide  && nSide>0)  barDesc += ` + ${nSideTotal}-Ø${diaSide} (sides)`;
+    barDesc += ` = ${nBarsTotal} bars total`;
+    html += resRow("Steel Area &nbsp; Asc",     `${Asc.toFixed(1)} mm²`);
+    html += resRow("Bar arrangement",           barDesc, 'highlight');
+    html += resRow("Steel %",                   `${p.toFixed(3)} %`);
+    html += resRow("Effective Cover &nbsp; d'", `${dEff.toFixed(1)} mm`);
+    html += resRow("leff / b",                  `${leffb.toFixed(2)}`);
+    html += resRow("leff / D",                  `${leffD.toFixed(2)}`);
+    html += resRow("Column Classification",     isShort
+      ? `<span style="color:#155724;font-weight:700;">Short Column ✓</span>`
+      : `<span style="color:#721c24;font-weight:700;">Slender Column ✗ — apply moment magnification (Cl. 39.7)</span>`);
+    html += `</div>`;
+
+    html += `<div class="sec-hdr">Axial Capacity &nbsp; (IS 456 Cl. 39.3)</div>`;
+    html += `<div style="border:1px solid #dee2e6;border-top:none;margin-bottom:0;">`;
+    html += resRow("Lateral reinforcement", "Lateral Ties &nbsp;(rectangular column)");
+    html += resRow("0.4 · fck · Ac",           `${(0.4*fck*Ac/1000).toFixed(2)} kN`);
+    html += resRow("0.67 · fy · Asc",          `${(0.67*fy*Asc/1000).toFixed(2)} kN`);
+    html += resRow("Pu,cap",                    `${(PuCap/1000).toFixed(2)} kN`, 'highlight');
+    html += resRow("Pu applied",                `${PuKN.toFixed(2)} kN`, Pu<=PuCap?'highlight':'fail-row');
+    html += `</div>`;
+
+    html += `<div class="sec-hdr">Eccentricity &nbsp; (IS 456 Cl. 25.4)</div>`;
+    html += `<div style="border:1px solid #dee2e6;border-top:none;margin-bottom:0;">`;
+    html += resRow("eMin,X = leff/500 + D/30",     `${eMinX.toFixed(1)} mm`);
+    html += resRow("eMin,Y = leff/500 + b/30",     `${eMinY.toFixed(1)} mm`);
+    html += resRow("eX applied &nbsp; (Mux/Pu)",   `${eX.toFixed(1)} mm`);
+    html += resRow("eY applied &nbsp; (Muy/Pu)",   `${eY.toFixed(1)} mm`);
+    html += resRow("eX,eff",                       `${exEff.toFixed(1)} mm`, 'highlight');
+    html += resRow("eY,eff",                       `${eyEff.toFixed(1)} mm`, 'highlight');
+    html += resRow("Mux,eff = Pu · eX,eff",       `${(MuxEff/1e6).toFixed(3)} kNm`);
+    html += resRow("Muy,eff = Pu · eY,eff",       `${(MuyEff/1e6).toFixed(3)} kNm`);
+    html += `</div>`;
+
+    html += `<div class="sec-hdr">Uniaxial Moment Capacity &nbsp; (SP16 Parametric Method)</div>`;
+    html += `<div style="border:1px solid #dee2e6;border-top:none;margin-bottom:0;">`;
+    html += resRow("Neutral axis xu &nbsp; (X bending)", `${xuX.toFixed(1)} mm`);
+    html += resRow("Neutral axis xu &nbsp; (Y bending)", `${xuY.toFixed(1)} mm`);
+    html += resRow("Mu1x &nbsp; (about X-axis)",  `${(Mu1x/1e6).toFixed(3)} kNm`, 'highlight');
+    html += resRow("Mu1y &nbsp; (about Y-axis)",  `${(Mu1y/1e6).toFixed(3)} kNm`, 'highlight');
+    html += resRow("P̄ = Pu/(fck·b·D)",            `${(Pu/(fck*b*D)).toFixed(4)}`);
+    html += resRow("M̄x = Mu1x/(fck·b·D²)",        `${(Mu1x/(fck*b*D*D)).toFixed(4)}`);
+    html += resRow("M̄y = Mu1y/(fck·D·b²)",        `${(Mu1y/(fck*D*b*b)).toFixed(4)}`);
+    html += `</div>`;
+
+    html += `<div class="sec-hdr">Biaxial Interaction Check &nbsp; (IS 456 Cl. 39.6)</div>`;
+    html += `<div style="border:1px solid #dee2e6;border-top:none;margin-bottom:0;">`;
+    html += resRow("Pu / Puz",                    `${puPuz.toFixed(4)}`);
+    html += resRow("αn &nbsp; (exponent)",         `${alphaN.toFixed(2)}`);
+    html += resRow("(Mux,eff / Mu1x) ^ αn",       `${termX.toFixed(4)}`);
+    html += resRow("(Muy,eff / Mu1y) ^ αn",       `${termY.toFixed(4)}`);
+    html += resRow("Biaxial ratio &nbsp; (sum)",   `${biaxial.toFixed(4)}`, biaxial<=1.0?'highlight':'fail-row');
+    html += `</div>`;
+
+    html += `<div class="sec-hdr">Tie / Spiral Spacing &nbsp; (IS 456 Cl. 26.5.3.2)</div>`;
+    html += `<div style="border:1px solid #dee2e6;border-top:none;margin-bottom:0;">`;
+    html += resRow("Least lateral dimension",     `${Math.min(b,D)} mm`);
+    html += resRow("16 × Ø main bar",            `${16*diaMain} mm`);
+    html += resRow("300 mm &nbsp; (abs. max)",   `300 mm`);
+    html += resRow("Sv calc. &nbsp; (min of above)", `${svCalc} mm`);
+    html += resRow("Sv provided",                `${svProv} mm`, svProv<=svCalc?'highlight':'fail-row');
+    html += resRow("IS 13920 confining zone Sv", `${svConf} mm &nbsp; (Cl. 7.3.3)`);
+    html += `</div>`;
+
+    html += `<div class="sec-hdr">Development Length</div>`;
+    html += `<div style="border:1px solid #dee2e6;border-top:none;margin-bottom:0;">`;
+    html += resRow("Ld", `${ld.toFixed(1)} mm`);
+    html += `</div>`;
+
+    html += `<div class="sec-hdr">Code Checks &nbsp; (IS 456 : 2000 + IS 13920 : 2018)</div>`;
+    html += `<div style="border:1px solid #dee2e6;border-top:none;overflow-x:auto;">`;
+    html += `<table class="checks-table"><thead><tr>
+      <th style="width:32px">#</th><th>Check</th><th>Computed</th><th>Limit</th>
+      <th style="width:56px;text-align:center;">✓/✗</th>
+    </tr></thead><tbody>`;
+    checks.forEach(([num,desc,clause,computed,limit,passed]) => {
+      html += `<tr>
+        <td>${num}</td>
+        <td>${desc}<span class="check-clause">${clause}</span></td>
+        <td>${computed}</td><td>${limit}</td>
+        <td style="text-align:center;"><span class="${passed?'badge-ok':'badge-fail'}">${passed?'✓':'✗'}</span></td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+
+    updateMinBarsNote();
+    $('results').innerHTML = html;
+    drawSketch({ b, D, Cc, diaTie, dEff,
+      diaCornerV:  diaCorner,
+      diaInterV:   hasInter ? diaInter : 0,
+      nInterV:     hasInter ? nInter   : 0,
+      hasInterV:   hasInter,
+      diaSideV:    hasSide  ? diaSide  : 0,
+      nSideV:      hasSide  ? nSide    : 0,
+      hasSideV:    hasSide,
+      nBars:       nBarsTotal
+    });
+  }
+
+  // ── Sketch ────────────────────────────────────────────────────────────────
+  function drawSketch({ b, D, Cc, diaMain, nBars, diaTie, dEff,
+                        diaCornerV, diaInterV, nInterV, hasInterV,
+                        diaSideV, nSideV, hasSideV }) {
+    const canvas = $('colSketch');
+    const dpr = window.devicePixelRatio || 1;
+    const FS=12, mL=50, mR=110, mT=28, mB=36;
+    const W = Math.min(canvas.parentElement.clientWidth||420, 420);
+    const availW=W-mL-mR, availH=270;
+    const sc = Math.min(availW/b, availH/D);
+    const bW=b*sc, bH=D*sc, logH=mT+bH+mB+8;  // extra for top label
+
+    canvas.style.width=W+'px'; canvas.style.height=logH+'px';
+    canvas.width=W*dpr; canvas.height=logH*dpr;
+    const ctx=canvas.getContext('2d');
+    ctx.scale(dpr,dpr); ctx.clearRect(0,0,W,logH);
+
+    const ox=mL+(availW-bW)/2, oy=mT+16, ccPx=Cc*sc, dEffPx=dEff*sc;
+
+    // Concrete body
+    ctx.fillStyle='#EDF4F4';
+    ctx.fillRect(ox,oy,bW,bH);
+    ctx.strokeStyle='#343A40'; ctx.lineWidth=2.5;
+    ctx.strokeRect(ox,oy,bW,bH);
+
+    // Lateral tie
+    const tlw=Math.max(diaTie*sc*0.5,1.5);
+    ctx.strokeStyle='#28A745'; ctx.lineWidth=tlw;
+    ctx.strokeRect(ox+ccPx,oy+ccPx,bW-2*ccPx,bH-2*ccPx);
+
+    // d' centroid dashed box
+    ctx.strokeStyle='#6F42C1'; ctx.lineWidth=1.2;
+    ctx.setLineDash([8,5]);
+    ctx.strokeRect(ox+dEffPx,oy+dEffPx,bW-2*dEffPx,bH-2*dEffPx);
+    ctx.setLineDash([]);
+
+    // Bar helper
+    function drawBar(bx,by,dia,fill,stroke) {
+      const r=Math.min(Math.max(dia/2*sc,3.5),10);
+      ctx.beginPath(); ctx.arc(bx,by,r,0,2*PI);
+      ctx.fillStyle=fill; ctx.fill();
+      ctx.strokeStyle=stroke; ctx.lineWidth=1.5; ctx.stroke();
+    }
+
+    const tlwH=tlw/2;
+    const rC=Math.min(Math.max(diaCornerV/2*sc,3.5),10);
+    const off=ccPx+tlwH+rC;
+    const xl=ox+off,xr=ox+bW-off,yt=oy+off,yb=oy+bH-off;
+
+    // 4 corner bars — orange
+    [[xl,yt],[xr,yt],[xr,yb],[xl,yb]].forEach(([bx,by])=>
+      drawBar(bx,by,diaCornerV,'#F0A500','#C06000'));
+
+    // Intermediate bars — all 4 faces — yellow
+    if (hasInterV && nInterV>0) {
+      const rI=Math.min(Math.max(diaInterV/2*sc,3),9);
+      const offI=ccPx+tlwH+rI;
+      const xlI=ox+offI, xrI=ox+bW-offI;
+      const ytI=oy+offI, ybI=oy+bH-offI;
+      for(let i=1;i<=nInterV;i++){
+        const t=i/(nInterV+1);
+        // Top and Bottom faces
+        const bx=xlI+t*(xrI-xlI);
+        drawBar(bx, ytI, diaInterV,'#FFCC02','#997700');
+        drawBar(bx, ybI, diaInterV,'#FFCC02','#997700');
+        // Left and Right faces
+        const by=ytI+t*(ybI-ytI);
+        drawBar(ox+offI,    by, diaInterV,'#FFCC02','#997700');
+        drawBar(ox+bW-offI, by, diaInterV,'#FFCC02','#997700');
+      }
+    }
+
+    // Side bars left/right — brown
+    if (hasSideV && nSideV>0) {
+      const rS=Math.min(Math.max(diaSideV/2*sc,3),9);
+      const offS=ccPx+tlwH+rS;
+      for(let i=1;i<=nSideV;i++){
+        const t=i/(nSideV+1);
+        const by=oy+offS+t*(bH-2*offS);
+        drawBar(ox+offS,    by,diaSideV,'#BF360C','#7B1A00');
+        drawBar(ox+bW-offS, by,diaSideV,'#BF360C','#7B1A00');
+      }
+    }
+
+    // ── Labels ───────────────────────────────────────────────────────────
+    ctx.font = `bold ${FS}px sans-serif`;
+
+    // b= below section
+    ctx.fillStyle='#343A40'; ctx.textAlign='center';
+    ctx.fillText(`b = ${Math.round(b)} mm`, ox+bW/2, oy+bH+24);
+
+    // D= rotated left
+    ctx.save(); ctx.translate(ox-40, oy+bH/2); ctx.rotate(-PI/2);
+    ctx.fillStyle='#343A40'; ctx.textAlign='center';
+    ctx.fillText(`D = ${Math.round(D)} mm`, 0, 0);
+    ctx.restore();
+
+    // Build bar arrangement text lines
+    // Top/Bottom face: 2-Ø12 + n_inter-Ø10  (Tension/Compression)
+    const LH = 16; // line height px
+    let lines = [];
+
+    // Top face label (above sketch)
+    // Top/Bottom: 2-Øcorner + nInter-Øinter per face
+    const faceDesc = hasInterV && nInterV>0
+      ? `2-Ø${diaCornerV} + ${nInterV}-Ø${diaInterV}`
+      : `2-Ø${diaCornerV}`;
+    let topFaceStr = faceDesc + `  (Top)`;
+    let botFaceStr = faceDesc + `  (Bottom)`;
+
+    // Side face label — right side
+    let sideFaceStr = hasSideV && nSideV > 0
+      ? `${nSideV}-Ø${diaSideV}  (each side)`
+      : `No side bars`;
+
+    // Total bars
+    const nCornerTotal = 4;
+    const nInterTotal  = hasInterV && nInterV>0 ? 4*nInterV : 0;
+    const nSideTotal   = hasSideV  && nSideV>0  ? 2*nSideV  : 0;
+    const nTotal       = nCornerTotal + nInterTotal + nSideTotal;
+
+    // Top label — above sketch
+    ctx.fillStyle='#C06000'; ctx.textAlign='center';
+    ctx.fillText(topFaceStr, ox+bW/2, oy-6);
+
+    // Bottom label — below sketch (above b= line)
+    ctx.fillStyle='#C06000'; ctx.textAlign='center';
+    ctx.fillText(botFaceStr, ox+bW/2, oy+bH+14);
+
+
+
+    // Right side labels — stacked
+    ctx.textAlign='left';
+    let ry = oy + bH/2 - (hasSideV && nSideV>0 ? LH*2 : LH);
+
+    ctx.fillStyle='#1B5E20';
+    ctx.fillText(`Ø${diaTie} tie`, ox+bW+8, ry);
+    ry += LH;
+
+    if (hasSideV && nSideV>0) {
+      ctx.fillStyle='#7B1A00';
+      ctx.fillText(sideFaceStr, ox+bW+8, ry);
+      ry += LH;
+    }
+
+    ctx.fillStyle='#6C757D';
+    ctx.fillText(`Cc = ${Math.round(Cc)} mm`, ox+bW+8, ry);
+    ry += LH;
+
+    ctx.fillStyle='#343A40';
+    ctx.fillText(`Total: ${nTotal} bars`, ox+bW+8, ry);
+  }
+
+
+  window.addEventListener('load', () => { filterInter(); updateMinBarsNote(); calc(); });
+  window.addEventListener('resize', calc);
+  function toggleMenu(){ document.querySelector("header nav").classList.toggle("show"); }
+  </script>
+</body>
+</html>
