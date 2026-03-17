@@ -287,13 +287,13 @@
   function filterInter() {
     const cornerDia = parseInt($('diaCorner').value) || 12;
     const sel = $('diaInter');
-    const prev = parseInt(sel.value) || 10;
+    const prev = parseInt(sel.value) || 12;
     sel.innerHTML = '';
     // Only show diameters strictly less than corner dia (intermediate < corner)
     ALL_DIAS.filter(d => d <= cornerDia).forEach(d => {
       const o = document.createElement('option');
       o.value = d; o.text = d + ' mm';
-      if (d === prev) o.selected = true;
+      if (d === (prev || cornerDia)) o.selected = true;
       sel.appendChild(o);
     });
 
